@@ -1,11 +1,7 @@
-const hair = ['Auburn', 'Black', 'Blair', 'Blonde', 'Brown', 'Dark Brown', 'Ginger', 'Grey', 'Light Brown', 'Red'];
-const skin = ['1-n', '2-n', '3-n', '4-n', '5-n'];
-const shirt = ['volunteer'];
-const jacket = ['gt', 'ae'];
 
 var components = {
     "skin":{
-        textures: ['1-n', '2-n', '3-n', '4-n', '5-n'],
+        textures: ['1-n', '2-n', '3-n', '4-n', '5-n', '5-n-2'],
         index: 0
     },
     "hair":{
@@ -13,11 +9,19 @@ var components = {
         index: 0
     },
     "shirt":{
-        textures: ['volunteer'],
+        textures: ['white','blue','volunteer'],
+        index: 0
+    },
+    "logo_front":{
+        textures: ['','duck','ae','gt'],
         index: 0
     },
     "jacket":{
-        textures: ['gt', 'ae'],
+        textures: ['','white','gray','gt', 'ae'],
+        index: 0
+    },
+    "logo_back":{
+        textures: ['','duck','ae','gt'],
         index: 0
     },
 }
@@ -35,8 +39,10 @@ function updateTextureComponent(part, dir) {
 function getFilePaths() {
     filepaths = [];
     for(var key in components) {
+        
         textures = components[key].textures;
         ind = components[key].index;
+        if (textures[ind] == '') continue;
         filepaths.push(key +"/"+textures[ind]+".png");
     }
     return filepaths;
