@@ -3,6 +3,7 @@
     position: relative; 
     z-index: 5;
     display: block;
+    width:200px;
 }
 
 .row {

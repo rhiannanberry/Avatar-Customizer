@@ -1,136 +1,111 @@
-// Defaults
 const defaultOptions = {
 	format: 'image/png',
 	quality: 1.0,
-	width: undefined,
-	height: undefined,
+	width: 1024,
+	height: 1024,
 	Canvas: undefined
 };
 
-// Return Promise
-const mergeImages = (sources = [], options = {}) => new Promise(resolve => {
-	options = Object.assign({}, defaultOptions, options);
+function loadAllImages(components) {
+    return new Promise(resolve => {
+        componentGroupPromises = Object.keys(components).map( part => new Promise( resolve => {
+            const imgPromises = components[part].textures.map( source => new Promise(function (resolve, reject) {
+                if (source == '') {
+                    resolve(Object.assign({}, { image:null }));
+                } else {
 
-	// Setup browser/Node.js specific variables
+                    fullpath = getpath(part, source);
+
+                    const img = new Image();
+                    img.src = fullpath;
+                    img.onerror = () => reject(Object.assign({}, { image:null }));
+                    img.onload = () => resolve(Object.assign({}, { image:img }));
+                }
+
+            }));
+            resolve(Promise.all(imgPromises));
+        }));
+
+        Promise.all(componentGroupPromises)
+            .then(part => {
+                keys = Object.keys(components);
+                for (var ind in keys) {
+                    console.log(keys[ind]);
+                    components[keys[ind]].images = part[ind];
+                }
+                resolve(components);
+            });
+    });
+}
+
+const tintAndMergeImages = (sources) => new Promise(resolve => {
+    options = defaultOptions;
+   
+    // Setup browser/Node.js specific variables
 	const canvas = options.Canvas ? new options.Canvas() : window.document.createElement('canvas');
-	const Image = options.Canvas ? options.Canvas.Image : window.Image;
 	if (options.Canvas) {
 		options.quality *= 100;
-	}
+    }
+    
+    const ctx = canvas.getContext('2d');
 
-	// Load sources
-	const images = sources.map(source => new Promise((resolve, reject) => {
-		// Convert sources to objects
-		if (source.constructor.name !== 'Object') {
-			source = { src: source };
-		}
+    canvas.width = options.width;
+    canvas.height = options.height;
 
-		// Resolve source and img when loaded
-		const img = new Image();
-		img.onerror = () => reject(new Error('Couldn\'t load image'));
-		img.onload = () => resolve(Object.assign({}, source, { img }));
-		img.src = source.src;
-	}));
+    var promises = [];
+    
+    for (let [k, el] of Object.entries(sources)) {
+        
+        promises.push( new Promise( resolve => {
+        var i = el['index'];
+        var images = el['images'];
+        
+        if(el['textures'][i] != '') {
+            var image = images[i]['image'];
+            ctx.globalAlpha = image.opacity ? image.opacity : 1;
+            ctx.globalCompositeOperation = 'source-over';
+            if(el['tint'] != '#ffffff') {
+                
+                applyColor(image, el['tint']).then( im => {
+                    resolve({[k]:im});
+                });
 
-	// Get canvas context
-	const ctx = canvas.getContext('2d');
+            } else {
 
-	// When sources have loaded
-	resolve(Promise.all(images)
-		.then(images => {
-			// Set canvas dimensions
-			const getSize = dim => options[dim] || Math.max(...images.map(image => image.img[dim]));
-			canvas.width = getSize('width');
-			canvas.height = getSize('height');
-			i=0
-			// Draw images to canvas
-			images.forEach(image => {
-				ctx.globalAlpha = image.opacity ? image.opacity : 1;
-	
-				
-				return ctx.drawImage(image.img, image.x || 0, image.y || 0);
-			});
+                resolve({[k]:image});
+            }
+            image = null;
 
-			if (options.Canvas && options.format === 'image/jpeg') {
-				// Resolve data URI for node-canvas jpeg async
-				return new Promise(resolve => {
-					canvas.toDataURL(options.format, {
-						quality: options.quality,
-						progressive: false
-					}, (err, jpeg) => {
-						if (err) {
-							throw err;
-						}
-						resolve(jpeg);
-					});
-				});
-			}
-
-			// Resolve all other data URIs sync
-			return canvas.toDataURL(options.format, options.quality);
-		}));
-});
+        } else {
+            resolve({});
+        }
+        images = null;
+        }));
+        
+    }
 
 
-const mergeAndTintImages = (sources = [], options = {}) => new Promise(resolve => {
-	options = Object.assign({}, defaultOptions, options);
+    Promise.all(promises).then((imgsRaw) => {
+        var keys = Object.keys(sources);
+        var imgs = {};
+        imgsRaw.forEach(v => {
+            if (v != undefined) {
+                imgs = Object.assign(imgs, v);
+            }
+        });
 
-	// Setup browser/Node.js specific variables
-	const canvas = options.Canvas ? new options.Canvas() : window.document.createElement('canvas');
-	const Image = options.Canvas ? options.Canvas.Image : window.Image;
-	if (options.Canvas) {
-		options.quality *= 100;
-	}
+        //Object.valuesimgsRaw.map()
+        
+        keys.forEach(k => {
+            if ([k] in imgs) {
+                ctx.drawImage(imgs[k], 0,0);
+            }
+        });
+        imgs = null;
+        imgsRaw = null;
+        resolve( canvas.toDataURL(options.format, options.quality));
+    })
+    // Resolve all other data URIs sync
+    
 
-	// Load sources
-	const images = sources.map(source => new Promise((resolve, reject) => {
-		// Convert sources to objects
-		if (source.constructor.name !== 'Object') {
-			source = { src: source };
-		}
-
-		// Resolve source and img when loaded
-		const img = new Image();
-		img.onerror = () => reject(new Error('Couldn\'t load image'));
-		img.onload = () => resolve(Object.assign({}, source, { img }));
-		img.src = source.src;
-	}));
-
-	// Get canvas context
-	const ctx = canvas.getContext('2d');
-
-	// When sources have loaded
-	resolve(Promise.all(images)
-		.then(images => {
-			// Set canvas dimensions
-			const getSize = dim => options[dim] || Math.max(...images.map(image => image.img[dim]));
-			canvas.width = getSize('width');
-			canvas.height = getSize('height');
-
-			// Draw images to canvas
-			images.forEach(image => {
-				ctx.globalAlpha = image.opacity ? image.opacity : 1;
-				ctx.globalCompositeOperation = 'multiply';
-				ctx.fillStyle = "#991d1d";
-				return ctx.drawImage(image.img, image.x || 0, image.y || 0);
-			});
-
-			if (options.Canvas && options.format === 'image/jpeg') {
-				// Resolve data URI for node-canvas jpeg async
-				return new Promise(resolve => {
-					canvas.toDataURL(options.format, {
-						quality: options.quality,
-						progressive: false
-					}, (err, jpeg) => {
-						if (err) {
-							throw err;
-						}
-						resolve(jpeg);
-					});
-				});
-			}
-
-			// Resolve all other data URIs sync
-			return canvas.toDataURL(options.format, options.quality);
-		}));
 });

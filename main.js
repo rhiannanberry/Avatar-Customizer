@@ -2,43 +2,31 @@
 var components = {
     "skin":{
         textures: ['1-n', '2-n', '3-n', '4-n', '5-n', '5-n-2'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
     "hair":{
         textures: ['Auburn', 'Black', 'Blair', 'Blonde', 'Brown', 'Dark Brown', 'Ginger', 'Grey', 'Light Brown', 'Red'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
     "shirt":{
         textures: ['white','blue','volunteer'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
     "logo_front":{
         textures: ['','duck','ae','gt'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
     "jacket":{
         textures: ['','white','gray','gt', 'ae'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
     "logo_back":{
         textures: ['','duck','ae','gt'],
-        images: [],
-        pixels:[],
         tint: '#ffffff',
         index: 0
     },
@@ -47,7 +35,9 @@ var components = {
 var img, canvas, me;
 
 function updateTextureTint(part, val) {
+    //TODO: THROTTLE THIS
     components[part].tint = val;
+    updateTexture();
 }
 
 function updateTextureComponent(part, dir) {
@@ -58,67 +48,20 @@ function updateTextureComponent(part, dir) {
     updateTexture();
 }
 
-function loadImages() {
-    for (var key in components) {
-        imgs = [];
-        textures = components[key].textures;
-        for (var t in textures) {
-            if (t == '') continue;
-            path = key + "/" + textures[t] + ".png"
-            if (path.constructor.name !== 'Object') {
-                source = { src: path };
-            }
-        
-            // Resolve source and img when loaded
-            const img = new Image();
-            //img.onerror = () => reject(new Error('Couldn\'t load image'));
-            //img.onload = () => resolve(Object.assign({}, source, { img }));
-
-            img.src = source.src;
-            imgs.push(img);
-
-            img.onload = () => {
-                var canvas = document.createElement("canvas"),
-                    ppixels = [],
-                    rgbPixel,
-                    ctx,
-                    data,
-                    i;
-
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx = canvas.getContext("2d");
-                ctx.drawImage(img, 0, 0, img.width, img.height);
-                data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-                for (i = 0; i < data.length; i += 4) {
-                    rgbPixel = [];
-                    rgbPixel[0] = data[i];
-                    rgbPixel[1] = data[i + 1];
-                    rgbPixel[2] = data[i + 2];
-                    ppixels.push(rgbPixel);
-                }
-                pixels = ppixels;
-            }
-        }
-        components[key].images = imgs;
+function getTextureComponents() {
+    var sources = [];
+    for(var i in Object.keys(components)) {
+        var obj = components[Object.keys(components)[i]];
+        var ind = obj['index'];
+        var imgTint = obj['tint'];
+        var imgData = obj['images'][ind]['pixelData'];
+        sources.push({pixelData:imgData, tint:imgTint});
     }
-}
-
-function getFilePaths() {
-    filepaths = [];
-    for(var key in components) {
-        
-        textures = components[key].textures;
-        ind = components[key].index;
-        if (textures[ind] == '') continue;
-        filepaths.push(key +"/"+textures[ind]+".png");
-    }
-    return filepaths;
+    return sources;
 }
 
 function updateTexture() {
-    mergeImages(getFilePaths()).then(function(b64) { 
+    tintAndMergeImages(components).then(function(b64) { 
         img.src=b64
         
         me.traverse(function(node) {
@@ -142,19 +85,30 @@ function initialize() {
     canvas = document.createElement('canvas');
     me = document.querySelector("#me").getObject3D('mesh');
 
-    loadImages();
+    loadAllImages(components).then((d) => {
+        components = d;
+        updateTexture();
+
+        canvas.height = 1024;
+        canvas.width = 1024;
+        const ctx = canvas.getContext('2d');
+        //ctx.putImageData(components['hair']['images'][0]['pixelData'], 0,0);
+        //document.body.appendChild(canvas);
+        
+
+        var dl = document.querySelector("#dl");
+        dl.addEventListener("click", function(ev) {
+            dl.href = img.src;
+            dl.download = "custom_texture.png"
+        })
+
+    });
 
     //console.log(components);
 
     
 
-    updateTexture();
 
-    var dl = document.querySelector("#dl");
-    dl.addEventListener("click", function(ev) {
-        dl.href = img.src;
-        dl.download = "custom_texture.png"
-    })
 }
 
 
