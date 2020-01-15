@@ -1,0 +1,23 @@
+{
+  "name": "multi-mat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {
+    "aframe": "^1.0.3",
+    "three": "^0.112.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4"
+  },
+  "scripts": {
+    "webpack": "webpack",
+    "dev": "npm run webpack -- --mode development --watch",
+    "build": "npm run webpack -- --mode production"
+  },
+  "author": "",
+  "license": "ISC"
+}

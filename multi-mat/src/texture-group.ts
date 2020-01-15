@@ -1,7 +1,11 @@
-class TextureGroup {
+import * as THREE from "three";
+
+export class TextureGroup {
     images : HTMLImageElement[]=[];
     index : number=0;
+    _index : number=0;
     loaded : boolean=false;
+    _tint : string='#ffffff';
     tint : string='#ffffff';
     canvas : HTMLCanvasElement = window.document.createElement('canvas');
     ctx : CanvasRenderingContext2D;
@@ -32,7 +36,8 @@ class TextureGroup {
     getImage() : Promise<HTMLImageElement>{
         return new Promise((resolve,reject) => {
             if (this.enabled) {
-                if(this.tint != '#ffffff') {
+                if(this.tint != '#ffffff' && (this.tint != this._tint || this.index != this._index)) {
+                    this._tint = this.tint;
                     this.ctx.clearRect(0,0,1024,1024);
 
                     this.ctx.drawImage(this.images[this.index],0,0);
@@ -45,14 +50,16 @@ class TextureGroup {
                     this.ctx.drawImage(this.images[this.index],0,0);
 
                     this.ctx.globalCompositeOperation = 'source-over';
-
+                    console.log("tinted");
                     var img = new Image();
                     img.src = this.canvas.toDataURL();
                     img.onload = () => resolve(img);
                     img.onerror = () => reject();
-
+                    
+                } else {
+                    console.log("not tinted");
+                    resolve(this.images[this.index]);
                 }
-                resolve(this.images[this.index]);
             } else {
                 reject();
             }
@@ -61,28 +68,27 @@ class TextureGroup {
 
 
 }
-class ComplexModelPart {
+export class ComplexModelPart {
     canvas : HTMLCanvasElement = window.document.createElement('canvas');
+    ctx : CanvasRenderingContext2D;
 
     constructor (public object:any, public textureGroups: TextureGroup[]) {
         this.canvas.width = 1024;
         this.canvas.height = 1024;
+        this.ctx = this.canvas.getContext('2d');
     }
 
-    getTexture() : Promise<string>{
-        return new Promise(resolve => {
-            const ctx = this.canvas.getContext('2d');
-            const imagePromises = this.textureGroups.map(tGroup => new Promise(resolve => {
-                tGroup.getImage().then((img) => {
-                    ctx.drawImage(img,0,0);
-                    resolve();
-                });
-            }));
+    updateTint(index, tint) {
+        this.textureGroups[index].tint = tint;
+    }
 
-            Promise.all(imagePromises).then(() => {
-                resolve(this.canvas.toDataURL('image/png', 100));
+    async getTexture() : Promise<string>{
+        for( const textureGroup of this.textureGroups ) {
+            await textureGroup.getImage().then((img) => {
+                this.ctx.drawImage(img,0,0);
             });
-        });
+        }
+        return this.canvas.toDataURL('image/png', 100);
     }
 
     setTexture() {
@@ -99,8 +105,12 @@ class ComplexModelPart {
     }
 }
 
-class ModelPart extends ComplexModelPart{
+export class ModelPart extends ComplexModelPart{
     constructor (object:Object, baseTextureGroup: TextureGroup) {
         super(object, [baseTextureGroup]);
+    }
+
+    updateTint(tint) {
+        this.textureGroups[0].tint = tint;
     }
 }
