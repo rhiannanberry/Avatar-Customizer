@@ -1,6 +1,8 @@
 import {TextureGroup, ComplexModelPart, ModelPart} from './texture-group'
 import * as THREE from "three";
 
+const TEXTURES : string = "../includes/textures/";
+
 var top : ComplexModelPart;
 
 function sleep(ms:number) {
@@ -22,9 +24,9 @@ async function init() {
     let me : THREE.Object3D = document.querySelector("#me").getObject3D('mesh');
     console.log(me);
 
-    let hair_tex = new TextureGroup('hair/', ['Auburn','Black','Blair']);
-    let shirt_tex = new TextureGroup('shirt/', ['white']);
-    let jacket_tex = new TextureGroup('jacket/', ['white']);
+    let hair_tex = new TextureGroup(TEXTURES + 'hair/', ['Auburn','Black','Blair']);
+    let shirt_tex = new TextureGroup(TEXTURES + 'shirt/', ['white']);
+    let jacket_tex = new TextureGroup(TEXTURES + 'jacket/', ['white']);
 
     await until(() => hair_tex.loaded == true && shirt_tex.loaded==true && jacket_tex.loaded ==true);
     //shirt_tex.tint = '#00ff00';
