@@ -1,17 +1,14 @@
 import {TextureGroup, ComplexModelPart, ModelPart} from './texture-group'
 import * as THREE from "three";
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import {ColorPicker} from './components/ColorPicker'
 
 const TEXTURES : string = "../includes/textures/";
 
-var top : ComplexModelPart;
 
 function sleep(ms:number) {
     return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function updateShirtTint(tint) {
-    top.updateTint(0, tint);
-    top.setTexture();
 }
 
 async function until(fn:any) {
@@ -31,13 +28,25 @@ async function init() {
 
     await until(() => hair_tex.loaded == true && shirt_tex.loaded==true && jacket_tex.loaded ==true);
     //shirt_tex.tint = '#000000';
-    top = new ComplexModelPart(me.getObjectByName('Top'), [shirt_tex,jacket_tex]);
+    let top = new ComplexModelPart(me.getObjectByName('Top'), [shirt_tex,jacket_tex]);
     let hair = new ModelPart(me.getObjectByName('Hair'), hair_tex);
 
 
-    top.setTexture();
+    //top.setTexture();
     hair.setTexture();
 
+    function shirtTint(tint) {
+        top.updateTint(0, tint);
+        top.setTexture();
+    }
+
+    function jacketTint(tint) {
+        top.updateTint(1, tint);
+        top.setTexture();
+    }
+
+    ReactDOM.render(
+    <ColorPicker func={jacketTint} color='#00ffff'/>, document.getElementById('testreact'));
 }
 
 

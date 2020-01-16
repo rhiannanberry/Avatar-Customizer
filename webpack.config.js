@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/main.ts', './src/model-view-controls.js'],
+  entry: ['./src/main.tsx', './src/model-view-controls.js'],
   devtool: 'inline-source-map',
   module: {
     rules: [
