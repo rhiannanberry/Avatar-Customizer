@@ -21,6 +21,7 @@ async function until(fn:any) {
 }
 
 async function init() {
+    // @ts-ignore
     let me : THREE.Object3D = document.querySelector("#me").getObject3D('mesh');
     console.log(me);
 
@@ -29,7 +30,7 @@ async function init() {
     let jacket_tex = new TextureGroup(TEXTURES + 'jacket/', ['white']);
 
     await until(() => hair_tex.loaded == true && shirt_tex.loaded==true && jacket_tex.loaded ==true);
-    //shirt_tex.tint = '#00ff00';
+    //shirt_tex.tint = '#000000';
     top = new ComplexModelPart(me.getObjectByName('Top'), [shirt_tex,jacket_tex]);
     let hair = new ModelPart(me.getObjectByName('Hair'), hair_tex);
 
