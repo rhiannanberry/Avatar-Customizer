@@ -25,6 +25,19 @@ AFRAME.registerComponent("drag-rotate-x", {
     }
 });
 
+
+AFRAME.registerComponent("custom-mat", {
+    init: function() {
+        console.log("bruh");
+        this.el.object3D.traverse(function(node) {
+            if(node.material) {
+                console.log("djjdjdjd");
+                node.material = new THREE.MeshStandardMaterial({color: new THREE.Color(0xff00ff)});
+            }
+        })
+    }
+});
+
 AFRAME.registerComponent("scroll-zoom", {
     schema : { 
         target: {type: 'selector'},
@@ -63,4 +76,4 @@ AFRAME.registerComponent("scroll-zoom", {
             z: currentPosition.z + distChange * this.direction.z
         });
     }
-})
+});

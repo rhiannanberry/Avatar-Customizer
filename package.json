@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "@types/aframe": "^0.8.4",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },
@@ -23,7 +24,7 @@
   "scripts": {
     "webpack": "webpack",
     "dev": "webpack-dev-server --open",
-    "build": "npm run webpack -- --mode production"
+    "build": "webpack --mode=development --watch "
   },
   "author": "",
   "license": "ISC"
