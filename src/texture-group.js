@@ -3,17 +3,18 @@ import { Color } from "three";
 import {until} from "./util";
 
 export class TextureGroup {
-    _obj : THREE.Object3D;
-    _textures : THREE.Texture[] = [];
-    _images : HTMLImageElement[]=[];
-    _tints : string[]=[];
-    _tint : string='#ffffff';
+    _obj;
+    _textures;
+    _images;
+    _tints;
+    _tint;
     _canvases = [] ;
-    _index : number=0;
-    loaded : boolean=false;
-    tint : string='#ffffff';
+    _index;
+    parent;
+    loaded;
+    tint;
 
-    constructor( public path: string, public filenames:string[], public enabled:boolean=true) {
+    constructor( path,  filenames,  enabled=true) {
         this._textures.length = filenames.length;
         this._images.length = filenames.length;
         this._tints.length = filenames.length;
@@ -26,8 +27,8 @@ export class TextureGroup {
         let promises = [];
         
         
-        for (let i:number=0; i < filenames.length; i++ ) {
-            let fullpath : string = path + filenames[i] + '.png';
+        for (let i=0; i < filenames.length; i++ ) {
+            let fullpath = path + filenames[i] + '.png';
             promises.push(
                 new Promise(function (resolve) {
                 img_loader.load(fullpath, function( img ) {
@@ -47,16 +48,19 @@ export class TextureGroup {
         Promise.all(promises).then(() => this.loaded = true);
     }
 
-    async updateTint(tint:string) {
+    async updateTint(tint) {
         await until(() => {return this.loaded == true;});
         this._tint = tint;
         if(this._tints[this._index] != tint) {
             this._tints[this._index] = tint;
             this._createNewCanvas();
+            if (this.parent != null) {
+                this.parent.layerTextures();
+            }
         }
     }
 
-    async updateIndex(index:number) {
+    async updateIndex(index) {
         await until(() => {return this.loaded == true;});
         if (this._index != index) {
             this._index = index;
@@ -64,15 +68,18 @@ export class TextureGroup {
             if (this._tints[this._index] != this._tint) {
                 this._tints[this._index] = this._tint;
                 this._createNewCanvas();
+                if (this.parent != null) {
+                    this.parent.layerTextures();
+                }
             }
         }
     }
 
     _createNewCanvas() {
-        let canvas : any = window.document.createElement('canvas');
+        let canvas = window.document.createElement('canvas');
         canvas.width = 1024;
         canvas.height = 1024;
-        let ctx : CanvasRenderingContext2D = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d');
 
         ctx.clearRect(0,0,1024,1024);
         ctx.drawImage(this._images[this._index],0,0);
@@ -86,22 +93,22 @@ export class TextureGroup {
         this._canvases[this._index] = canvas;
     }
 
-    async getTexture(tinted:boolean=false) : Promise<HTMLCanvasElement> {
+    async getTexture(tinted=false) {
         await until(() => {return this.loaded == true;});
         return this._canvases[this._index];    
     }
 }
 
 export class SimpleModelPart {
-    images : HTMLImageElement[] = [];
-    _obj : THREE.Object3D;
-    _material : THREE.MeshBasicMaterial;
-    _textures : THREE.Texture[] = []; 
-    _index : number=0;
-    loaded : boolean=false;
-    _tint : string='#ffffff';
+    images = [];
+    _obj ;
+    _material ;
+    _textures  = []; 
+    _index =0;
+    loaded =false;
+    _tint ='#ffffff';
 
-    constructor(public material: any, public path: string, public filenames:string[], public enabled:boolean=true) {
+    constructor(material, path, filenames, enabled=true) {
         this._material = material;
         //this._material.transparent = true;
 
@@ -111,8 +118,8 @@ export class SimpleModelPart {
 
         let t = this;
 
-        for (let i:number=0; i < filenames.length; i++ ) {
-            let fullpath : string = path + filenames[i] + '.png';
+        for (let i=0; i < filenames.length; i++ ) {
+            let fullpath = path + filenames[i] + '.png';
             loader.load(fullpath, function( texture ) {
                 texture.flipY = false;
                 texture.wrapS = 1000;
@@ -128,7 +135,7 @@ export class SimpleModelPart {
         }
     }
 
-    updateTint(tint : string) {
+    updateTint(tint ) {
         if (this._tint != tint) {
             this._tint = tint;
 
@@ -137,7 +144,7 @@ export class SimpleModelPart {
         }
     }
 
-    updateTextureIndex(index : number) {
+    updateTextureIndex(index) {
         if (this._index != index) {
             this._index = index;
 
@@ -148,28 +155,32 @@ export class SimpleModelPart {
 }
 
 export class ComplexModelPart {
-    _renderer : THREE.WebGLRenderer;
-    _textureGroups : TextureGroup[];
-    _material : THREE.MeshBasicMaterial;
-    _index : number=0;
-    loaded : boolean=false;
+    _renderer ;
+    _textureGroups;
+    _material;
+    _index=0;
+    loaded=false;
 
     //Needs renderer to use copyTextureToTexture
-    constructor(public renderer: THREE.WebGLRenderer, public material: any, public textureGroups:TextureGroup[], public enabled:boolean=true) {
+    constructor(renderer, material, textureGroups, enabled=true) {
         this._renderer = renderer;
         this._material = material;
         this._material.transparent = true;
 
         this._textureGroups = textureGroups;
 
+        this._textureGroups.forEach((tGroup) => {
+            tGroup.parent = this;
+        })
+
         this.layerTextures();
     }
 
     async layerTextures(){
-        let canvas : any = window.document.createElement('canvas');
+        let canvas = window.document.createElement('canvas');
         canvas.width = 1024;
         canvas.height = 1024;
-        let ctx : CanvasRenderingContext2D = canvas.getContext('2d');
+        let ctx = canvas.getContext('2d');
         let promises = [];
         this._textureGroups.forEach(async tgroup => {
 
@@ -200,7 +211,7 @@ export class ComplexModelPart {
         })
     }
 
-    updateTint(index:number, tint:string) {
+    updateTint(index, tint) {
         this._textureGroups[index].updateTint(tint).then(() => this.layerTextures());
     }
 }
