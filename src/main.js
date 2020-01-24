@@ -48,7 +48,7 @@ async function init() {
       if (node.name == "Body") {
         ReactDOM.render(
           <TextureGroup model={node}>
-            <TextureLayer material={node.material.clone()} />
+            <TextureLayer enableTint={false} material={node.material.clone()} />
             <TextureLayer
               label="Hair"
               material={node.material.clone()}
@@ -62,6 +62,7 @@ async function init() {
               filenames={["white"]}
             />
             <TextureLayer
+              disabled={true}
               label="Eyes"
               material={node.material.clone()}
               path={TEXTURES + "eyes/"}

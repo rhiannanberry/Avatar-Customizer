@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 export class ColorPicker extends Component {
   static propTypes = {
     defaultColor: PropTypes.string,
-    label: PropTypes.string,
-    material: PropTypes.object
+    material: PropTypes.object,
+    disabled: PropTypes.bool
   };
 
   constructor(props) {
@@ -14,7 +14,6 @@ export class ColorPicker extends Component {
     this.state = {
       color: props.defaultColor
     };
-    if (!this.props.label) return;
     this.colorPicker = React.createRef();
   }
 
@@ -30,22 +29,20 @@ export class ColorPicker extends Component {
   }
 
   randomize() {
-    if (!this.props.label) return;
     const clr = new THREE.Color(0, 0, 0).setHex(Math.random() * 0xffffff);
     this.setState({ color: "#" + clr.getHexString() });
   }
 
   render() {
-    if (!this.props.label) return null;
     this.updateMaterial();
     return (
       <div>
-        <label>{this.props.label}</label>
         <input
           ref={this.colorPicker}
           className="color-picker"
           name="Color Picker"
           type="color"
+          disabled={this.props.disabled}
           value={this.state.color}
           onInput={this.onUpdateColor.bind(this)}
           onChange={this.onUpdateColor.bind(this)}

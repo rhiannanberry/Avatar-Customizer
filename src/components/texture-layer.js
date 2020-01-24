@@ -3,13 +3,21 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { ColorPicker } from "./color-picker";
+import { TextureDropdown } from "./texture-dropdown";
 
 export class TextureLayer extends Component {
   static propTypes = {
     material: PropTypes.object,
     label: PropTypes.string,
     path: PropTypes.string,
-    filenames: PropTypes.arrayOf(PropTypes.string)
+    filenames: PropTypes.arrayOf(PropTypes.string),
+    enableTint: PropTypes.bool,
+    disabled: PropTypes.bool
+  };
+
+  static defaultProps = {
+    enableTint: true,
+    disabled: false
   };
 
   constructor(props) {
@@ -72,17 +80,35 @@ export class TextureLayer extends Component {
   }
 
   randomize() {
+    if (this.colorPicker.current == null) return;
     this.colorPicker.current.randomize();
   }
 
   render() {
+    if (this.props.enableTint == false) return null;
+    const dropdown = () => {
+      if (this.props.filenames && this.props.filenames.length > 1)
+        return (
+          <TextureDropdown
+            disabled={this.props.disabled}
+            filenames={this.props.filenames}
+            setTexFunc={e => this.setTexture(e)}
+          />
+        );
+      return null;
+    };
     return (
-      <ColorPicker
-        label={this.props.label}
-        material={this.props.material}
-        defaultColor={this.defaultColor}
-        ref={this.colorPicker}
-      />
+      <div>
+        {this.props.label}
+        <ColorPicker
+          label={this.props.label}
+          disabled={this.props.disabled}
+          material={this.props.material}
+          defaultColor={this.defaultColor}
+          ref={this.colorPicker}
+        />
+        {dropdown()}
+      </div>
     );
   }
 
