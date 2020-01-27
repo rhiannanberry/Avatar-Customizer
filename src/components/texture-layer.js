@@ -1,9 +1,14 @@
 import * as THREE from "three";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
+import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
+import {faUpload} from "@fortawesome/free-solid-svg-icons/faUpload";
+import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
+import {faCheckSquare} from "@fortawesome/free-regular-svg-icons/faCheckSquare";
+import {faSquare} from "@fortawesome/free-regular-svg-icons/faSquare";
 import { ColorPicker } from "./color-picker";
 import { TextureDropdown } from "./texture-dropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export class TextureLayer extends Component {
   static propTypes = {
@@ -12,11 +17,13 @@ export class TextureLayer extends Component {
     path: PropTypes.string,
     filenames: PropTypes.arrayOf(PropTypes.string),
     enableTint: PropTypes.bool,
+    disableable: PropTypes.bool,
     disabled: PropTypes.bool
   };
 
   static defaultProps = {
     enableTint: true,
+    disableable: false,
     disabled: false
   };
 
@@ -25,16 +32,26 @@ export class TextureLayer extends Component {
     super(props);
     this.props.material.transparent = true;
     this.props.material.needsUpdate = true;
+    this.material = null;
     this.textures = {};
     this.key = null;
     this.colorPicker = React.createRef();
     this.defaultColor = "#ffffff";
 
+    this.filenames = this.props.filenames;
+    if(this.props.disableable) {
+      this.filenames.unshift('');
+    }
+
+    this.state = {
+      disabled: props.disabled
+    };
+
     if (this.props.path && this.props.filenames) {
       this.props.filenames.forEach(fname => {
         this.textures[fname] = null;
       });
-      this.setTexture(Object.keys(this.textures)[0]);
+      this.setTexture(this.filenames[0]);
     }
 
     if (this.props.label) {
@@ -44,16 +61,25 @@ export class TextureLayer extends Component {
   }
 
   setTexture(key) {
+    if (key == '') {
+      this.key = key;
+      this.props.material.visible = false;
+      this.props.material.needsUpdate = true;
+      return;
+    }
+    
     if (!this.props.path || this.key == key) return;
-
+    
     if (!(key in this.textures)) this.textures[key] = null;
-
+    
     if (this.textures[key]) {
       this.props.material.map = this.textures[key];
+      this.props.material.visible = true;
       this.props.material.needsUpdate = true;
     } else {
       const loader = new THREE.TextureLoader();
       loader.load(this.props.path + key + ".png", texture => {
+        this.props.material.visible = true;
         texture.flipY = false;
         this.props.material.map = texture;
         this.props.material.needsUpdate = true;
@@ -85,12 +111,12 @@ export class TextureLayer extends Component {
   }
 
   render() {
+
     if (this.props.enableTint == false) return null;
     const dropdown = () => {
       if (this.props.filenames && this.props.filenames.length > 1)
         return (
           <TextureDropdown
-            disabled={this.props.disabled}
             filenames={this.props.filenames}
             setTexFunc={e => this.setTexture(e)}
           />
@@ -100,14 +126,16 @@ export class TextureLayer extends Component {
     return (
       <div>
         {this.props.label}
+        <FontAwesomeIcon icon={faDownload} title="Download layout PNG to customize"/>
+        <FontAwesomeIcon icon={faUpload} title="Upload custom layer texture"/>
+        {dropdown()}
         <ColorPicker
           label={this.props.label}
-          disabled={this.props.disabled}
+          disabled={this.state.disabled}
           material={this.props.material}
           defaultColor={this.defaultColor}
           ref={this.colorPicker}
         />
-        {dropdown()}
       </div>
     );
   }

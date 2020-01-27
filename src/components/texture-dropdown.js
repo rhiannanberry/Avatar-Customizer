@@ -21,9 +21,10 @@ export class TextureDropdown extends Component {
 
   render() {
     const optionList = this.props.filenames.map(function(opt, i) {
+      const optLabel = (opt) ? opt.charAt(0).toUpperCase() + opt.slice(1) : 'None';
       return (
         <option key={i} value={opt}>
-          {opt.charAt(0).toUpperCase() + opt.slice(1)}
+          {optLabel}
         </option>
       );
     });

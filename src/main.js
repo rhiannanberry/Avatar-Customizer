@@ -62,7 +62,6 @@ async function init() {
               filenames={["white"]}
             />
             <TextureLayer
-              disabled={true}
               label="Eyes"
               material={node.material.clone()}
               path={TEXTURES + "eyes/"}
@@ -79,6 +78,7 @@ async function init() {
               material={node.material.clone()}
               path={TEXTURES + "jacket/"}
               filenames={["white"]}
+              disableable={true}
             />
           </TextureGroup>,
           document.getElementById("testreact")

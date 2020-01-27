@@ -36,7 +36,7 @@ export class ColorPicker extends Component {
   render() {
     this.updateMaterial();
     return (
-      <div>
+      
         <input
           ref={this.colorPicker}
           className="color-picker"
@@ -47,7 +47,7 @@ export class ColorPicker extends Component {
           onInput={this.onUpdateColor.bind(this)}
           onChange={this.onUpdateColor.bind(this)}
         />
-      </div>
+    
     );
   }
 }

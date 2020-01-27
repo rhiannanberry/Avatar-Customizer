@@ -4,6 +4,10 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.26",
+    "@fortawesome/free-regular-svg-icons": "^5.12.0",
+    "@fortawesome/free-solid-svg-icons": "^5.12.0",
+    "@fortawesome/react-fontawesome": "^0.1.8",
     "@types/aframe": "^0.8.4",
     "prop-types": "^15.7.2",
     "webpack": "^4.41.5",
