@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require("fs");
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const babelConfig = JSON.parse(
   fs
@@ -13,7 +14,12 @@ const babelConfig = JSON.parse(
 
 module.exports = {
   entry: ['./src/main.js'],
-  devtool: 'inline-source-map',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js'
+  },
+
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -21,18 +27,26 @@ module.exports = {
         include: [path.resolve(__dirname, "src")],
         exclude: /node_modules/,
         loader: "babel-loader"
+      },
+      {
+        test: /\.(scss|css)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          "css-loader",
+          "sass-loader"
+        ]
       }
     ],
   },
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js', '.jsx' ],
+    extensions: [ '.tsx', '.ts', '.js', '.jsx' , '.scss'],
   },
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, './dist'),
-  },
+  
   devServer: {
-    hot: true
+    hot: true,
+    
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -40,6 +54,11 @@ module.exports = {
       inject: "head"
     }),
     new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin()
+    //new webpack.HotModuleReplacementPlugin(),
+    // Extract required css and add a content hash.
+    new MiniCssExtractPlugin({
+      disable: false
+
+    })
   ]
 };

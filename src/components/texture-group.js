@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 export class TextureGroup extends Component {
   static propTypes = {
+    id: PropTypes.string,
     children: PropTypes.arrayOf(PropTypes.element),
     model: PropTypes.object
   };
@@ -55,11 +56,11 @@ export class TextureGroup extends Component {
       return React.cloneElement(child, { ref: el => this.childReferences.push(el) });
     });
     return (
-      <div>
+      <>
         {this.children}
         <button onClick={e => this.randomize(e)}>Randomize</button>
         <button onClick={e => this.getDownloadTexture(e)}>Download Texture</button>
-      </div>
+      </>
     );
   }
 }

@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TextureLayer } from "./components/texture-layer";
+import styles from "./stylesheets/test.scss"
 import { TextureGroup } from "./components/texture-group";
 
 const TEXTURES = "../includes/textures/";
@@ -20,7 +21,7 @@ async function init() {
   const renderer = new THREE.WebGLRenderer();
 
   renderer.setSize(size.width, size.height);
-  document.getElementById("container").appendChild(renderer.domElement);
+  document.getElementById("container").prepend(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
 
@@ -47,41 +48,53 @@ async function init() {
     avatargltf.scene.traverse(node => {
       if (node.name == "Body") {
         ReactDOM.render(
-          <TextureGroup model={node}>
+          <TextureGroup model={node} id="options">
             <TextureLayer enableTint={false} material={node.material.clone()} />
+            <TextureLayer
+              label="Skin"
+              material={node.material.clone()}
+              path={TEXTURES + "skin/"}
+              filenames={["default"]}
+            />
+            <TextureLayer
+              label="Blush"
+              material={node.material.clone()}
+              path={TEXTURES + "skin/"}
+              filenames={["blush"]}
+            />
             <TextureLayer
               label="Hair"
               material={node.material.clone()}
               path={TEXTURES + "hair/"}
-              filenames={["white"]}
+              filenames={["default"]}
             />
             <TextureLayer
               label="Eyebrows"
               material={node.material.clone()}
               path={TEXTURES + "eyebrows/"}
-              filenames={["white"]}
+              filenames={["default"]}
             />
             <TextureLayer
               label="Eyes"
               material={node.material.clone()}
               path={TEXTURES + "eyes/"}
-              filenames={["custom", "default"]}
+              filenames={["default", "black"]}
             />
             <TextureLayer
               label="Shirt"
               material={node.material.clone()}
               path={TEXTURES + "shirt/"}
-              filenames={["white"]}
+              filenames={["default"]}
             />
             <TextureLayer
               label="Jacket"
               material={node.material.clone()}
               path={TEXTURES + "jacket/"}
-              filenames={["white"]}
+              filenames={["default"]}
               disableable={true}
             />
           </TextureGroup>,
-          document.getElementById("testreact")
+          document.getElementById("options")
         );
 
         scene.add(avatargltf.scene);

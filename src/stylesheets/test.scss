@@ -1,0 +1,53 @@
+#container {
+    height: 400px;
+}
+
+
+#options {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+
+    .texture-layer  {
+        height: 32px;
+        margin: 10px;
+
+        .label {
+            display: inline-block;
+            width: 72px;
+            vertical-align: middle;
+            height: 100%;
+            line-height: 50%;
+            text-align: right;
+        }
+        
+        .layer-button-group {
+            display: inline-block;
+            margin: 0px 5px;
+            .layer-button {
+                display:block;
+                color: #8d8d8d;
+
+                :hover {
+                    color:#010101;
+                    -webkit-transition-duration: 0.2s; /* Safari */
+                    transition-duration: 0.2s;
+                    -moz-transition-duration: 0.2s;
+                }
+            }
+        }
+        
+        .color-picker {
+            height:100%;
+            width:32px;
+            padding: 0px;
+            border: 0px;
+            margin: 0px 10px;
+        }
+
+        .dropdown {
+            height:100%;
+            vertical-align: top;
+        }
+    }
+}

@@ -124,11 +124,10 @@ export class TextureLayer extends Component {
       return null;
     };
     return (
-      <div>
-        {this.props.label}
-        <FontAwesomeIcon icon={faDownload} title="Download layout PNG to customize"/>
-        <FontAwesomeIcon icon={faUpload} title="Upload custom layer texture"/>
-        {dropdown()}
+      <div className="texture-layer">
+        <div className="label">
+          {this.props.label}
+        </div>
         <ColorPicker
           label={this.props.label}
           disabled={this.state.disabled}
@@ -136,8 +135,16 @@ export class TextureLayer extends Component {
           defaultColor={this.defaultColor}
           ref={this.colorPicker}
         />
+        <div className="layer-button-group">
+          <a href="test" download> <FontAwesomeIcon className="layer-button" icon={faDownload} title="Download layout PNG to customize"/></a>
+          <FontAwesomeIcon className="layer-button" icon={faUpload} title="Upload custom layer texture"/>
+        </div>
+        {dropdown()}
+        
       </div>
     );
+
+    //https://blog.benestudio.co/custom-file-upload-button-with-pure-css-5aacf39aa0a ^^ setting up upload button
   }
 
   //clone base material

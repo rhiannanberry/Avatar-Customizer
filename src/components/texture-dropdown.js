@@ -30,7 +30,7 @@ export class TextureDropdown extends Component {
     });
 
     return (
-      <select disabled={this.props.disabled} value={this.state.value} onChange={this.handleChange}>
+      <select className="dropdown" disabled={this.props.disabled} value={this.state.value} onChange={this.handleChange}>
         {optionList}
       </select>
     );
