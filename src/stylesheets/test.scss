@@ -1,3 +1,7 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 #container {
     height: 400px;
 }
@@ -34,7 +38,20 @@
                     transition-duration: 0.2s;
                     -moz-transition-duration: 0.2s;
                 }
+
+                >svg {
+                    display: block;
+                }
+
             }
+        }
+
+        .layer-toggle {
+            display: inline-block;
+            position: relative;
+            width: 32px;
+            height: 32px;
+            vertical-align: top;
         }
         
         .color-picker {

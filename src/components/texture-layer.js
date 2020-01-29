@@ -1,14 +1,10 @@
 import * as THREE from "three";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {faDownload} from "@fortawesome/free-solid-svg-icons/faDownload";
-import {faUpload} from "@fortawesome/free-solid-svg-icons/faUpload";
-import {faTimes} from "@fortawesome/free-solid-svg-icons/faTimes";
-import {faCheckSquare} from "@fortawesome/free-regular-svg-icons/faCheckSquare";
-import {faSquare} from "@fortawesome/free-regular-svg-icons/faSquare";
 import { ColorPicker } from "./color-picker";
 import { TextureDropdown } from "./texture-dropdown";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DownloadButton, UploadButton } from "./buttons"
+import { LayerToggle } from "./toggle"
 
 export class TextureLayer extends Component {
   static propTypes = {
@@ -18,13 +14,13 @@ export class TextureLayer extends Component {
     filenames: PropTypes.arrayOf(PropTypes.string),
     enableTint: PropTypes.bool,
     disableable: PropTypes.bool,
-    disabled: PropTypes.bool
+    active: PropTypes.bool
   };
 
   static defaultProps = {
     enableTint: true,
     disableable: false,
-    disabled: false
+    active: true
   };
 
   constructor(props) {
@@ -39,12 +35,9 @@ export class TextureLayer extends Component {
     this.defaultColor = "#ffffff";
 
     this.filenames = this.props.filenames;
-    if(this.props.disableable) {
-      this.filenames.unshift('');
-    }
 
     this.state = {
-      disabled: props.disabled
+      active: props.active
     };
 
     if (this.props.path && this.props.filenames) {
@@ -123,22 +116,25 @@ export class TextureLayer extends Component {
         );
       return null;
     };
+
     return (
       <div className="texture-layer">
+        <LayerToggle active={this.props.disableable} checked={this.props.active}></LayerToggle>
         <div className="label">
           {this.props.label}
         </div>
         <ColorPicker
           label={this.props.label}
-          disabled={this.state.disabled}
+          active={this.state.active}
           material={this.props.material}
           defaultColor={this.defaultColor}
           ref={this.colorPicker}
-        />
+          />
         <div className="layer-button-group">
-          <a href="test" download> <FontAwesomeIcon className="layer-button" icon={faDownload} title="Download layout PNG to customize"/></a>
-          <FontAwesomeIcon className="layer-button" icon={faUpload} title="Upload custom layer texture"/>
+          <DownloadButton src="hello"></DownloadButton>
+          <UploadButton></UploadButton>
         </div>
+        
         {dropdown()}
         
       </div>

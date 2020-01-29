@@ -61,6 +61,7 @@ async function init() {
               material={node.material.clone()}
               path={TEXTURES + "skin/"}
               filenames={["blush"]}
+              disableable={true}
             />
             <TextureLayer
               label="Hair"
