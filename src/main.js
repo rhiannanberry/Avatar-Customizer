@@ -9,7 +9,23 @@ import { TextureGroup } from "./components/texture-group";
 
 const TEXTURES = "../includes/textures/";
 
+function applyExtenstions() {
+  THREE.Color.prototype.getHexStringFull = function getHexStringFull() {
+    return '#' + this.getHexString();
+  };
+  
+  THREE.Color.prototype.randomize = function randomize() {
+    this.setHex(Math.random() * 0xffffff);
+    return this;
+  }
+  THREE.Color.prototype.createRandom = function createRandomColor() {
+    return new THREE.Color().randomize();
+  }
+}
+
 async function init() {
+  applyExtenstions();
+
   const size = {
     width: 500,
     height: 400
@@ -49,19 +65,20 @@ async function init() {
       if (node.name == "Body") {
         ReactDOM.render(
           <TextureGroup model={node} id="options">
-            <TextureLayer enableTint={false} material={node.material.clone()} />
+            <TextureLayer hidden={true} material={node.material.clone()} />
             <TextureLayer
               label="Skin"
               material={node.material.clone()}
               path={TEXTURES + "skin/"}
               filenames={["default"]}
+              layout={TEXTURES+'layouts/skin_layout.png'}
             />
             <TextureLayer
               label="Blush"
               material={node.material.clone()}
               path={TEXTURES + "skin/"}
               filenames={["blush"]}
-              disableable={true}
+              canDisable={true}
             />
             <TextureLayer
               label="Hair"
@@ -92,7 +109,7 @@ async function init() {
               material={node.material.clone()}
               path={TEXTURES + "jacket/"}
               filenames={["default"]}
-              disableable={true}
+              canDisable={true}
             />
           </TextureGroup>,
           document.getElementById("options")
