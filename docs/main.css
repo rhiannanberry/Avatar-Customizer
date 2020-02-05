@@ -1,0 +1,44 @@
+body {
+  font-family: Arial, Helvetica, sans-serif; }
+
+#container {
+  height: 400px; }
+
+td {
+  vertical-align: middle;
+  height: 100%;
+  text-align: right; }
+  td > div {
+    display: contents; }
+
+#options {
+  display: inline-block;
+  vertical-align: top;
+  height: 100%; }
+  #options .texture-layer {
+    height: 32px;
+    margin: 10px; }
+    #options .texture-layer .layer-button-group {
+      margin: 0px 5px; }
+      #options .texture-layer .layer-button-group .layer-button {
+        display: block;
+        color: #8d8d8d; }
+        #options .texture-layer .layer-button-group .layer-button :hover {
+          color: #010101;
+          -webkit-transition-duration: 0.2s;
+          /* Safari */
+          transition-duration: 0.2s;
+          -moz-transition-duration: 0.2s; }
+        #options .texture-layer .layer-button-group .layer-button > svg {
+          display: block; }
+    #options .texture-layer .color-picker {
+      height: 100%;
+      width: 32px;
+      padding: 0px;
+      margin: 0px 10px; }
+    #options .texture-layer .dropdown {
+      height: 100%;
+      width: 100px; }
+
+
+/*# sourceMappingURL=main.css.map*/

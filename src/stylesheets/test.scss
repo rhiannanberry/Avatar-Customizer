@@ -6,27 +6,27 @@ body {
     height: 400px;
 }
 
+td {
+    vertical-align: middle;
+    height: 100%;
+    text-align: right;
+
+    & > div {
+        display:contents;
+    }
+}
 
 #options {
     display: inline-block;
     vertical-align: top;
     height: 100%;
 
+
     .texture-layer  {
         height: 32px;
         margin: 10px;
-
-        .label {
-            display: inline-block;
-            width: 72px;
-            vertical-align: middle;
-            height: 100%;
-            line-height: 50%;
-            text-align: right;
-        }
         
         .layer-button-group {
-            display: inline-block;
             margin: 0px 5px;
             .layer-button {
                 display:block;
@@ -45,26 +45,17 @@ body {
 
             }
         }
-
-        .layer-toggle {
-            display: inline-block;
-            position: relative;
-            width: 32px;
-            height: 32px;
-            vertical-align: top;
-        }
         
         .color-picker {
             height:100%;
             width:32px;
             padding: 0px;
-            border: 0px;
+            //border: 0px;
             margin: 0px 10px;
         }
 
         .dropdown {
             height:100%;
-            vertical-align: top;
             width: 100px;
         }
     }

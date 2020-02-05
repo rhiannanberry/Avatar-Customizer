@@ -1,4 +1,3 @@
-import * as THREE from "three";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
@@ -10,9 +9,9 @@ export class ColorPicker extends Component {
   };
 
   static defaultProps = {
-    defaultColor: '#ffffff',
+    defaultColor: "#ffffff",
     onChange: () => {}
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -28,17 +27,18 @@ export class ColorPicker extends Component {
   }
   render() {
     //this.updateMaterial();
-    return (  
-        <input
-          ref={this.colorPicker}
-          className="color-picker"
-          name="Color Picker"
-          type="color"
-          disabled={!this.props.active}
-          value={this.state.color}
-          onChange={(e) => {this.updateColor(e.target.value)}}
-        />
-    
+    return (
+      <input
+        ref={this.colorPicker}
+        className="color-picker"
+        name="Color Picker"
+        type="color"
+        disabled={!this.props.active}
+        value={this.state.color}
+        onChange={e => {
+          this.updateColor(e.target.value);
+        }}
+      />
     );
   }
 }

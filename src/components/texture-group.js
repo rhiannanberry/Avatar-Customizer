@@ -10,7 +10,6 @@ export class TextureGroup extends Component {
   };
 
   constructor(props) {
-    //model, children
     super(props);
 
     const len = this.props.children.length;
@@ -57,7 +56,7 @@ export class TextureGroup extends Component {
     });
     return (
       <>
-        {this.children}
+        <table>{this.children}</table>
         <button onClick={e => this.randomize(e)}>Randomize</button>
         <button onClick={e => this.getDownloadTexture(e)}>Download Texture</button>
       </>

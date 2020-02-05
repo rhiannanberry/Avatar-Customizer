@@ -20,25 +20,31 @@ export class TextureDropdown extends Component {
     this.props.setTexFunc(e.target.value);
     this.setState({ value: e.target.value });
   }
-  
+
   addOption(option) {
-    if (this.filenames.includes(option) == false)this.filenames.push(option);
-    this.setState({hidden: this.filenames.length <= 1})
-    this.state.value= this.filenames.slice(-1)[0];
+    if (this.filenames.includes(option) == false) this.filenames.push(option);
+    this.setState({ hidden: this.filenames.length <= 1 });
+    this.state.value = this.filenames.slice(-1)[0];
   }
 
   render() {
     const optionList = this.filenames.map(function(opt, i) {
-      const optLabel = (opt) ? opt.charAt(0).toUpperCase() + opt.slice(1) : 'None';
       return (
-        <option key={i} value={opt}>
-          {optLabel}
+        <option key={i} value={i}>
+          {opt}
         </option>
       );
     });
 
     return (
-      <select ref={this.self} className="dropdown" disabled={!this.props.active} value={this.state.value} onChange={this.handleChange} hidden={this.filenames.length <= 1}>
+      <select
+        ref={this.self}
+        className="dropdown"
+        disabled={!this.props.active}
+        value={this.state.value}
+        onChange={this.handleChange}
+        hidden={this.filenames.length <= 1}
+      >
         {optionList}
       </select>
     );

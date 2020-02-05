@@ -15,7 +15,7 @@ const babelConfig = JSON.parse(
 module.exports = {
   entry: ['./src/main.js'],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
     filename: '[name].js'
   },
 
@@ -37,7 +37,19 @@ module.exports = {
           "css-loader",
           "sass-loader"
         ]
-      }
+      },
+      {
+        test: /\.(png|jpg|gif|glb|ogg|mp3|mp4|wav|woff2|svg|webm)$/,
+        use: {
+          loader: "file-loader",
+          options: {
+            // move required assets to output dir and add a hash for cache busting
+            name: "[path][name]-[hash].[ext]",
+            // Make asset paths relative to /src
+            context: path.join(__dirname, "src")
+          }
+        }
+      },
     ],
   },
   resolve: {
