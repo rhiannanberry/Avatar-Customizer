@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#container {
+    height: 400px;
+}
+
+td {
+    vertical-align: middle;
+    height: 100%;
+    text-align: right;
+
+    & > div {
+        display:contents;
+    }
+}
+
+#options {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+
+
+    .texture-layer  {
+        height: 32px;
+        margin: 10px;
+        
+        .layer-button-group {
+            margin: 0px 5px;
+            .layer-button {
+                display:block;
+                color: #8d8d8d;
+
+                :hover {
+                    color:#010101;
+                    -webkit-transition-duration: 0.2s; /* Safari */
+                    transition-duration: 0.2s;
+                    -moz-transition-duration: 0.2s;
+                }
+
+                >svg {
+                    display: block;
+                }
+
+            }
+        }
+        
+        .color-picker {
+            height:100%;
+            width:32px;
+            padding: 0px;
+            //border: 0px;
+            margin: 0px 10px;
+        }
+
+        .dropdown {
+            height:100%;
+            width: 100px;
+        }
+    }
+}
