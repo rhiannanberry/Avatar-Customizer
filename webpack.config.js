@@ -44,9 +44,9 @@ module.exports = {
           loader: "file-loader",
           options: {
             // move required assets to output dir and add a hash for cache busting
-            name: "[path][name]-[hash].[ext]",
+            name: "[path][name].[ext]",
             // Make asset paths relative to /src
-            context: path.join(__dirname, "src")
+            context: path.join(__dirname, "docs")
           }
         }
       },
