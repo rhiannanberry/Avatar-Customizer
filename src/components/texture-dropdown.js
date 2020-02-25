@@ -22,9 +22,13 @@ export class TextureDropdown extends Component {
   }
 
   addOption(option) {
-    if (this.filenames.includes(option) == false) this.filenames.push(option);
+    if (this.filenames.includes(option) == false) {
+      this.filenames.push(option);
+      this.setState({ value: this.filenames.length - 1 });
+    } else {
+      this.setState({ value: this.filenames.indexOf(option) });
+    }
     this.setState({ hidden: this.filenames.length <= 1 });
-    this.state.value = this.filenames.slice(-1)[0];
   }
 
   render() {

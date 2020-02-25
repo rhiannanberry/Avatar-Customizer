@@ -63,10 +63,10 @@ export class TextureLayer extends Component {
   }
 
   setTexture(index) {
-    if (this.state.active == false || index >= this.props.labeledTextures.length) return;
+    if (index >= this.props.labeledTextures.length) return;
 
     this.props.labeledTextures[index].getTexture().then(texture => {
-      this.props.material.visible = true;
+      this.props.material.visible = this.state.active;
       this.props.material.needsUpdate = true;
       this.props.material.map = texture;
       this.index = index;
@@ -118,7 +118,7 @@ export class TextureLayer extends Component {
   }
 
   randomize() {
-    if (this.props.hidden == true || this.state.active == false) return;
+    if (this.props.hidden == true) return;
     this.colorPicker.current.updateColor(new THREE.Color().randomize().getHexStringFull());
   }
 

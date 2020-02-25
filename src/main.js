@@ -4,7 +4,7 @@ import * as ReactDOM from "react-dom";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { TextureLayer } from "./components/texture-layer";
-import styles from "./stylesheets/test.scss";
+import styles from "./stylesheets/main.scss";
 import { TextureGroup } from "./components/texture-group";
 import gb from "../includes/models/separated/hubs_model_short_messy.glb";
 import { LabeledTexture } from "./labeled-texture";
@@ -90,17 +90,12 @@ async function init() {
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(skin)]}
                 layoutTexture={new LabeledTexture(skinLayout, "", true)}
-                path={TEXTURES + "skin/"}
-                filenames={["default"]}
-                layout={TEXTURES + "layouts/skin_layout.png"}
               />
               <TextureLayer
                 label="Blush"
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(blush)]}
                 layoutTexture={new LabeledTexture(skinLayout, "", true)}
-                path={TEXTURES + "skin/"}
-                filenames={["blush"]}
                 canDisable={true}
               />
               <TextureLayer
@@ -108,41 +103,47 @@ async function init() {
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(hair)]}
                 layoutTexture={new LabeledTexture(hairLayout, "", true)}
-                path={TEXTURES + "hair/"}
-                filenames={["default"]}
               />
               <TextureLayer
                 label="Eyebrows"
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(eyebrows)]}
                 layoutTexture={new LabeledTexture(eyebrowsLayout, "", true)}
-                path={TEXTURES + "eyebrows/"}
-                filenames={["default"]}
               />
               <TextureLayer
                 label="Eyes"
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(eyes), new LabeledTexture(eyes_black, "Black")]}
                 layoutTexture={new LabeledTexture(eyesLayout, "", true)}
-                path={TEXTURES + "eyes/"}
-                filenames={["default", "black"]}
               />
               <TextureLayer
                 label="Shirt"
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(shirt)]}
                 layoutTexture={new LabeledTexture(topLayout, "", true)}
-                path={TEXTURES + "shirt/"}
-                filenames={["default"]}
+              />
+              <TextureLayer
+                label="Shirt Logo"
+                material={node.material.clone()}
+                labeledTextures={[new LabeledTexture(shirt)]}
+                layoutTexture={new LabeledTexture(topLayout, "", true)}
+                canDisable={true}
+                active={false}
               />
               <TextureLayer
                 label="Jacket"
                 material={node.material.clone()}
                 labeledTextures={[new LabeledTexture(jacket)]}
                 layoutTexture={new LabeledTexture(topLayout, "", true)}
-                path={TEXTURES + "jacket/"}
-                filenames={["default"]}
                 canDisable={true}
+              />
+              <TextureLayer
+                label="Jacket Logo"
+                material={node.material.clone()}
+                labeledTextures={[new LabeledTexture(jacket)]}
+                layoutTexture={new LabeledTexture(topLayout, "", true)}
+                canDisable={true}
+                active={false}
               />
             </TextureGroup>,
             document.getElementById("options")
@@ -159,7 +160,6 @@ async function init() {
     undefined,
     e => {
       console.log(e);
-      console.log("fml");
     }
   );
 }

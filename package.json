@@ -1,5 +1,5 @@
 {
-  "name": "multi-mat",
+  "name": "avatar-customizer",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -56,13 +56,11 @@
     "webpack-dev-server": "^3.10.1"
   },
   "scripts": {
-    "tst": "ls",
     "prettier": "prettier --write src/**/*.js",
     "lint:js": "eslint src/**/*.js",
-    "webpack": "webpack",
     "start": "webpack-dev-server --mode=development",
-    "build": "webpack --mode=development "
+    "build": "webpack --mode=production "
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Rhiannan Berry",
+  "license": "MPL"
 }
