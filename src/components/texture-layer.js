@@ -15,14 +15,24 @@ export class TextureLayer extends Component {
     hidden: PropTypes.bool,
     canDisable: PropTypes.bool,
     active: PropTypes.bool,
-    layoutTexture: PropTypes.object
+    layoutTexture: PropTypes.object,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    scaleTexture: PropTypes.bool
   };
 
   static defaultProps = {
     hidden: false,
     canDisable: false,
     active: true,
-    labeledTextures: []
+    labeledTextures: [],
+    x: 0,
+    y: 0,
+    width: 1024,
+    height: 1024,
+    scaleTexture: false
   };
 
   constructor(props) {
@@ -65,7 +75,14 @@ export class TextureLayer extends Component {
   setTexture(index) {
     if (index >= this.props.labeledTextures.length) return;
 
-    this.props.labeledTextures[index].getTexture().then(texture => {
+    this.props.labeledTextures[index]
+    .getTexture(
+      this.props.x,
+      this.props.y,
+      this.props.width,
+      this.props.height,
+      this.props.scaleTexture
+    ).then(texture => {
       this.props.material.visible = this.state.active;
       this.props.material.needsUpdate = true;
       this.props.material.map = texture;

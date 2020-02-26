@@ -18,6 +18,10 @@ import jacket from "../includes/textures/jacket_default.png";
 import shirt from "../includes/textures/shirt_default.png";
 import hair from "../includes/textures/hair_default.png";
 
+import duck from "../includes/textures/logo_front/duck.png";
+import ae from "../includes/textures/logo_front/ae.png";
+import gt from "../includes/textures/logo_front/gt.png";
+
 import skinLayout from "../includes/textures/layouts/skin_layout.png";
 import topLayout from "../includes/textures/layouts/top_layout.png";
 import eyebrowsLayout from "../includes/textures/layouts/eyebrows_layout.png";
@@ -125,10 +129,15 @@ async function init() {
               <TextureLayer
                 label="Shirt Logo"
                 material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(shirt)]}
+                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
                 layoutTexture={new LabeledTexture(topLayout, "", true)}
                 canDisable={true}
                 active={false}
+                x={200}
+                y={476}
+                width={210}
+                height={210}
+                scaleTexture={true}
               />
               <TextureLayer
                 label="Jacket"
@@ -140,10 +149,15 @@ async function init() {
               <TextureLayer
                 label="Jacket Logo"
                 material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(jacket)]}
+                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
                 layoutTexture={new LabeledTexture(topLayout, "", true)}
                 canDisable={true}
                 active={false}
+                x={700}
+                y={469}
+                width={210}
+                height={210}
+                scaleTexture={true}
               />
             </TextureGroup>,
             document.getElementById("options")

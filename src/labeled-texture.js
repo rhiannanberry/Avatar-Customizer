@@ -8,7 +8,7 @@ export class LabeledTexture {
     if (autoLoad) this.getTexture(path);
   }
 
-  getTexture() {
+  getTexture(x,y,width,height,scaleTexture, resized=false) {
     return new Promise((resolve, reject) => {
       if (this.loaded) {
         resolve(this.texture);
@@ -16,14 +16,27 @@ export class LabeledTexture {
         new THREE.TextureLoader().load(
           this.path,
           texture => {
-            if (texture.image.width != 1024 || texture.image.height != 1024) {
+            const img = texture.image;
+            const sizeMismatched = [img.width, img.height] != [width, height];
+
+            if (resized==false && (sizeMismatched || x != 0 || y != 0)) {
+              var w = img.width;
+              var h = img.height;
+              if (scaleTexture && sizeMismatched) {
+                const texAspect = img.width / img.height;
+                const aspect = width / height;
+                const fitToX = aspect > texAspect;
+                w = (fitToX) ? width : (width / img.width) * img.height;
+                h = (fitToX) ? (width / img.width) * img.height : height;
+              }
+
               const canvas = document.createElement('canvas');
               canvas.width = 1024;
               canvas.height = 1024;
               const ctx = canvas.getContext('2d');
-              ctx.drawImage(texture.image, 0, 0, texture.image.width, texture.image.height);
+              ctx.drawImage(texture.image,x,y,w,h);
               this.path = canvas.toDataURL();
-              resolve(this.getTexture());
+              resolve(this.getTexture(0,0,1024,1024,false,true));
             } else {
               
               this.loaded = true;
@@ -40,5 +53,9 @@ export class LabeledTexture {
         );
       }
     });
+  }
+
+  scaleTexture() {
+
   }
 }
