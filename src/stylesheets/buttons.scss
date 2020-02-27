@@ -1,0 +1,69 @@
+.radioButton {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    
+    width: 28px;
+    height:28px;
+
+    &:hover {
+        .checkmark {
+            border-color: rgb(110, 110, 110);
+        }
+    }
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height:100%;
+        width:100%;
+        margin: 0px;
+        left:0;
+        top:0;
+
+        &:checked ~ .checkmark {
+            border-color: rgb(70,70,70);
+        }
+
+    }
+
+    .checkmark {
+        display: block;
+        position: absolute;
+        border-color: rgb(170, 170, 170);
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 4px;
+        top:2px;
+        bottom: 2px;
+        left:2px;
+        right:2px;
+        margin: -2px;
+        &:after {
+            border-color: rgb(170, 170, 170);
+        }
+    }
+
+    .icon {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        height: 20px;
+        width: 20px;
+    }
+
+    .colorfield {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        height: 18px;
+        width: 18px;
+        border-radius: 2px ;
+    }
+}
