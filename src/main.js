@@ -28,6 +28,8 @@ import eyebrowsLayout from "../includes/textures/layouts/eyebrows_layout.png";
 import eyesLayout from "../includes/textures/layouts/eyes_layout.png";
 import hairLayout from "../includes/textures/layouts/hair_layout.png";
 
+import {BodyEditor} from "./components/body-editor"
+
 const TEXTURES = "../includes/textures/";
 
 function applyExtenstions() {
@@ -87,6 +89,10 @@ async function init() {
       avatargltf.scene.traverse(node => {
         if (node.name == "Body") {
           ReactDOM.render(
+            <>
+            <BodyEditor>
+
+            </BodyEditor>
             <TextureGroup model={node} id="options">
               <TextureLayer hidden={true} material={node.material.clone()} />
               <TextureLayer
@@ -159,7 +165,8 @@ async function init() {
                 height={210}
                 scaleTexture={true}
               />
-            </TextureGroup>,
+            </TextureGroup>
+            </>,
             document.getElementById("options")
           );
 

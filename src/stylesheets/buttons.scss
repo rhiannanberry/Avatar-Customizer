@@ -1,5 +1,5 @@
 .radioButton {
-    display: block;
+    display: inline-block;
     position: relative;
     cursor: pointer;
     -moz-user-select: none;
@@ -33,18 +33,29 @@
 
     }
 
-    .checkmark {
+    .buttonShape {
         display: block;
         position: absolute;
-        border-color: rgb(170, 170, 170);
-        border-width: 2px;
-        border-style: solid;
         border-radius: 4px;
         top:2px;
         bottom: 2px;
         left:2px;
         right:2px;
         margin: -2px;
+
+        &.background {
+            background-color: white;
+        }
+    }
+
+    .checkmark {
+        border-color: rgb(170, 170, 170);
+        border-width: 2px;
+        border-style: solid;
+        &:before {
+            background-color: white;
+
+        }
         &:after {
             border-color: rgb(170, 170, 170);
         }

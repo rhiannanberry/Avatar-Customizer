@@ -69,6 +69,18 @@ export class UploadButton extends Component {
 }
 
 export class RadioButton extends Component{
+  static propTypes = {
+    defaultChecked: PropTypes.bool,
+    value: PropTypes.object,
+    onChange: PropTypes.func,
+    onClick: PropTypes.func
+  };
+
+  static defaultProps = {
+    onChange: () => {},
+    onClick: () => {}
+  }
+
   constructor(props) {
     super(props);
     this.checked = this.props.defaultChecked;
@@ -87,6 +99,7 @@ export class RadioButton extends Component{
   render() {
     return (
       <label className="radioButton">
+        <span className="buttonShape background"></span>
       <input 
         id={this.props.id} 
         onClick={this.clicked.bind(this)}
@@ -97,7 +110,7 @@ export class RadioButton extends Component{
         defaultChecked={this.props.defaultChecked}
       />
       {this.props.children}
-      <span className="checkmark"></span>
+      <span className="checkmark buttonShape"></span>
       
       </label>
     );
@@ -114,7 +127,6 @@ export class CustomColorButton extends Component {
     this.colorPicker = React.createRef();
   }
   clicked(e) {
-    console.log("please")
     this.colorPicker.current.click();
     //if (this.props.onChange) this.props.onChange(e);
   }
@@ -153,7 +165,7 @@ export const PresetColorButton = (props) => {
   return (
     <RadioButton
       id={props.id}
-      onChange={(e) => {props.onChange(e)}}
+      onChange={(e) => {if (typeof props.onChange == "function") props.onChange(e)}}
       value={props.value}
       defaultChecked={props.defaultChecked}
       name={props.name}
