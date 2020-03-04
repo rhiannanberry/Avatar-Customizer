@@ -28,7 +28,10 @@ import eyebrowsLayout from "../includes/textures/layouts/eyebrows_layout.png";
 import eyesLayout from "../includes/textures/layouts/eyes_layout.png";
 import hairLayout from "../includes/textures/layouts/hair_layout.png";
 
-import {BodyEditor} from "./components/body-editor"
+import Material from "./components/material"
+
+import {Editor} from "./components/editor"
+import {RadioButton} from "./components/buttons"
 
 const TEXTURES = "../includes/textures/";
 
@@ -79,6 +82,7 @@ async function init() {
   }
 
   const _loader = new GLTFLoader();
+  var body = React.createRef();
 
   await _loader.load(
     gb,
@@ -88,84 +92,14 @@ async function init() {
       avatargltf.scene.scale.z = 30;
       avatargltf.scene.traverse(node => {
         if (node.name == "Body") {
+          const skinMat = new Material(node.material.clone(), "skin", [new LabeledTexture(skin)])
+          const blushMat = new Material(node.material.clone(), "blush", [new LabeledTexture(blush)])
+          const hairMat = new Material(node.material.clone(), "hair", [new LabeledTexture(hair)])
           ReactDOM.render(
             <>
-            <BodyEditor>
-
-            </BodyEditor>
-            <TextureGroup model={node} id="options">
-              <TextureLayer hidden={true} material={node.material.clone()} />
-              <TextureLayer
-                label="Skin"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(skin)]}
-                layoutTexture={new LabeledTexture(skinLayout, "", true)}
-              />
-              <TextureLayer
-                label="Blush"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(blush)]}
-                layoutTexture={new LabeledTexture(skinLayout, "", true)}
-                canDisable={true}
-              />
-              <TextureLayer
-                label="Hair"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(hair)]}
-                layoutTexture={new LabeledTexture(hairLayout, "", true)}
-              />
-              <TextureLayer
-                label="Eyebrows"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(eyebrows)]}
-                layoutTexture={new LabeledTexture(eyebrowsLayout, "", true)}
-              />
-              <TextureLayer
-                label="Eyes"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(eyes), new LabeledTexture(eyes_black, "Black")]}
-                layoutTexture={new LabeledTexture(eyesLayout, "", true)}
-              />
-              <TextureLayer
-                label="Shirt"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(shirt)]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-              />
-              <TextureLayer
-                label="Shirt Logo"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-                active={false}
-                x={200}
-                y={476}
-                width={210}
-                height={210}
-                scaleTexture={true}
-              />
-              <TextureLayer
-                label="Jacket"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(jacket)]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-              />
-              <TextureLayer
-                label="Jacket Logo"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-                active={false}
-                x={700}
-                y={469}
-                width={210}
-                height={210}
-                scaleTexture={true}
-              />
-            </TextureGroup>
+            
+            <Editor model={node} materials={[skinMat, blushMat, hairMat]}/>
+            
             </>,
             document.getElementById("options")
           );

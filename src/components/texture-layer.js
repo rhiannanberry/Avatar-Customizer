@@ -6,9 +6,6 @@ import { TextureDropdown } from "./texture-dropdown";
 import {RadioButton, DisableButton, CustomColorButton, PresetColorButton, DownloadButton, UploadButton } from "./buttons";
 import { LayerToggle } from "./toggle";
 import { LabeledTexture } from "../labeled-texture";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-import { faTint } from "@fortawesome/free-solid-svg-icons/faTint";
 
 export class TextureLayer extends Component {
   static propTypes = {

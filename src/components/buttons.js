@@ -68,10 +68,11 @@ export class UploadButton extends Component {
   }
 }
 
-export class RadioButton extends Component{
+export class RadioButton extends Component {
   static propTypes = {
     defaultChecked: PropTypes.bool,
-    value: PropTypes.object,
+    name: PropTypes.string,
+    value: PropTypes.any,
     onChange: PropTypes.func,
     onClick: PropTypes.func
   };

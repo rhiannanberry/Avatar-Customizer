@@ -2,19 +2,30 @@ import React, { Component } from "react";
 import {EditorPage} from "./editor-page"
 import {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
 
-export class BodyEditor extends Component{
+import { LabeledTexture } from "../labeled-texture";
+import Material from "./material"
+
+import skin from "../../includes/textures/skin_default.png";
+import blush from "../../includes/textures/blush_default.png";
+
+export default class BodyEditor extends Component{
     constructor(props) {
       super(props);
-      this.colorPicker1 = React.createRef();
+      
+      this.editorPage = React.createRef();
     }
 
     changed(e) {
       
     }
 
+    setActive(isActive) {
+      this.editorPage.current.setActive(isActive);
+    }
+
     render() {
       return (
-        <EditorPage>
+        <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
             <div>
                 <PresetColorButton value="1" defaultChecked={true} name="body-type" color='#aa9234'/>    

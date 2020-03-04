@@ -1,0 +1,16 @@
+
+#pageButtons {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.editorPage {
+    height: 100%;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    //background-color: blue;
+}
