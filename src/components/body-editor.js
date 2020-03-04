@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {EditorPage} from "./editor-page"
 import {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
 
+import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
 import Material from "./material"
 
@@ -9,14 +10,19 @@ import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
 
 export default class BodyEditor extends Component{
+    static propTypes = {
+      model: PropTypes.object
+    }
+
     constructor(props) {
       super(props);
       
-      this.editorPage = React.createRef();
-    }
+      this.materials = [
+          new Material(this.props.model.material.clone(), "skin", [new LabeledTexture(skin)]),
+          new Material(this.props.model.material.clone(), "blush", [new LabeledTexture(blush)])
+      ]
 
-    changed(e) {
-      
+      this.editorPage = React.createRef();
     }
 
     setActive(isActive) {

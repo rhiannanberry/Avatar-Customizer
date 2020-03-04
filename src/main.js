@@ -92,13 +92,10 @@ async function init() {
       avatargltf.scene.scale.z = 30;
       avatargltf.scene.traverse(node => {
         if (node.name == "Body") {
-          const skinMat = new Material(node.material.clone(), "skin", [new LabeledTexture(skin)])
-          const blushMat = new Material(node.material.clone(), "blush", [new LabeledTexture(blush)])
-          const hairMat = new Material(node.material.clone(), "hair", [new LabeledTexture(hair)])
           ReactDOM.render(
             <>
             
-            <Editor model={node} materials={[skinMat, blushMat, hairMat]}/>
+            <Editor model={node}/>
             
             </>,
             document.getElementById("options")
