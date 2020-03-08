@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -126,16 +128,31 @@ export class CustomColorButton extends Component {
       color: this.props.color
     }
     this.colorPicker = React.createRef();
+
+    
+    if (this.props.defaultChecked && typeof this.props.onChange == "function") this.props.onChange(this.state.color);
   }
+  
+  componentDidMount() {
+    
+    this.randomize();
+  }
+
   clicked(e) {
     this.colorPicker.current.click();
-    //if (this.props.onChange) this.props.onChange(e);
+    if (this.props.onClick) this.props.onClick(e.target.value);
+    if (this.props.onChange) this.props.onChange(this.state.color);
   }
 
   changed(e) {
     this.setState({color:e.target.value});
-    if (this.props.onChange) this.props.onChange(e);
-    //this.setState({value: e.target.value});
+    if (this.props.onChange) this.props.onChange(e.target.value);
+  }
+
+  randomize() {
+    const newColor = new THREE.Color().randomize().getHexStringFull();
+    this.setState({color: newColor})
+    if (typeof this.props.onChange == "function" ) this.props.onChange(newColor);
   }
 
   render() {
@@ -151,8 +168,8 @@ export class CustomColorButton extends Component {
       <input
         ref={this.colorPicker}
         type="color"
-        defaultValue={this.props.color}
         onChange={this.changed.bind(this)}
+        value={this.state.color}
       />
       <FontAwesomeIcon className="icon" icon={faTint} style={{color:this.state.color}}/>
     </RadioButton>
@@ -160,13 +177,14 @@ export class CustomColorButton extends Component {
   }
 }
 
-
-
 export const PresetColorButton = (props) => {
   return (
     <RadioButton
       id={props.id}
-      onChange={(e) => {if (typeof props.onChange == "function") props.onChange(e)}}
+      onChange={(e) => {
+        e.target.color = props.color;
+        if (typeof props.onChange == "function") props.onChange(e)}
+      }
       value={props.value}
       defaultChecked={props.defaultChecked}
       name={props.name}
@@ -180,7 +198,7 @@ export const DisableButton = (props) => {
   return (
     <RadioButton
       id={props.id}
-      onChange={props.changed}
+      onChange={props.onChange}
       value={props.value}
       defaultChecked={props.defaultChecked}
       name={props.name}
@@ -188,5 +206,24 @@ export const DisableButton = (props) => {
       <FontAwesomeIcon className="icon" icon={faBan}/>
     </RadioButton>
   );
+}
+
+export default class Buttons {
+  static presetColorButtons(colorList, index, name, onChange, context) {
+    return (
+      colorList.map((value, i) => {
+      return (
+          <PresetColorButton
+            key={i}
+            value={i} 
+            defaultChecked={false} 
+            name={name}
+            color={value}
+            onChange={(e) => {onChange(index, value, context)}}
+            />
+          );
+      })
+    )
+}
 }
 

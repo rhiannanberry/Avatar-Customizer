@@ -45,7 +45,6 @@ export default class Material {
       this.material.needsUpdate = true;
       this.material.map = texture;
       this.index = index;
-      this.setColor("#ffaabb")
     });
     }
 }

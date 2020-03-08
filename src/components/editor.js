@@ -11,13 +11,6 @@ import JacketEditor from "./jacket-editor"
 
 import "../stylesheets/editor"
 
-import { LabeledTexture } from "../labeled-texture";
-import Material from "./material"
-
-import skin from "../../includes/textures/skin_default.png";
-import blush from "../../includes/textures/blush_default.png";
-import hair from "../../includes/textures/hair_default.png";
-
 export class Editor extends Component{
     static propTypes = {
         model : PropTypes.object
@@ -29,38 +22,28 @@ export class Editor extends Component{
         this.head = React.createRef();
         this.shirt = React.createRef();
         this.jacket = React.createRef();
-        
-        this.materials = [
-            new Material(this.props.model.material.clone(), "skin", [new LabeledTexture(skin)]),
-            new Material(this.props.model.material.clone(), "blush", [new LabeledTexture(blush)]),
-            new Material(this.props.model.material.clone(), "hair", [new LabeledTexture(hair)])
-
-        ];
-        
-/*
-        for (let i = 0; i < len; i++) {
-            this.props.model.geometry.addGroup(0, Infinity, i+1);
-            this.props.model.material.push(this.materials[i].material);
-        }*/
 
     }
     
     componentDidMount() {
         var counter = 0;
         const backgroundMaterial = this.props.model.material.clone();
+
+        this.props.model.material = [];
+
         this.props.model.geometry.clearGroups();
 
         this.props.model.geometry.addGroup(0, Infinity, counter);
         this.props.model.material.push(backgroundMaterial);
 
         counter = this.addMaterials(1, this.body.current.materials);
-        //counter = this.addMaterials(counter, this.body.current.materials);
+        counter = this.addMaterials(counter, this.head.current.materials);
 
         this.changePage("Body")
     }
 
     addMaterials(counter, materials) {
-        for (i=0; i<materials.length; i++) {
+        for (var i=0; i<materials.length; i++) {
             this.props.model.geometry.addGroup(0, Infinity, counter+i);
             this.props.model.material.push(materials[i].material);
         }
@@ -68,10 +51,10 @@ export class Editor extends Component{
     }
 
     changePage(value) {
-        this.body.current.setActive(value === "Body");
-        this.head.current.setActive(value === "Head");
-        this.shirt.current.setActive(value === "Shirt");
-        this.jacket.current.setActive(value === "Jacket");
+        this.body.current.editorPage.current.setActive(value === "Body");
+        this.head.current.editorPage.current.setActive(value === "Head");
+        this.shirt.current.editorPage.current.setActive(value === "Shirt");
+        this.jacket.current.editorPage.current.setActive(value === "Jacket");
     }
 
     render() {

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-//can include multiple texture layers
-//defines the overarching style of the editor layer
-//give a radio button to make toggling between easier
+
 export class EditorPage extends Component {
   static propTypes = {
     selected: PropTypes.bool
@@ -22,7 +20,6 @@ export class EditorPage extends Component {
   setActive(isActive) {
     this.setState({selected:isActive})
   }
-
 
   render() {
     return (

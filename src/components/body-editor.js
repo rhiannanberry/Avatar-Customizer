@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+import EditorUtils from "./editor-utils";
 import {EditorPage} from "./editor-page"
-import {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
+import Buttons, {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
 
 import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
@@ -8,6 +9,9 @@ import Material from "./material"
 
 import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
+
+const skinColors = ["#eeffee", "#eeccff", "#bbbbbb"];
+const blushColors = ["#aabbcc", "#abcdef", "#000fff"];
 
 export default class BodyEditor extends Component{
     static propTypes = {
@@ -25,11 +29,8 @@ export default class BodyEditor extends Component{
       this.editorPage = React.createRef();
     }
 
-    setActive(isActive) {
-      this.editorPage.current.setActive(isActive);
-    }
-
     render() {
+      
       return (
         <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
@@ -39,18 +40,30 @@ export default class BodyEditor extends Component{
             </div>
             <label>Skin Color</label>
             <div>
-                <CustomColorButton value="1" defaultChecked={true} name="body-color" color='#ff22dd'/>
-                <PresetColorButton value="2" defaultChecked={false} name="body-color" color='#aa9234'/>
-                <PresetColorButton value="3" defaultChecked={false} name="body-color" color='#aa9234'/>
-                <PresetColorButton value="4" defaultChecked={false} name="body-color" color='#aa9234'/>
+                <CustomColorButton 
+                  value="0" 
+                  defaultChecked={true} 
+                  name="body-color"
+                  onClick={(e) => {this.materials[0].setActive(true)}}
+                  onChange={ (clr) => { EditorUtils.setMaterialColor(clr, this.materials[0]) } }
+                />
+
+                { EditorUtils.presetColorButtons(skinColors, "body-color", this.materials[0]) }
+                
             </div>
             <label>Blush</label>
             <div>
-                <DisableButton name="blush-color" />
-                <CustomColorButton value="1" defaultChecked={true} name="blush-color" color='#ff22dd'/>
-                <PresetColorButton value="2" defaultChecked={false} name="blush-color" color='#aa9234'/>
-                <PresetColorButton value="3" defaultChecked={false} name="blush-color" color='#aa9234'/>
-                <PresetColorButton value="4" defaultChecked={false} name="blush-color" color='#aa9234'/>
+                <DisableButton value="0" name="blush-color" onChange={(e) => {this.materials[1].setActive(false)}}/>
+
+                <CustomColorButton
+                  value="1" 
+                  defaultChecked={true} 
+                  name="blush-color" 
+                  onClick={(e) => {this.materials[1].setActive(true)}}
+                  onChange={(clr) => {EditorUtils.setMaterialColor(clr, this.materials[1])}}
+                />
+                
+                { EditorUtils.presetColorButtons(blushColors, "blush-color", this.materials[1]) }
             </div>
         </EditorPage>
       );
