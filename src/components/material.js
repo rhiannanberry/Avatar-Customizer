@@ -47,4 +47,9 @@ export default class Material {
       this.index = index;
     });
     }
+
+    getTexture() {
+        return this.labeledTextures[this.index].getTexture(this.x, this.y, this.width, this.height,
+            this.scaleTexture);
+    }
 }

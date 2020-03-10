@@ -76,7 +76,8 @@ export class RadioButton extends Component {
     name: PropTypes.string,
     value: PropTypes.any,
     onChange: PropTypes.func,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    classNames: PropTypes.string
   };
 
   static defaultProps = {
@@ -101,7 +102,7 @@ export class RadioButton extends Component {
   }
   render() {
     return (
-      <label className="radioButton">
+      <label className={"radioButton" + (this.props.classNames ? " " + this.props.classNames : "")}>
         <span className="buttonShape background"></span>
       <input 
         id={this.props.id} 
@@ -173,6 +174,31 @@ export class CustomColorButton extends Component {
       />
       <FontAwesomeIcon className="icon" icon={faTint} style={{color:this.state.color}}/>
     </RadioButton>
+    );
+  }
+}
+
+export class TextureButton extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <RadioButton
+        id={this.props.id}
+        onChange= { (e) => {if (typeof props.onChange == "function") props.onChange(e)} }
+        value={this.props.value}
+        defaultChecked={this.props.defaultChecked}
+        name={this.props.name}
+        classNames="textureButton"
+      >
+        <div
+          className="imageContainer"
+        >
+          <img src={this.props.src}/>
+        </div>
+      </RadioButton>
     );
   }
 }

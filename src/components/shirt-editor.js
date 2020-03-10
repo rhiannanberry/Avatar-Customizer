@@ -7,9 +7,9 @@ import Material from "./material"
 
 import shirt from "../../includes/textures/shirt_default.png";
 
-import {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
+import {DisableButton, PresetColorButton, CustomColorButton, TextureButton} from "./buttons"
 
-const shirtColors = ["#abcdeff", "#abab12", "#123abc"]
+const shirtColors = ["#abcdef", "#abab12", "#123abc"]
 
 export default class ShirtEditor extends Component {
     constructor(props) {
@@ -40,16 +40,16 @@ export default class ShirtEditor extends Component {
             <label>Logo Front</label>
             <div>
                 <DisableButton value="1" name="shirt-logo-front" />
-                <PresetColorButton value="2" defaultChecked={true} name="shirt-logo-front" color='#aa9234'/>
-                <PresetColorButton value="3" defaultChecked={false} name="shirt-logo-front" color='#aa9234'/>
-                <PresetColorButton value="4" defaultChecked={false} name="shirt-logo-front" color='#aa9234'/>
+                <TextureButton value="2" defaultChecked={true} name="shirt-logo-front" src={shirt}/>
+                <TextureButton value="3" defaultChecked={false} name="shirt-logo-front" src={shirt}/>
+                <TextureButton value="4" defaultChecked={false} name="shirt-logo-front" src={shirt}/>
             </div>
             <label>Logo Back</label>
             <div>
                 <DisableButton value="1" name="shirt-logo-back" />
-                <PresetColorButton value="2" defaultChecked={true} name="shirt-logo-back" color='#aa9234'/>
-                <PresetColorButton value="3" defaultChecked={false} name="shirt-logo-back" color='#aa9234'/>
-                <PresetColorButton value="4" defaultChecked={false} name="shirt-logo-back" color='#aa9234'/>
+                <TextureButton value="2" defaultChecked={true} name="shirt-logo-back" src={shirt}/>
+                <TextureButton value="3" defaultChecked={false} name="shirt-logo-back" src={shirt}/>
+                <TextureButton value="4" defaultChecked={false} name="shirt-logo-back" src={shirt}/>
             </div>
         </EditorPage>
       );

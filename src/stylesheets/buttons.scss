@@ -12,8 +12,8 @@
     height:28px;
 
     &:hover {
-        .checkmark {
-            border-color: rgb(110, 110, 110);
+        .buttonShape.background {
+            background-color: rgb(224, 224, 224);
         }
     }
 
@@ -28,7 +28,7 @@
         top:0;
 
         &:checked ~ .checkmark {
-            border-color: rgb(70,70,70);
+            border-color: rgb(179, 179, 179);
         }
 
     }
@@ -36,7 +36,7 @@
     .buttonShape {
         display: block;
         position: absolute;
-        border-radius: 4px;
+        border-radius: 6px;
         top:2px;
         bottom: 2px;
         left:2px;
@@ -44,12 +44,12 @@
         margin: -2px;
 
         &.background {
-            background-color: white;
+            background-color: rgb(238, 238, 238);
         }
     }
 
     .checkmark {
-        border-color: rgb(170, 170, 170);
+        border-color: white;
         border-width: 2px;
         border-style: solid;
         &:before {
@@ -57,7 +57,7 @@
 
         }
         &:after {
-            border-color: rgb(170, 170, 170);
+            border-color: white;
         }
     }
 
@@ -76,5 +76,24 @@
         height: 18px;
         width: 18px;
         border-radius: 2px ;
+    }
+
+    
+}
+
+.textureButton {
+    width:80px;
+    height:80px;
+    .imageContainer {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        height: 100%;
+        padding: 0px 5px;
+        img {
+            z-index: 100;
+            object-fit: contain;
+            width: 100%;
+        }
     }
 }

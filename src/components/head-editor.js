@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import EditorUtils from "./editor-utils";
 import {EditorPage} from "./editor-page"
-import {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
+import {DisableButton, PresetColorButton, CustomColorButton, TextureButton} from "./buttons"
 
 import { LabeledTexture } from "../labeled-texture";
 import Material from "./material"
@@ -37,9 +37,9 @@ export default class HeadEditor extends Component {
             <label>Hair Type</label>
             <div>
                 <DisableButton value="1" name="hair-type" />
-                <PresetColorButton value="2" defaultChecked={true} name="hair-type" color='#aa9234'/>    
-                <PresetColorButton value="3" defaultChecked={false} name="hair-type" color='#aa9234'/>
-                <PresetColorButton value="4" defaultChecked={false} name="hair-type" color='#aa9234'/>
+                <TextureButton value="2" defaultChecked={true} name="hair-type" src={hair}/>    
+                <TextureButton value="3" defaultChecked={false} name="hair-type" src={eyes}/>
+                <TextureButton value="4" defaultChecked={false} name="hair-type" src={eyebrows}/>
             </div>
             <label>Hair Color</label>
             <div>
@@ -56,7 +56,7 @@ export default class HeadEditor extends Component {
                     EditorUtils.setMaterialColor(clr, this.materials[1]);
                   }}
                 />
-                { EditorUtils.presetColorButtons(hairColors, "hair-color", this.materials[0]) }
+                { EditorUtils.presetColorButtons(hairColors, "hair-color", [this.materials[0], this.materials[1]]) }
                 
             </div>
             <label>Eye Color</label>

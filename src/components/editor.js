@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as THREE from "three";
 
 import PropTypes from "prop-types";
 import {DisableButton, PresetColorButton, CustomColorButton, RadioButton} from "./buttons"

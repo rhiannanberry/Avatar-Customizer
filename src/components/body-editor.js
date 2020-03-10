@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import EditorUtils from "./editor-utils";
 import {EditorPage} from "./editor-page"
-import Buttons, {DisableButton, PresetColorButton, CustomColorButton} from "./buttons"
+import Buttons, {DisableButton, PresetColorButton, CustomColorButton, TextureButton} from "./buttons"
 
 import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
@@ -9,6 +9,7 @@ import Material from "./material"
 
 import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
+import logo from "../../includes/textures/logo_front/ae.png"
 
 const skinColors = ["#eeffee", "#eeccff", "#bbbbbb"];
 const blushColors = ["#aabbcc", "#abcdef", "#000fff"];
@@ -35,8 +36,8 @@ export default class BodyEditor extends Component{
         <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
             <div>
-                <PresetColorButton value="1" defaultChecked={true} name="body-type" color='#aa9234'/>    
-                <PresetColorButton value="2" defaultChecked={false} name="body-type" color='#aa9234'/>
+                <TextureButton value="1" defaultChecked={true} name="body-type" src={logo} />
+                <TextureButton value="2" defaultChecked={false} name="body-type" src={skin} />
             </div>
             <label>Skin Color</label>
             <div>

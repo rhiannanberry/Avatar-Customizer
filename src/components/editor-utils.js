@@ -32,7 +32,15 @@ export default class EditorUtils {
                         defaultChecked={false}
                         name={name}
                         color={value}
-                        onChange={(e) => {this.setMaterialColor(value, material)}}
+                        onChange={(e) => {
+                            if (Array.isArray(material)) {
+                                material.map((mat) => {
+                                    this.setMaterialColor(value,mat);
+                                })
+                            } else {
+                                this.setMaterialColor(value, material)
+                            }
+                        }}
                     />
                 );
             })
