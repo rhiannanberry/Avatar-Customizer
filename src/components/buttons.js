@@ -190,7 +190,7 @@ export class TextureButton extends Component {
     return (
       <RadioButton
         id={this.props.id}
-        onChange= { (e) => {if (typeof props.onChange == "function") props.onChange(e)} }
+        onChange= { (e) => {if (typeof this.props.onChange == "function") this.props.onChange(e)} }
         value={this.props.value}
         defaultChecked={this.props.defaultChecked}
         name={this.props.name}

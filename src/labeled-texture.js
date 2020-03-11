@@ -25,7 +25,8 @@ export class LabeledTexture {
               if (scaleTexture && sizeMismatched) {
                 const texAspect = img.width / img.height;
                 const aspect = width / height;
-                const fitToX = aspect > texAspect;
+                const fitToX = aspect < texAspect;
+
                 w = (fitToX) ? width : (width / img.width) * img.height;
                 h = (fitToX) ? (width / img.width) * img.height : height;
               }

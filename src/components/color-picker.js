@@ -4,7 +4,7 @@ import { CustomPicker } from 'react-color'
 import { Hue, Saturation, Swatch } from 'react-color/lib/components/common'
 import color from 'react-color/lib/helpers/color'
 
-export const ColorPicker = ({ hsl, hsv, colors, onChange }) => {
+export const ColorPicker = ({ hex, hsl, hsv, colors, onChange }) => {
   const styles = {
     customContainer: {
       height: 50,
@@ -33,7 +33,7 @@ export const ColorPicker = ({ hsl, hsv, colors, onChange }) => {
     swatch: {
       width: 50,
       height: 50,
-      //background: hex,
+      background: hex,
       borderRadius: 4
     },
   }

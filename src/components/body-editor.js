@@ -1,13 +1,17 @@
 import React, { Component } from "react";
+import * as THREE from "three";
 import EditorUtils from "./editor-utils";
 import {EditorPage} from "./editor-page"
-import Buttons, {DisableButton, PresetColorButton, CustomColorButton, TextureButton} from "./buttons"
+import Buttons, {TextureButton} from "./buttons"
 
 import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
 import Material from "./material"
 
 import ColorPicker from "./color-picker"
+
+import straight from "../../includes/icons/icons_straight.png"
+import curvy from "../../includes/icons/icons_curvy.png"
 
 import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
@@ -28,51 +32,46 @@ export default class BodyEditor extends Component{
           new Material(this.props.model.material.clone(), "skin", [new LabeledTexture(skin)]),
           new Material(this.props.model.material.clone(), "blush", [new LabeledTexture(blush)])
       ]
-      this.color = "red"
       this.editorPage = React.createRef();
+      this.state = {
+          skin:new THREE.Color().randomize().getHexStringFull(),
+          blush:new THREE.Color().randomize().getHexStringFull()
+      }
+      EditorUtils.setMaterialColor(this.state.skin, this.materials[0]) 
+      EditorUtils.setMaterialColor(this.state.blush, this.materials[1]) 
+
     }
 
-    render() {
-      console.log(this.color)
-      
+    render() {      
       return (
         <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
-            <ColorPicker
-              color={this.color}
-              colors={["#aaabbb", "#ababab"]}
-              onChange={(e) => {this.color = e.hex; console.log(e.hex)}}
-            />
             <div>
-                <TextureButton value="1" defaultChecked={true} name="body-type" src={logo} />
-                <TextureButton value="2" defaultChecked={false} name="body-type" src={skin} />
+                <TextureButton value="1" defaultChecked={true} name="body-type" src={straight} />
+                <TextureButton value="2" defaultChecked={false} name="body-type" src={curvy} />
             </div>
             <label>Skin Color</label>
             <div>
-                <CustomColorButton 
-                  value="0" 
-                  defaultChecked={true} 
-                  name="body-color"
-                  onClick={(e) => {this.materials[0].setActive(true)}}
-                  onChange={ (clr) => { EditorUtils.setMaterialColor(clr, this.materials[0]) } }
-                />
-
-                { EditorUtils.presetColorButtons(skinColors, "body-color", this.materials[0]) }
-                
+              <ColorPicker
+                color={this.state.skin}
+                colors={skinColors}
+                onChange={(e) => {
+                  this.setState({skin:e.rgb}); 
+                  EditorUtils.setMaterialColor(e.hex, this.materials[0]) 
+                }}
+              />
+               
             </div>
             <label>Blush</label>
             <div>
-                <DisableButton value="0" name="blush-color" onChange={(e) => {this.materials[1].setActive(false)}}/>
-
-                <CustomColorButton
-                  value="1" 
-                  defaultChecked={true} 
-                  name="blush-color" 
-                  onClick={(e) => {this.materials[1].setActive(true)}}
-                  onChange={(clr) => {EditorUtils.setMaterialColor(clr, this.materials[1])}}
-                />
-                
-                { EditorUtils.presetColorButtons(blushColors, "blush-color", this.materials[1]) }
+            <ColorPicker
+                color={this.state.blush}
+                colors={blushColors}
+                onChange={(e) => {
+                  this.setState({blush:e.rgb}); 
+                  EditorUtils.setMaterialColor(e.hex, this.materials[1]) 
+                }}
+              />
             </div>
         </EditorPage>
       );
