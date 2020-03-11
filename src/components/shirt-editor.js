@@ -16,7 +16,7 @@ import gt from "../../includes/textures/logo_front/gt.png";
 
 import {DisableButton, PresetColorButton, CustomColorButton, TextureButton} from "./buttons"
 
-const shirtColors = ["#abcdef", "#abab12", "#123abc"]
+const shirtColors = ["#7d0c1e", "#cedded", "#92a1b1", "#3479b7"]
 
 export default class ShirtEditor extends Component {
     constructor(props) {

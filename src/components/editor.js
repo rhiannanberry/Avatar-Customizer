@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import * as THREE from "three";
 
 import PropTypes from "prop-types";
-import {DisableButton, PresetColorButton, CustomColorButton, RadioButton,TextureButton} from "./buttons"
+import {DisableButton, PresetColorButton, CustomColorButton, RadioButton,TextureButton, DownloadButton} from "./buttons"
+import Material from "./material"
 
 import BodyEditor from "./body-editor"
 import HeadEditor from "./head-editor"
@@ -24,7 +26,9 @@ export class Editor extends Component{
     constructor(props) {
         super(props);
 
-        this.bodyType = 'curvy';
+        this.materials = [];
+
+        this.bodyType = 'straight';
         this.hairType = 'long';
 
         this.body = React.createRef();
@@ -35,42 +39,35 @@ export class Editor extends Component{
     }
 
     createMaterials(model, materials) {
-        var counter = 0;
-        const backgroundMaterial = model.material.clone();
-
         model.material = [];
-
         model.geometry.clearGroups();
 
-        if (materials != null) {
-            this.addMaterials(0, materials, model);
-        } else {
-
-            model.geometry.addGroup(0, Infinity, counter);
-            model.material.push(backgroundMaterial);
-    
-            counter = this.addMaterials(1, this.body.current.materials,model);
-            counter = this.addMaterials(counter, this.head.current.materials,model);
-            counter = this.addMaterials(counter, this.shirt.current.materials,model);
-            //counter = this.addMaterials(counter, this.jacket.current.materials);
+        for (var i=0; i<materials.length; i++) {
+            model.geometry.addGroup(0, Infinity, i);
+            model.material.push(materials[i].material);
         }
-
     }
     
     componentDidMount() {
-        this.createMaterials(this.props.models[this.bodyType][this.hairType].model);
+        const currentModel = this.props.models[this.bodyType][this.hairType].model;
+        const bgMaterial = currentModel.material.clone();
+        this.materials = [
+            new Material(bgMaterial, "", null),
+            ...this.body.current.materials,
+            ...this.head.current.materials,
+            ...this.shirt.current.materials,
+            //...this.jacket.current.materials,
+        ]
+        
+        Object.keys(this.props.models).forEach((b) => {
+            Object.keys(this.props.models[b]).forEach((h) => {
+                this.createMaterials(this.props.models[b][h].model, this.materials);
+            })
+        });
+
         this.props.models[this.bodyType][this.hairType].model.visible = true;
-        var materialList = this.props.models[this.bodyType][this.hairType].model.material;
 
         this.changePage("Body")
-    }
-
-    addMaterials(counter, materials, model) {
-        for (var i=0; i<materials.length; i++) {
-            model.geometry.addGroup(0, Infinity, counter+i);
-            model.material.push(materials[i].material);
-        }
-        return counter+materials.length;
     }
 
     changePage(value) {
@@ -80,7 +77,40 @@ export class Editor extends Component{
         this.jacket.current.editorPage.current.setActive(value === "Jacket");
     }
 
+    updateHairType(hairType) {
+        this.props.models[this.bodyType][this.hairType].model.visible = false;
+        this.props.models[this.bodyType][hairType].model.visible = true;
+        this.hairType = hairType;
+    }
+
+    updateBodyType(bodyType) {
+        this.props.models[this.bodyType][this.hairType].model.visible = false;
+        this.props.models[bodyType][this.hairType].model.visible = true;
+        this.bodyType = bodyType;
+    }
+
+    getDownloadTexture() {
+        const canvas = window.document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 1024;
+
+        const ctx = canvas.getContext("2d");
+
+        this.materials.forEach(mat => {
+            ctx.drawImage(mat.getDownloadTexture(), 0, 0);
+        });
+
+        new THREE.ImageLoader().load(canvas.toDataURL("image/png", 1.0), img => {
+            const el = document.createElement("a");
+            el.href = img.src;
+            el.download = "tex.png";
+            el.click();
+            el.remove();
+        })       
+    }
+
     render() {
+        const activeModel = this.props.models[this.bodyType][this.hairType].model;
         return(
         <>
             <div id="pageButtons">
@@ -90,10 +120,11 @@ export class Editor extends Component{
                 <TextureButton value="Jacket"  name="page" onChange={(e) => this.changePage(e.target.value)} src={jacket}/>
                 
             </div>
-            <BodyEditor ref={this.body} model={this.props.models[this.bodyType][this.hairType].model} />
-            <HeadEditor ref={this.head} model={this.props.models[this.bodyType][this.hairType].model} />
-            <ShirtEditor ref={this.shirt} model={this.props.models[this.bodyType][this.hairType].model} />
-            <JacketEditor ref={this.jacket} model={this.props.models[this.bodyType][this.hairType].model} />
+            <BodyEditor ref={this.body} model={activeModel} onChange={(b) => this.updateBodyType(b)}/>
+            <HeadEditor ref={this.head} model={activeModel} onChange={(h) => this.updateHairType(h)}/>
+            <ShirtEditor ref={this.shirt} model={activeModel} />
+            <JacketEditor ref={this.jacket} model={activeModel} />
+            <button onClick={e => this.getDownloadTexture(e)}>Download Texture</button>
         </>
         );
     }

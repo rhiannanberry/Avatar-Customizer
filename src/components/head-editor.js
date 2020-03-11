@@ -21,12 +21,13 @@ import hair_short from "../../includes/icons/icons_hair_messy.png"
 import hair_blair from "../../includes/icons/icons_hair_blair.png"
 import hair_long from "../../includes/icons/icons_hair_long.png"
 
-const hairColors = ["#aaabbb", "#bbbccc", "#dddeee"];
-const eyeColors = ["#aaabbb", "#bbbccc", "#dddeee"];
+const hairColors = ["#2F2321", "#5C4033", "#C04532", "#B9775A", "#E6C690", "#FCE3B8", "#E6E6E6"];
+const eyeColors = ["#552919", "#915139", "#917839", "#718233", "#338251", "#335A82"];
 
 export default class HeadEditor extends Component {
     static propTypes = {
-      model: PropTypes.object
+      model: PropTypes.object,
+      onChange: PropTypes.func
     }
 
     constructor(props) {
@@ -49,6 +50,10 @@ export default class HeadEditor extends Component {
       this.editorPage = React.createRef();
     }
 
+    onChangeHandler(e) {
+      this.props.onChange(e.target.value);
+    }
+
     render() {
       return (
         <EditorPage ref={this.editorPage}>
@@ -56,10 +61,10 @@ export default class HeadEditor extends Component {
            
             
             <div>
-                <TextureButton value="1" defaultChecked={false} name="hair-type" src={hair_none}/>    
-                <TextureButton value="2" defaultChecked={true} name="hair-type" src={hair_short}/>    
-                <TextureButton value="3" defaultChecked={false} name="hair-type" src={hair_blair}/>
-                <TextureButton value="4" defaultChecked={false} name="hair-type" src={hair_long}/>
+                <TextureButton value="none" defaultChecked={false} name="hair-type" src={hair_none}   onChange={(e) => this.onChangeHandler(e)}/>    
+                <TextureButton value="short" defaultChecked={true} name="hair-type" src={hair_short}  onChange={(e) => this.onChangeHandler(e)}/>    
+                <TextureButton value="blair" defaultChecked={false} name="hair-type" src={hair_blair} onChange={(e) => this.onChangeHandler(e)}/>
+                <TextureButton value="long" defaultChecked={false} name="hair-type" src={hair_long}   onChange={(e) => this.onChangeHandler(e)}/>
             </div>
             <label>Hair Color</label>
             <div>

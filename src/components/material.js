@@ -16,7 +16,7 @@ export default class Material {
         this.height = height;
         this.scaleTexture = scaleTexture;
         this.index = 0;
-        this.setTexture(0);
+        if (labeledTextures != null) this.setTexture(0);
     }
 
     setActive(isActive) {
@@ -60,5 +60,29 @@ export default class Material {
     getTexture() {
         return this.labeledTextures[this.index].getTexture(this.x, this.y, this.width, this.height,
             this.scaleTexture);
+    }
+
+    getDownloadTexture() {
+        //get current texture image
+        const img = this.material.map.image;
+        const clr = this.material.color;
+
+        //bake in color
+        const canvas = window.document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 1024;
+
+        if (this.active == false || this.material.visible == false) return canvas;
+
+        const ctx = canvas.getContext("2d");
+        ctx.globalCompositeOperation = "copy";
+        ctx.drawImage(img, 0, 0);
+        ctx.globalCompositeOperation = "multiply";
+        ctx.fillStyle = clr.getHexStringFull();
+        ctx.fillRect(0, 0, 1024, 1024);
+        ctx.globalCompositeOperation = "destination-atop";
+        ctx.drawImage(img, 0, 0);
+
+        return canvas;
     }
 }

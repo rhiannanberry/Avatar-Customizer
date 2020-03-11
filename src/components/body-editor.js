@@ -17,12 +17,13 @@ import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
 import logo from "../../includes/textures/logo_front/ae.png"
 
-const skinColors = ["#eeffee", "#eeccff", "#bbbbbb"];
-const blushColors = ["#aabbcc", "#abcdef", "#000fff"];
+const skinColors = ["#503335", "#592f2a", "#a1665e", "#c58c85", "#d1a3a4", "#ecbcb4", "#FFE2DC"];
+const blushColors = ["#551F25", "#82333C", "#983E38", "#DC6961"];
 
 export default class BodyEditor extends Component{
     static propTypes = {
-      model: PropTypes.object
+      model: PropTypes.object,
+      onChange: PropTypes.func
     }
 
     constructor(props) {
@@ -47,8 +48,8 @@ export default class BodyEditor extends Component{
         <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
             <div>
-                <TextureButton value="1" defaultChecked={true} name="body-type" src={straight} />
-                <TextureButton value="2" defaultChecked={false} name="body-type" src={curvy} />
+                <TextureButton value="straight" defaultChecked={true} name="body-type" src={straight} onChange={(e) => this.props.onChange(e.target.value)}/>
+                <TextureButton value="curvy" defaultChecked={false} name="body-type" src={curvy} onChange={(e) => this.props.onChange(e.target.value)}/>
             </div>
             <label>Skin Color</label>
             <div>
