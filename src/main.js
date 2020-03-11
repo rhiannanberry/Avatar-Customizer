@@ -82,7 +82,7 @@ async function init() {
   }
 
   const _loader = new GLTFLoader();
-  var body = React.createRef();
+  //var body = React.createRef();
 
   await _loader.load(
     gb,
@@ -93,11 +93,10 @@ async function init() {
       avatargltf.scene.traverse(node => {
         if (node.name == "Body") {
           ReactDOM.render(
-            <>
             
             <Editor model={node}/>
             
-            </>,
+            ,
             document.getElementById("options")
           );
 

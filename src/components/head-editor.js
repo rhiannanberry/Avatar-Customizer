@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import {TwitterPicker} from "react-color";
+
 import PropTypes from "prop-types";
 
 import EditorUtils from "./editor-utils";
@@ -35,6 +37,11 @@ export default class HeadEditor extends Component {
       return (
         <EditorPage ref={this.editorPage}>
             <label>Hair Type</label>
+            <TwitterPicker
+              triangle="hide"
+              onChangeComplete={ (clr) => {console.log(clr);EditorUtils.setMaterialColor(clr.hex, this.materials[0])} }
+            />
+            
             <div>
                 <DisableButton value="1" name="hair-type" />
                 <TextureButton value="2" defaultChecked={true} name="hair-type" src={hair}/>    

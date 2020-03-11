@@ -30,22 +30,31 @@ export default class Material {
         this.material.needsUpdate = true;
     }
 
-    setTexture(index) {
-        if (index >= this.labeledTextures.length) return;
+    setTextureByPath(path) {
+        const index = this.labeledTextures.findIndex((element) => {
+            return element.path == path;
+        });
 
-    this.labeledTextures[index]
-    .getTexture(
-      this.x,
-      this.y,
-      this.width,
-      this.height,
-      this.scaleTexture
-    ).then(texture => {
-      this.material.visible = this.active;
-      this.material.needsUpdate = true;
-      this.material.map = texture;
-      this.index = index;
-    });
+        setTexture(index);
+    }
+
+    setTexture(index) {
+
+        if (index >= this.labeledTextures.length || index < 0) return;
+
+        this.labeledTextures[index]
+        .getTexture(
+        this.x,
+        this.y,
+        this.width,
+        this.height,
+        this.scaleTexture
+        ).then(texture => {
+        this.material.visible = this.active;
+        this.material.needsUpdate = true;
+        this.material.map = texture;
+        this.index = index;
+        });
     }
 
     getTexture() {

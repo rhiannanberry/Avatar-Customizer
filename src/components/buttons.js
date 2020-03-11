@@ -128,10 +128,12 @@ export class CustomColorButton extends Component {
       value: '',
       color: this.props.color
     }
+
+    this.color = this.props.color;
     this.colorPicker = React.createRef();
 
     
-    if (this.props.defaultChecked && typeof this.props.onChange == "function") this.props.onChange(this.state.color);
+    if (this.props.defaultChecked && typeof this.props.onChange == "function") this.props.onChange(this.color);
   }
   
   componentDidMount() {
@@ -142,11 +144,12 @@ export class CustomColorButton extends Component {
   clicked(e) {
     this.colorPicker.current.click();
     if (this.props.onClick) this.props.onClick(e.target.value);
-    if (this.props.onChange) this.props.onChange(this.state.color);
+    if (this.props.onChange) this.props.onChange(this.color);
   }
 
   changed(e) {
     this.setState({color:e.target.value});
+    this.color = e.target.value;
     if (this.props.onChange) this.props.onChange(e.target.value);
   }
 
@@ -169,10 +172,10 @@ export class CustomColorButton extends Component {
       <input
         ref={this.colorPicker}
         type="color"
-        onChange={this.changed.bind(this)}
-        value={this.state.color}
+        onChange={(e) => {this.changed(e)}}
+        value={this.color}
       />
-      <FontAwesomeIcon className="icon" icon={faTint} style={{color:this.state.color}}/>
+      <FontAwesomeIcon className="icon" icon={faTint} style={{color:this.color}}/>
     </RadioButton>
     );
   }

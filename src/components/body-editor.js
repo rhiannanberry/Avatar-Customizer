@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
 import Material from "./material"
 
+import ColorPicker from "./color-picker"
+
 import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
 import logo from "../../includes/textures/logo_front/ae.png"
@@ -26,15 +28,21 @@ export default class BodyEditor extends Component{
           new Material(this.props.model.material.clone(), "skin", [new LabeledTexture(skin)]),
           new Material(this.props.model.material.clone(), "blush", [new LabeledTexture(blush)])
       ]
-
+      this.color = "red"
       this.editorPage = React.createRef();
     }
 
     render() {
+      console.log(this.color)
       
       return (
         <EditorPage ref={this.editorPage}>
             <label>Body Type</label>
+            <ColorPicker
+              color={this.color}
+              colors={["#aaabbb", "#ababab"]}
+              onChange={(e) => {this.color = e.hex; console.log(e.hex)}}
+            />
             <div>
                 <TextureButton value="1" defaultChecked={true} name="body-type" src={logo} />
                 <TextureButton value="2" defaultChecked={false} name="body-type" src={skin} />
