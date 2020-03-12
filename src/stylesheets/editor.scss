@@ -7,10 +7,17 @@
 .editorPage {
     height: 100%;
     padding: 20px;
+    padding-bottom: 0;
 
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     //background-color: blue;
+    &>div {
+        margin-bottom: 10px;
+    }
+    &>label {
+        margin-bottom: 5px;
+    }
 }

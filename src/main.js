@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { cloneDeep } from "lodash"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import styles from "./stylesheets/main.scss";
@@ -87,8 +88,11 @@ async function init() {
 
   function processModel(src, bodyType, hair, val, success) {
     var mod = null;
+    var fullscene = null;
 
     if (success) {
+      fullscene = cloneDeep(val)
+
       val.scene.scale.x = 30;
       val.scene.scale.y = 30;
       val.scene.scale.z = 30;
@@ -105,9 +109,9 @@ async function init() {
     }
 
     if (models[bodyType]) {
-      models[bodyType][hair] = {model: mod, src:src}
+      models[bodyType][hair] = {model: mod, fullscene: fullscene}
     } else {
-      models[bodyType] =  {[hair]: {model: mod, src:src}}
+      models[bodyType] =  {[hair]: {model: mod, fullscene: fullscene}}
     }
     cnt+=1;
   }

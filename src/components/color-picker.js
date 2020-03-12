@@ -2,9 +2,10 @@ import React from 'react'
 
 import { CustomPicker } from 'react-color'
 import { Hue, Saturation, Swatch } from 'react-color/lib/components/common'
-import color from 'react-color/lib/helpers/color'
+import * as COLOR from 'react-color/lib/helpers/color';
 
-export const ColorPicker = ({ hex, hsl, hsv, colors, onChange }) => {
+
+export const ColorPicker = ({ hex, hsl, hsv, colors, onChange, color}) => {
   const styles = {
     customContainer: {
       height: 50,
@@ -37,44 +38,45 @@ export const ColorPicker = ({ hex, hsl, hsv, colors, onChange }) => {
       borderRadius: 4
     },
   }
-  const uh = (t) => {
-    return t;
+
+  const onClick = (e) => {
+    disabled = e.disabled;
   }
 
-  const uhh = (e) => {
-    onChange(e)
+  const customColorMenu = (e) => {
+    return (<div style={styles.customContainer}>
+      <div style={styles.sliders}>
+
+        <div style={ styles.hue }>
+          <Hue
+            hsl={ hsl } onChange={ onChange } />
+        </div>
+        <div style={ styles.saturation }>
+          <Saturation 
+            hsl={ hsl }
+            hsv={ hsv }
+            //color={color}
+            onChange={ onChange }/>
+        </div>
+
+      </div>
+      <div style={ styles.swatch }>
+
+      </div>
+    </div>)
   }
   return (
     <div>
-      <div style={styles.customContainer}>
-        <div style={styles.sliders}>
-
-          <div style={ styles.hue }>
-            <Hue
-              hsl={ hsl } onChange={ uhh } />
-          </div>
-          <div style={ styles.saturation }>
-            <Saturation 
-              hsl={ hsl }
-              hsv={ hsv }
-              color={color}
-              onChange={ uhh }/>
-          </div>
-
-        </div>
-        <div style={ styles.swatch }>
-
-        </div>
-      </div>
+      {}
       <div>
-        <PresetColors colors={ colors } onChange={onChange}/>
+        <PresetColors colors={ colors } onChange={ onChange } color={color}/>
       </div>
       
     </div>
   )
 }
 
-const PresetColors = ({ colors, onChange = () => {}, onSwatchHover }) => {
+const PresetColors = ({ colors, onChange = () => {}, onSwatchHover, color}) => {
   const styles = {
     swatch: {
       width: '30px',
@@ -88,19 +90,27 @@ const PresetColors = ({ colors, onChange = () => {}, onSwatchHover }) => {
 
     }
   }
+
+  var clr = null
+
   const handleChange = (hexcode, e) => {
-    console.log(hexcode)
-    color.isValidHex(hexcode) && onChange({
+    clr = hexcode;
+    onChange({
       hex: hexcode,
       source:'hex'
     }, e)
   }
+
 
   return (
     <div style={styles.swatchContainer}>
       {colors.map((c,i) => {
         var swatchStyle = {...styles.swatch};
         swatchStyle.marginLeft = i === 0 ? '0' : swatchStyle.marginLeft;
+        
+        if (color.hex != undefined && color.hex.toLowerCase() == c.toLowerCase()) {
+          swatchStyle.boxShadow= `0 0 4px ${c}`
+        }
 
         return (
           <Swatch

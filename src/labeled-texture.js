@@ -4,6 +4,7 @@ export class LabeledTexture {
   constructor(path, label = "Default", autoLoad = false) {
     this.label = label;
     this.path = path;
+    this.src = path;
     this.loaded = undefined;
     if (autoLoad) this.getTexture(path);
   }

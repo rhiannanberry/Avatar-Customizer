@@ -3,6 +3,7 @@ import * as THREE from "three";
 import EditorUtils from "./editor-utils";
 import {EditorPage} from "./editor-page"
 import Buttons, {TextureButton} from "./buttons"
+import Swatches from "./color-picker2"
 
 import PropTypes from "prop-types";
 import { LabeledTexture } from "../labeled-texture";
@@ -15,7 +16,6 @@ import curvy from "../../includes/icons/icons_curvy.png"
 
 import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
-import logo from "../../includes/textures/logo_front/ae.png"
 
 const skinColors = ["#503335", "#592f2a", "#a1665e", "#c58c85", "#d1a3a4", "#ecbcb4", "#FFE2DC"];
 const blushColors = ["#551F25", "#82333C", "#983E38", "#DC6961"];
@@ -46,33 +46,45 @@ export default class BodyEditor extends Component{
     render() {      
       return (
         <EditorPage ref={this.editorPage}>
-            <label>Body Type</label>
+            <label>Body</label>
+            
             <div>
-                <TextureButton value="straight" defaultChecked={true} name="body-type" src={straight} onChange={(e) => this.props.onChange(e.target.value)}/>
-                <TextureButton value="curvy" defaultChecked={false} name="body-type" src={curvy} onChange={(e) => this.props.onChange(e.target.value)}/>
-            </div>
-            <label>Skin Color</label>
-            <div>
-              <ColorPicker
-                color={this.state.skin}
-                colors={skinColors}
-                onChange={(e) => {
-                  this.setState({skin:e.rgb}); 
-                  EditorUtils.setMaterialColor(e.hex, this.materials[0]) 
+            <Swatches
+                selected={straight}
+                width={'70px'}
+                height={'80px'}
+                textures={[straight,curvy]}
+                canDisable={false}
+                onChange={(src) => {
+                  this.props.onChange((src == straight) ? 'straight' : 'curvy')
+                  
                 }}
               />
-               
             </div>
-            <label>Blush</label>
+            <label>Skin</label>
             <div>
-            <ColorPicker
-                color={this.state.blush}
-                colors={blushColors}
-                onChange={(e) => {
-                  this.setState({blush:e.rgb}); 
-                  EditorUtils.setMaterialColor(e.hex, this.materials[1]) 
-                }}
-              />
+               <Swatches 
+                  colors={skinColors} 
+                  canDisable={false}
+                  onChange={(color) => {
+                    EditorUtils.setMaterialColor(color, this.materials[0]) 
+                  }}
+                />
+            </div>
+            <label>Cheeks</label>
+            <div>
+              <Swatches 
+                  colors={blushColors} 
+                  canDisable={true}
+                  onChange={(color) => {
+                    if (color == 'none') {
+                      this.materials[1].setActive(false);
+                    } else {
+                      this.materials[1].setActive(true);
+                      EditorUtils.setMaterialColor(color, this.materials[1]) 
+                    }
+                  }}
+                />
             </div>
         </EditorPage>
       );

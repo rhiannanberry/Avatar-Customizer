@@ -30,18 +30,10 @@ export default class Material {
         this.material.needsUpdate = true;
     }
 
-    setTextureByPath(path) {
-        const index = this.labeledTextures.findIndex((element) => {
-            return element.path == path;
-        });
-
-        setTexture(index);
-    }
 
     setTexture(index) {
 
         if (index >= this.labeledTextures.length || index < 0) return;
-
         this.labeledTextures[index]
         .getTexture(
         this.x,
@@ -50,11 +42,18 @@ export default class Material {
         this.height,
         this.scaleTexture
         ).then(texture => {
-        this.material.visible = this.active;
-        this.material.needsUpdate = true;
-        this.material.map = texture;
-        this.index = index;
+            this.material.visible = this.active;
+            this.material.needsUpdate = true;
+            this.material.map = texture;
+            this.index = index;
         });
+    }
+
+    setTextureByPath(path) {
+        const index = this.labeledTextures.findIndex((element) => {
+            return element.src == path;
+        });
+        this.setTexture(index);
     }
 
     getTexture() {
@@ -62,7 +61,7 @@ export default class Material {
             this.scaleTexture);
     }
 
-    getDownloadTexture() {
+    getBakedTexture() {
         //get current texture image
         const img = this.material.map.image;
         const clr = this.material.color;

@@ -1,9 +1,23 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
 }
 
 #container {
+    margin-top: 30px;
     height: 400px;
+    max-width: 900px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-between;
+    width: 100%;
+
+    @media screen and (max-width: 900px) and (max-device-width: 900px){
+        flex-direction: column;
+    }
 }
 
 td {
@@ -17,10 +31,11 @@ td {
 }
 
 #options {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
     vertical-align: top;
     height: 100%;
-
+    width: 360px;
 
     .texture-layer  {
         height: 32px;

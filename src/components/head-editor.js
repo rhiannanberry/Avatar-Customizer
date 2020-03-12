@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as THREE from "three";
 
 import ColorPicker from "./color-picker";
+import Swatches from "./color-picker2"
 
 import PropTypes from "prop-types";
 
@@ -61,10 +62,22 @@ export default class HeadEditor extends Component {
            
             
             <div>
-                <TextureButton value="none" defaultChecked={false} name="hair-type" src={hair_none}   onChange={(e) => this.onChangeHandler(e)}/>    
-                <TextureButton value="short" defaultChecked={true} name="hair-type" src={hair_short}  onChange={(e) => this.onChangeHandler(e)}/>    
-                <TextureButton value="blair" defaultChecked={false} name="hair-type" src={hair_blair} onChange={(e) => this.onChangeHandler(e)}/>
-                <TextureButton value="long" defaultChecked={false} name="hair-type" src={hair_long}   onChange={(e) => this.onChangeHandler(e)}/>
+            <Swatches
+                selected={hair_long}
+                width={'80px'}
+                height={'80px'}
+                textures={[hair_none, hair_short, hair_blair, hair_long]}
+                canDisable={false}
+                onChange={(src) => {
+                  switch(src) {
+                    case hair_none: this.props.onChange('none'); break;
+                    case hair_short: this.props.onChange('short'); break;
+                    case hair_blair: this.props.onChange('blair'); break;
+                    case hair_long: this.props.onChange('long'); break;
+                  }                  
+                }}
+              />
+                
             </div>
             <label>Hair Color</label>
             <div>
@@ -72,7 +85,7 @@ export default class HeadEditor extends Component {
                 color={this.state.hair}
                 colors={hairColors}
                 onChange={(e) => {
-                  this.setState({hair:e.rgb}); 
+                  this.setState({hair:e}); 
                   EditorUtils.setMaterialColor(e.hex, this.materials[0]) 
                   EditorUtils.setMaterialColor(e.hex, this.materials[1]) 
                 }}
@@ -84,7 +97,7 @@ export default class HeadEditor extends Component {
                 color={this.state.eye}
                 colors={eyeColors}
                 onChange={(e) => {
-                  this.setState({eye:e.rgb}); 
+                  this.setState({eye:e}); 
                   EditorUtils.setMaterialColor(e.hex, this.materials[2]) 
                 }}
               />
