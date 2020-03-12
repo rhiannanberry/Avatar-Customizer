@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { ColorPicker } from "./color-picker";
 import { TextureDropdown } from "./texture-dropdown";
-import { DownloadButton, UploadButton } from "./buttons";
+import {RadioButton, DisableButton, CustomColorButton, PresetColorButton, DownloadButton, UploadButton } from "./buttons";
 import { LayerToggle } from "./toggle";
 import { LabeledTexture } from "../labeled-texture";
 
@@ -154,12 +154,10 @@ export class TextureLayer extends Component {
         <td>
           <ColorPicker active={this.state.active} onChange={this.setColor.bind(this)} ref={this.colorPicker} />
         </td>
-        <td className="layer-button-group">
-          <DownloadButton
-            name={this.props.label.toLowerCase() + "_layout"}
-            onClick={() => this.getLayoutTexture()}
-          ></DownloadButton>
-          <UploadButton onUpload={this.fileUploadHandler.bind(this)}></UploadButton>
+        <td>
+          <DisableButton name={this.props.label} />
+          <CustomColorButton value="1" defaultChecked={true} name={this.props.label} color='#ff22dd'/>
+          <PresetColorButton value="2" defaultChecked={false} name={this.props.label} color='#aa9234'/>          
         </td>
         <td>
           <TextureDropdown

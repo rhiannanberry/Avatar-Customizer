@@ -1,32 +1,36 @@
 import * as THREE from "three";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import { cloneDeep } from "lodash"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { TextureLayer } from "./components/texture-layer";
 import styles from "./stylesheets/main.scss";
-import { TextureGroup } from "./components/texture-group";
-import gb from "../includes/models/separated/hubs_model_short_messy.glb";
-import { LabeledTexture } from "./labeled-texture";
+//import gb from "../includes/models/separated/hubs_model_short_messy.glb";
 
-import skin from "../includes/textures/skin_default.png";
-import blush from "../includes/textures/blush_default.png";
-import eyes from "../includes/textures/eyes_default.png";
-import eyes_black from "../includes/textures/eyes_black.png";
-import eyebrows from "../includes/textures/eyebrows_default.png";
-import jacket from "../includes/textures/jacket_default.png";
-import shirt from "../includes/textures/shirt_default.png";
-import hair from "../includes/textures/hair_default.png";
+const modelPath = "../includes/models/merged/model_";
 
-import duck from "../includes/textures/logo_front/duck.png";
-import ae from "../includes/textures/logo_front/ae.png";
-import gt from "../includes/textures/logo_front/gt.png";
+const modelTypes = [
+  {body : "straight", hair: "none"},
+  {body : "straight", hair: "short"},
+  {body : "straight", hair: "blair"},
+  {body : "straight", hair: "long"},
+  {body : "curvy", hair: "none"},
+  {body : "curvy", hair: "short"},
+  {body : "curvy", hair: "blair"},
+  {body : "curvy", hair: "long"},
+]
 
-import skinLayout from "../includes/textures/layouts/skin_layout.png";
-import topLayout from "../includes/textures/layouts/top_layout.png";
-import eyebrowsLayout from "../includes/textures/layouts/eyebrows_layout.png";
-import eyesLayout from "../includes/textures/layouts/eyes_layout.png";
-import hairLayout from "../includes/textures/layouts/hair_layout.png";
+import straight_none from "../includes/models/merged/model_straight_none.glb";
+import straight_short from "../includes/models/merged/model_straight_short.glb";
+import straight_blair from "../includes/models/merged/model_straight_blair.glb";
+import straight_long from "../includes/models/merged/model_straight_long.glb";
+import curvy_none from "../includes/models/merged/model_curvy_none.glb";
+import curvy_short from "../includes/models/merged/model_curvy_short.glb";
+import curvy_blair from "../includes/models/merged/model_curvy_blair.glb";
+import curvy_long from "../includes/models/merged/model_curvy_long.glb";
+
+import {Editor} from "./components/editor"
+import { until } from "./util";
 
 const TEXTURES = "../includes/textures/";
 
@@ -76,106 +80,63 @@ async function init() {
     renderer.render(scene, camera);
   }
 
+  
   const _loader = new GLTFLoader();
+  
+  var models = {}
+  var cnt = 0;
 
-  await _loader.load(
-    gb,
-    avatargltf => {
-      avatargltf.scene.scale.x = 30;
-      avatargltf.scene.scale.y = 30;
-      avatargltf.scene.scale.z = 30;
-      avatargltf.scene.traverse(node => {
+  function processModel(src, bodyType, hair, val, success) {
+    var mod = null;
+    var fullscene = null;
+
+    if (success) {
+      fullscene = cloneDeep(val)
+
+      val.scene.scale.x = 30;
+      val.scene.scale.y = 30;
+      val.scene.scale.z = 30;
+      val.scene.traverse(node => {
         if (node.name == "Body") {
-          ReactDOM.render(
-            <TextureGroup model={node} id="options">
-              <TextureLayer hidden={true} material={node.material.clone()} />
-              <TextureLayer
-                label="Skin"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(skin)]}
-                layoutTexture={new LabeledTexture(skinLayout, "", true)}
-              />
-              <TextureLayer
-                label="Blush"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(blush)]}
-                layoutTexture={new LabeledTexture(skinLayout, "", true)}
-                canDisable={true}
-              />
-              <TextureLayer
-                label="Hair"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(hair)]}
-                layoutTexture={new LabeledTexture(hairLayout, "", true)}
-              />
-              <TextureLayer
-                label="Eyebrows"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(eyebrows)]}
-                layoutTexture={new LabeledTexture(eyebrowsLayout, "", true)}
-              />
-              <TextureLayer
-                label="Eyes"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(eyes), new LabeledTexture(eyes_black, "Black")]}
-                layoutTexture={new LabeledTexture(eyesLayout, "", true)}
-              />
-              <TextureLayer
-                label="Shirt"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(shirt)]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-              />
-              <TextureLayer
-                label="Shirt Logo"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-                active={false}
-                x={200}
-                y={476}
-                width={210}
-                height={210}
-                scaleTexture={true}
-              />
-              <TextureLayer
-                label="Jacket"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(jacket)]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-              />
-              <TextureLayer
-                label="Jacket Logo"
-                material={node.material.clone()}
-                labeledTextures={[new LabeledTexture(duck, "Duck"),new LabeledTexture(ae, "AE"),new LabeledTexture(gt, "GT")]}
-                layoutTexture={new LabeledTexture(topLayout, "", true)}
-                canDisable={true}
-                active={false}
-                x={700}
-                y={469}
-                width={210}
-                height={210}
-                scaleTexture={true}
-              />
-            </TextureGroup>,
-            document.getElementById("options")
-          );
-
-          scene.add(avatargltf.scene);
+          
+          mod = node
+          mod.visible = false;
         }
-      });
-
-      setInterval(() => {
-        render();
-      }, 100);
-    },
-    undefined,
-    e => {
-      console.log(e);
+      })
+      scene.add(val.scene);
+    } else {
+      console.log(val);
     }
-  );
+
+    if (models[bodyType]) {
+      models[bodyType][hair] = {model: mod, fullscene: fullscene}
+    } else {
+      models[bodyType] =  {[hair]: {model: mod, fullscene: fullscene}}
+    }
+    cnt+=1;
+  }
+
+  
+  modelTypes.forEach(model => {
+    const src = `${modelPath}${model.body}_${model.hair}.glb`
+    _loader.load( src,
+                  (val) => {processModel(src, model.body, model.hair, val, true)},
+                  undefined,
+                  (val) => {processModel(src, model.body, model.hair, val, false)}
+                );
+  });
+
+  await until(()=>{return cnt==8})
+  ReactDOM.render(
+    <>
+    <Editor models={models}/>
+    </>,
+    document.getElementById("options")
+  )
+
+  setInterval(() => {
+    render();
+  }, 100);
 }
 
 window.onload = init;
