@@ -41,7 +41,7 @@ export default class ShirtEditor extends Component {
         jacket:new THREE.Color().randomize().getHexStringFull(),
       }
       EditorUtils.setMaterialColor(this.state.shirt, this.materials[0]) 
-
+      this.materials[3].setActive(false);
       this.editorPage = React.createRef();
     }
 
@@ -85,6 +85,7 @@ export default class ShirtEditor extends Component {
               <Swatches
                 width={'40px'}
                 height={'40px'}
+                selected={duck}
                 textures={[duck, ae, gt]}
                 canDisable={true}
                 canUpload={true}
@@ -108,6 +109,7 @@ export default class ShirtEditor extends Component {
               <Swatches
                 width={'40px'}
                 height={'40px'}
+                selected="none"
                 textures={[duck, ae, gt]}
                 canDisable={true}
                 canUpload={true}

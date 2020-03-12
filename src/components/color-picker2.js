@@ -49,7 +49,7 @@ class Swatch extends Component {
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
 
-        if (this.props.selected) swatchStyle.boxShadow= `0 0 4px ${this.props.color}`
+        if (this.props.selected) swatchStyle.boxShadow= `0 0 6px ${this.props.color}`
         
         return(
             <span style={swatchStyle} onClick={()=>{this.props.onClick(this.props.color)}}>
@@ -69,7 +69,7 @@ class TextureSwatch extends Component {
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
         
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 4px grey`
+        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
         
         return(
             <span style={swatchStyle} onClick={()=>{this.props.onClick(this.props.src)}}>
@@ -105,7 +105,7 @@ class IconSwatch extends Component {
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
         
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 4px grey`
+        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
         
         return(
             <span style={swatchStyle} onClick={()=>{this.onClick()}}>
@@ -131,7 +131,7 @@ class Disable extends Component {
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
         
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 4px grey`
+        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
         
         return(
             <span style={swatchStyle} onClick={()=>{this.props.onClick('none')}}>

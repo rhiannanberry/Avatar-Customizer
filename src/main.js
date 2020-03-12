@@ -5,29 +5,26 @@ import { cloneDeep } from "lodash"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import styles from "./stylesheets/main.scss";
-//import gb from "../includes/models/separated/hubs_model_short_messy.glb";
 
-const modelPath = "../includes/models/merged/model_";
+import sn from "../includes/models/merged/model_straight_none.glb";
+import ss from "../includes/models/merged/model_straight_short.glb";
+import sb from "../includes/models/merged/model_straight_blair.glb";
+import sl from "../includes/models/merged/model_straight_long.glb";
+import cn from "../includes/models/merged/model_curvy_none.glb";
+import cs from "../includes/models/merged/model_curvy_short.glb";
+import cb from "../includes/models/merged/model_curvy_blair.glb";
+import cl from "../includes/models/merged/model_curvy_long.glb";
 
 const modelTypes = [
-  {body : "straight", hair: "none"},
-  {body : "straight", hair: "short"},
-  {body : "straight", hair: "blair"},
-  {body : "straight", hair: "long"},
-  {body : "curvy", hair: "none"},
-  {body : "curvy", hair: "short"},
-  {body : "curvy", hair: "blair"},
-  {body : "curvy", hair: "long"},
+  {body : "straight", hair: "none", src: sn},
+  {body : "straight", hair: "short", src: ss},
+  {body : "straight", hair: "blair", src: sb},
+  {body : "straight", hair: "long", src: sl},
+  {body : "curvy", hair: "none", src: cn},
+  {body : "curvy", hair: "short", src: cs},
+  {body : "curvy", hair: "blair", src: cb },
+  {body : "curvy", hair: "long", src: cl},
 ]
-
-import straight_none from "../includes/models/merged/model_straight_none.glb";
-import straight_short from "../includes/models/merged/model_straight_short.glb";
-import straight_blair from "../includes/models/merged/model_straight_blair.glb";
-import straight_long from "../includes/models/merged/model_straight_long.glb";
-import curvy_none from "../includes/models/merged/model_curvy_none.glb";
-import curvy_short from "../includes/models/merged/model_curvy_short.glb";
-import curvy_blair from "../includes/models/merged/model_curvy_blair.glb";
-import curvy_long from "../includes/models/merged/model_curvy_long.glb";
 
 import {Editor} from "./components/editor"
 import { until } from "./util";
@@ -118,11 +115,10 @@ async function init() {
 
   
   modelTypes.forEach(model => {
-    const src = `${modelPath}${model.body}_${model.hair}.glb`
-    _loader.load( src,
-                  (val) => {processModel(src, model.body, model.hair, val, true)},
+    _loader.load( model.src,
+                  (val) => {processModel(model.src, model.body, model.hair, val, true)},
                   undefined,
-                  (val) => {processModel(src, model.body, model.hair, val, false)}
+                  (val) => {processModel(model.src, model.body, model.hair, val, false)}
                 );
   });
 
