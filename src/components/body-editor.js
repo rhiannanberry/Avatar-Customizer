@@ -18,7 +18,7 @@ import skin from "../../includes/textures/skin_default.png";
 import blush from "../../includes/textures/blush_default.png";
 
 const skinColors = ["#503335", "#592f2a", "#a1665e", "#c58c85", "#d1a3a4", "#ecbcb4", "#FFE2DC"];
-const blushColors = ["#551F25", "#82333C", "#983E38", "#DC6961"];
+const blushColors = ["#551F25", "#82333C", "#983E38", "#DC6961","#e3b9a1"];
 
 export default class BodyEditor extends Component{
     static propTypes = {
