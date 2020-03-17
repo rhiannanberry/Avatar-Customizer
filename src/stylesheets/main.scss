@@ -12,11 +12,28 @@ body {
     display: flex;
     flex-direction: row;
     align-content: center;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
 
-    @media screen and (max-width: 900px) and (max-device-width: 900px){
+    canvas {
+        width: 500px;
+        height: 400px;
+    }
+
+    @media only screen and (max-width: 900px) {
         flex-direction: column;
+        canvas {
+            margin-bottom: 20px;
+        }
+    }
+    
+    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+        
+        flex-direction: column;
+        canvas {
+            margin-bottom: 20px;
+        }
     }
 }
 
