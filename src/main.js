@@ -26,7 +26,7 @@ const modelTypes = [
   {body : "curvy", hair: "long", src: cl},
 ]
 
-import {Editor} from "./components/editor"
+import Editor from "./Editor"
 import { until } from "./util";
 
 const TEXTURES = "../includes/textures/";

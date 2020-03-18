@@ -1,13 +1,15 @@
-import { LabeledTexture } from "../labeled-texture";
+import LabeledTexture from "./labeled-texture";
 
 export default class Material {
-    constructor(material, label, labeledTextures, canDisable=false, active=true, 
+    constructor(material, label, textures, canDisable=false, active=true, 
         x=0, y=0, width=1024, height=1024, scaleTexture=false) {
         this.material = material;
         this.material.transparent = true;
         this.material.needsUpdate = true;
         this.label = label;
-        this.labeledTextures = labeledTextures;
+        this.labeledTextures = textures == null || textures.length == 0 ? null : textures.map(t => {
+            return new LabeledTexture(t);
+        })
         this.canDisable = canDisable;
         this.active = active;
         this.x = x;
@@ -16,7 +18,7 @@ export default class Material {
         this.height = height;
         this.scaleTexture = scaleTexture;
         this.index = 0;
-        if (labeledTextures != null) this.setTexture(0);
+        if (this.labeledTextures != null ) this.setTexture(0);
     }
 
     setActive(isActive) {
@@ -28,6 +30,10 @@ export default class Material {
     setColor(color) {
         this.material.color.set(color)
         this.material.needsUpdate = true;
+    }
+
+    addTexture(t) {
+        this.labeledTextures.push(new LabeledTexture(t));
     }
 
 

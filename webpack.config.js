@@ -46,7 +46,6 @@ module.exports = {
             // move required assets to output dir and add a hash for cache busting
             name: "[path][name].[ext]",
             // Make asset paths relative to /src
-            context: path.join(__dirname, "docs")
           }
         }
       },

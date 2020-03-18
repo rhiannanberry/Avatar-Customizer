@@ -1,82 +1,136 @@
 import React, { Component } from "react";
 import * as THREE from "three";
-import EditorUtils from "./editor-utils";
-import {EditorPage} from "./editor-page"
-import Buttons, {TextureButton} from "./buttons"
+
 import { faBan } from "@fortawesome/free-solid-svg-icons/faBan";
 import { faUpload } from "@fortawesome/free-solid-svg-icons/faUpload";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import PropTypes from "prop-types";
-import { LabeledTexture } from "../labeled-texture";
-
-const styles = {
-    swatch: {
-      width: '30px',
-      height: '30px',
-      float: 'left',
-      borderRadius: '4px',
-      marginLeft: '6px',
-      cursor: 'pointer'
-    },
-    swatchInner: {
-        width: '100%',
-        height: '100%',
-        borderRadius: '4px',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    icon: {
-        width: '80%',
-        height: '80%',
-        objectFit: 'contain'
-    },
-    swatchContainer: {
-      display: 'flex',
-      justifyContent:'center'
-
-    }
-  }
 
 class Swatch extends Component { 
+    static propTypes = {
+        className: PropTypes.string,
+        first: PropTypes.bool,
+        selected: PropTypes.bool,
+        color: PropTypes.string,
+        src: PropTypes.string,
+        onClick: PropTypes.func,
+        style: PropTypes.object,
+        material: PropTypes.array
+    }
+
+    static defaultProps = {
+        className: "",
+        first: false,
+        selected: false,
+        color: "#e0e0e0",
+        onClick: () => {},
+        style: {},
+        material: []
+    }
+
     constructor(props) {
-        super(props);        
+        super(props);
     }
     
     render() {
-        var swatchStyle = {...styles.swatch};
+        var swatchStyle = {...this.props.style};
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
 
         if (this.props.selected) swatchStyle.boxShadow= `0 0 6px ${this.props.color}`
         
         return(
-            <span style={swatchStyle} onClick={()=>{this.props.onClick(this.props.color)}}>
-                <div style={{...styles.swatchInner, backgroundColor:this.props.color}} />
+            <span className={"swatch" + " " + this.props.className } style={swatchStyle} onClick={()=>{this.props.onClick()}}>
+                <div style={{backgroundColor:this.props.color}} className="inner">
+                    {this.props.children}
+                </div>
             </span>
         );
     }
 }
 
-class TextureSwatch extends Component {
+class ColorSwatch extends Component {
+    static propTypes = {
+        className: PropTypes.string,
+        first: PropTypes.bool,
+        selected: PropTypes.bool,
+        color: PropTypes.string,
+        onClick: PropTypes.func,
+        style: PropTypes.object,
+        material: PropTypes.array
+    }
+
+    static defaultProps = {
+        className: "",
+        first: false,
+        selected: false,
+        color: "#e0e0e0",
+        onClick: () => {},
+        style: {},
+        material: []
+    }
+
     constructor(props) {
-        super(props);        
+        super(props);
+        if (this.props.selected) {
+            this.props.material.forEach(m => {
+                m.setActive(true);
+                m.setColor(this.props.color);
+            });
+        }
+
+    }
+
+    onClickHandler() {
+        this.props.material.forEach(m => {
+            m.setActive(true);
+            m.setColor(this.props.color);
+        });
+        this.props.onClick(this.props.color);
+    }
+
+    render() {
+        return(
+            <Swatch {...this.props} onClick={()=>this.onClickHandler()}/>
+        );
+    }
+
+}
+
+class TextureSwatch extends Component {
+    
+    static defaultProps = {
+        className: "",
+        first: false,
+        selected: false,
+        color: "#e0e0e0",
+        onClick: () => {},
+        style: {},
+        material: []
+    }
+    constructor(props) {
+        super(props);
+         
+    }
+
+    onClickHandler() {
+        this.props.material.forEach(m => {
+            const noTex = (this.props.src == false || this.props.src == 'none');
+            m.setActive(!noTex);
+            (noTex) ? null : m.setTextureByPath(this.props.src) ;
+        });
+        
+        this.props.onClick(this.props.src);
     }
     
     render() {
-        var swatchStyle = (this.props.style) ? {...styles.swatch, ...this.props.style} : {...styles.swatch};
-
-        if (this.props.first) swatchStyle.marginLeft = '0px';
-        
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
-        
+        const onclickhandler = ()=>{this.onClickHandler()}
+        const props = {...this.props, onClick:onclickhandler}
         return(
-            <span style={swatchStyle} onClick={()=>{this.props.onClick(this.props.src)}}>
-                <div style={{...styles.swatchInner, backgroundColor:'#e0e0e0'}} >
-                    <img src={this.props.src} style={styles.icon}/>
-                </div>
-            </span>
+            <Swatch {...props} className="texture">
+                <img className="icon" src={this.props.src} />
+            </Swatch>
         );
     }
 }
@@ -90,55 +144,42 @@ class IconSwatch extends Component {
     onClick() {
         if (this.props.value == "upload") {
             this.file.current.click();
+        } else if (this.props.value == "none") {
+            this.props.material.forEach(m => {
+                m.setActive(false);
+                
+            })
         }
         this.props.onClick(this.props.value);
     }
-    onUpload(e) {
-        if (typeof this.props.onUpload == "function") {
 
-            this.props.onUpload(e.target.files[0]);
+    onUpload(e) {
+        
+        if (typeof this.props.onUpload == "function") {
+            const path = window.URL.createObjectURL(e.target.files[0]);
+            this.props.material.forEach(m => {
+                m.addTexture(path);
+                m.setActive(true);
+                m.setTextureByPath(path)
+                
+            })
         }
     }
     
     render() {
-        var swatchStyle = (this.props.style) ? {...styles.swatch, ...this.props.style} : {...styles.swatch};
-
-        if (this.props.first) swatchStyle.marginLeft = '0px';
-        
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
+        const props = {
+            ...this.props,
+            onClick: ()=>{this.onClick()},
+        }
         
         return(
-            <span style={swatchStyle} onClick={()=>{this.onClick()}}>
-                <div style={{...styles.swatchInner, backgroundColor:'#e0e0e0'}} >
-                    <FontAwesomeIcon className="icon" icon={this.props.icon} style={styles.icon}/>    
+            <Swatch {...props} >
+                <FontAwesomeIcon className="icon" icon={this.props.icon}/>    
                     {this.props.value == "upload" ? 
-                    
                     <input ref={this.file} type="file" hidden accept="image/png" onChange={(e)=>{this.onUpload(e)}} hidden/>
                 : null}
-                </div>
-            </span>
-        );
-    }
-}
-
-class Disable extends Component {
-    constructor(props) {
-        super(props);        
-    }
-    
-    render() {
-        var swatchStyle = (this.props.style) ? {...styles.swatch, ...this.props.style} : {...styles.swatch};
-
-        if (this.props.first) swatchStyle.marginLeft = '0px';
-        
-        if (this.props.selected) swatchStyle.boxShadow = `0 0 6px grey`
-        
-        return(
-            <span style={swatchStyle} onClick={()=>{this.props.onClick('none')}}>
-                <div style={{...styles.swatchInner, backgroundColor:'#e0e0e0'}} >
-                    <FontAwesomeIcon className="icon" icon={faBan} style={styles.icon}/>    
-                </div>
-            </span>
+            </Swatch>
+            
         );
     }
 }
@@ -153,7 +194,8 @@ export default class Swatches extends Component {
         onUpload: PropTypes.func, 
         width: PropTypes.string,
         height: PropTypes.string,
-        selected: PropTypes.string
+        selected: PropTypes.string,
+        material: PropTypes.array
     }
 
     static defaultProps = {
@@ -161,7 +203,8 @@ export default class Swatches extends Component {
         onUpload: () => {},
         colors: [],
         textures: [],
-        selected: ''
+        selected: '',
+        material: []
     }
 
     constructor(props) {
@@ -169,7 +212,6 @@ export default class Swatches extends Component {
         this.state = {selected: this.props.selected}
         this.size = {};
 
-        console.log(this.props.selected)
         if (this.props.width) this.size.width = this.props.width;
         if (this.props.height) this.size.height = this.props.height;
     }
@@ -184,7 +226,7 @@ export default class Swatches extends Component {
         const canUpload = this.props.canUpload;
 
         return(
-            <div style={styles.swatchContainer}>
+            <div className="swatchContainer">
                 {canDisable ? 
                     <IconSwatch 
                         first={true} 
@@ -193,6 +235,8 @@ export default class Swatches extends Component {
                         onClick={this.onClickHandler.bind(this)}
                         style={this.size}
                         icon={faBan}
+                        material={this.props.material}
+                        className={this.props.textures.length > 0 ? "texture" : ""}
                     /> 
                     : null
                 }
@@ -206,18 +250,21 @@ export default class Swatches extends Component {
                         onUpload={this.props.onUpload}
                         style={this.size}
                         icon={faUpload}
+                        material={this.props.material}
+                        className={this.props.textures.length > 0 ? "texture" : ""}
                     /> 
                     : null
                 }
 
                 {this.props.colors.map((c,i) => {
                     return(
-                        <Swatch
+                        <ColorSwatch
                             key={i}
                             first={!canDisable && i==0}
                             color={c}
                             selected={c.toLowerCase() == this.state.selected.toLowerCase()}
                             onClick={this.onClickHandler.bind(this)}
+                            material={this.props.material}
                         />
                     );
                 })}
@@ -229,6 +276,7 @@ export default class Swatches extends Component {
                             first={!canDisable && !canUpload && i==0}
                             src={s}
                             selected={s.toLowerCase() == this.state.selected.toLowerCase()}
+                            material={this.props.material}
                             onClick={this.onClickHandler.bind(this)}
                             style={this.size}
                         />
