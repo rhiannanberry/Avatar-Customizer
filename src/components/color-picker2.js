@@ -184,6 +184,16 @@ class IconSwatch extends Component {
     }
 }
 
+class CustomColorSwatch extends Component {
+
+
+    render() {
+        return (
+            
+        );
+    }
+}
+
 export default class Swatches extends Component {
     static propTypes = {
         canDisable: PropTypes.bool,
@@ -228,6 +238,7 @@ export default class Swatches extends Component {
         return(
             <div className="swatchContainer">
                 {canDisable ? 
+                    <>
                     <IconSwatch 
                         first={true} 
                         value="none"
@@ -238,6 +249,11 @@ export default class Swatches extends Component {
                         material={this.props.material}
                         className={this.props.textures.length > 0 ? "texture" : ""}
                     /> 
+
+                    <IconSwatch 
+                    
+                    />
+                    </>
                     : null
                 }
 

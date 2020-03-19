@@ -56,13 +56,16 @@ export default class BodyEditor extends Component{
       assets.skin.materials[0].setColor(assets.skin.selected);
       assets.blush.materials[0].setColor(assets.blush.selected);
 
+      this.state = {color: assets.skin.selected}
+
     }
 
-    render() {      
+    render() {
+      console.log(assets.skin.selected)
       return (
         <EditorPage ref={this.editorPage}>
             <label>Body</label>
-            
+            <ColorPicker color={this.state.color} onChange={(e) => {this.setState({color:e.hex})}} />
             <div>
             <Swatches
                 selected={assets.body.selected}

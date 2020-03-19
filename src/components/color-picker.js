@@ -5,7 +5,7 @@ import { Hue, Saturation, Swatch } from 'react-color/lib/components/common'
 import * as COLOR from 'react-color/lib/helpers/color';
 
 
-export const ColorPicker = ({ hex, hsl, hsv, colors, onChange, color}) => {
+export const ColorPicker = ({ hex, hsl, hsv, onChange, color}) => {
   const styles = {
     customContainer: {
       height: 50,
@@ -55,7 +55,7 @@ export const ColorPicker = ({ hex, hsl, hsv, colors, onChange, color}) => {
           <Saturation 
             hsl={ hsl }
             hsv={ hsv }
-            //color={color}
+            color={color}
             onChange={ onChange }/>
         </div>
 
@@ -66,12 +66,25 @@ export const ColorPicker = ({ hex, hsl, hsv, colors, onChange, color}) => {
     </div>)
   }
   return (
-    <div>
-      {}
-      <div>
-        <PresetColors colors={ colors } onChange={ onChange } color={color}/>
+    <div style={styles.customContainer}>
+      <div style={styles.sliders}>
+
+        <div style={ styles.hue }>
+          <Hue
+            hsl={ hsl } onChange={ onChange } />
+        </div>
+        <div style={ styles.saturation }>
+          <Saturation 
+            hsl={ hsl }
+            hsv={ hsv }
+            //color={color}
+            onChange={ onChange }/>
+        </div>
+
       </div>
-      
+      <div style={ styles.swatch }>
+
+      </div>
     </div>
   )
 }

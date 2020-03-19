@@ -97,7 +97,7 @@ export default class HeadEditor extends Component {
             </div>
             <label>Hair Color</label>
             <div>
-            <ColorPicker
+            <Swatches
                 selected={assets.hair.selected}
                 colors={hairColors}
                 material={assets.hair.materials}
@@ -105,7 +105,7 @@ export default class HeadEditor extends Component {
             </div>
             <label>Eye Color</label>
             <div>
-            <ColorPicker
+            <Swatches
                 selected={assets.eyes.selected}
                 colors={assets.eyes.colors}
                 material={assets.eyes.materials}
