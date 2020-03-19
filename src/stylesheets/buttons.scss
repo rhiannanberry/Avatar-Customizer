@@ -34,6 +34,49 @@ $swatch-background: #e0e0e0;
         height:100%;
         border-radius: $swatch-corner-radius;
 
+        &.custom {
+            background-color: $swatch-background !important;
+
+            .customContainer {
+                height: 50px;
+                width: 200px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                border-radius: 4px;
+                position: absolute;
+                padding: 4px;
+                margin-top: 96px;
+                margin-left: 176px;
+
+                background-color: #e8e8e8;
+
+                &.closed {
+                    display: none
+                }
+
+                .hue {
+                    height: 10px;
+                    width: 100%;
+                    margin-bottom: 6px;
+                    position: relative;
+                }
+
+                .saturation {
+                    flex-grow: 1;
+                    position: relative;
+                    width: 100%;
+                }
+
+                .icon {
+                    width: 80%;
+                    height: 80%;
+                    object-fit: contain;
+                    -o-object-fit: contain;
+                }
+            }
+        }
+
         .icon {
             width: 80%;
             height: 80%;

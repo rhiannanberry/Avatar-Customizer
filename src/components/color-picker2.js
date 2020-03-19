@@ -1,15 +1,20 @@
-import React, { Component } from "react";
+import React, { Component,  } from "react";
+import ReactDOM from "react-dom"
 import * as THREE from "three";
 
 import { faBan } from "@fortawesome/free-solid-svg-icons/faBan";
 import { faUpload } from "@fortawesome/free-solid-svg-icons/faUpload";
+import { faPalette } from "@fortawesome/free-solid-svg-icons/faPalette";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import ColorPicker from "./color-picker"
 
 import PropTypes from "prop-types";
 
 class Swatch extends Component { 
     static propTypes = {
         className: PropTypes.string,
+        innerClassName: PropTypes.string,
         first: PropTypes.bool,
         selected: PropTypes.bool,
         color: PropTypes.string,
@@ -21,6 +26,7 @@ class Swatch extends Component {
 
     static defaultProps = {
         className: "",
+        innerClassName: "",
         first: false,
         selected: false,
         color: "#e0e0e0",
@@ -37,12 +43,11 @@ class Swatch extends Component {
         var swatchStyle = {...this.props.style};
 
         if (this.props.first) swatchStyle.marginLeft = '0px';
-
         if (this.props.selected) swatchStyle.boxShadow= `0 0 6px ${this.props.color}`
         
         return(
             <span className={"swatch" + " " + this.props.className } style={swatchStyle} onClick={()=>{this.props.onClick()}}>
-                <div style={{backgroundColor:this.props.color}} className="inner">
+                <div style={{backgroundColor:this.props.color}} className={"inner" + " " + this.props.innerClassName }>
                     {this.props.children}
                 </div>
             </span>
@@ -186,15 +191,64 @@ class IconSwatch extends Component {
 
 class CustomColorSwatch extends Component {
 
+    //if not selected, close 
+    //if selected and open, close
+
+    static propTypes = {
+        open : PropTypes.bool,
+        innerClassName: PropTypes.string
+    }
+
+    static defaultProps = {
+        open : false,
+        innerClassName : "custom"
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {open: this.props.open, color: this.props.color, clicked: false}
+        this.clicked = false;
+
+        this.picker = React.createRef();
+    }
+
+    onClickHandler() {
+        const open = (!this.state.open || this.clicked) || (this.props.value != "custom");
+        this.setState({open: open})
+
+        if (open) {
+            ReactDOM.findDOMNode(this.picker.current).focus();
+        }
+
+        this.props.material.forEach(m => {
+            m.setActive(true);
+            m.setColor(this.state.color);
+        });
+        this.clicked = false
+        this.props.onClick("custom");
+    }
+
+    onCustomClickHandler() {
+        this.clicked=true;
+    }
 
     render() {
         return (
-            
+            <Swatch  {...this.props} color={this.state.color} onClick={()=>this.onClickHandler()}  > 
+                <ColorPicker 
+                    ref={this.picker}
+                    color={this.state.color} 
+                    open={this.state.open && this.props.selected || this.clicked} 
+                    onClick={()=>this.onCustomClickHandler()} 
+                    onChange={(e) => {this.setState({color:e.hex})}} 
+                />
+                <FontAwesomeIcon className="icon" icon={faPalette} color={this.state.color}/>   
+            </Swatch>
         );
     }
 }
 
-export default class Swatches extends Component {
+export default class Swatches extends Component { 
     static propTypes = {
         canDisable: PropTypes.bool,
         canUpload: PropTypes.bool,
@@ -234,11 +288,11 @@ export default class Swatches extends Component {
     render() {
         const canDisable = this.props.canDisable;
         const canUpload = this.props.canUpload;
+        const randColor = new THREE.Color().randomize().getHexStringFull();
 
         return(
             <div className="swatchContainer">
                 {canDisable ? 
-                    <>
                     <IconSwatch 
                         first={true} 
                         value="none"
@@ -249,11 +303,6 @@ export default class Swatches extends Component {
                         material={this.props.material}
                         className={this.props.textures.length > 0 ? "texture" : ""}
                     /> 
-
-                    <IconSwatch 
-                    
-                    />
-                    </>
                     : null
                 }
 
@@ -272,11 +321,26 @@ export default class Swatches extends Component {
                     : null
                 }
 
+                {
+                    this.props.colors.length > 0 ?
+                    
+                    <CustomColorSwatch
+                        first={canDisable == false}
+                        material={this.props.material}
+                        selected={this.state.selected == "custom"}
+                        onClick={this.onClickHandler.bind(this)}
+                        color={randColor}
+                        value={this.state.selected}
+                        
+                    />
+                    : null
+                }
+
                 {this.props.colors.map((c,i) => {
                     return(
                         <ColorSwatch
                             key={i}
-                            first={!canDisable && i==0}
+                            first={false}
                             color={c}
                             selected={c.toLowerCase() == this.state.selected.toLowerCase()}
                             onClick={this.onClickHandler.bind(this)}

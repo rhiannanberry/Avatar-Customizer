@@ -5,75 +5,18 @@ import { Hue, Saturation, Swatch } from 'react-color/lib/components/common'
 import * as COLOR from 'react-color/lib/helpers/color';
 
 
-export const ColorPicker = ({ hex, hsl, hsv, onChange, color}) => {
-  const styles = {
-    customContainer: {
-      height: 50,
-      width: 250,
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: 8,
-      position: 'relative'
-    },
-    sliders: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      height: '100%',
-      marginRight: 8
-    },
-    hue: {
-      height: 10,
-      position: 'relative',
-      marginBottom: 6,
-    },
-    saturation: {
-      flexGrow: 1,
-      position: 'relative',
-    },
-    swatch: {
-      width: 50,
-      height: 50,
-      background: hex,
-      borderRadius: 4
-    },
-  }
+export const ColorPicker = ({ hex, hsl, hsv, onChange, color, open, onClick}) => {
 
-  const onClick = (e) => {
-    disabled = e.disabled;
-  }
 
-  const customColorMenu = (e) => {
-    return (<div style={styles.customContainer}>
-      <div style={styles.sliders}>
-
-        <div style={ styles.hue }>
-          <Hue
-            hsl={ hsl } onChange={ onChange } />
-        </div>
-        <div style={ styles.saturation }>
-          <Saturation 
-            hsl={ hsl }
-            hsv={ hsv }
-            color={color}
-            onChange={ onChange }/>
-        </div>
-
-      </div>
-      <div style={ styles.swatch }>
-
-      </div>
-    </div>)
-  }
   return (
-    <div style={styles.customContainer}>
-      <div style={styles.sliders}>
+    <div className={"customContainer" + (open ? "" : " closed") } onClick={onClick}>
 
-        <div style={ styles.hue }>
+
+        <div className="hue">
           <Hue
             hsl={ hsl } onChange={ onChange } />
         </div>
-        <div style={ styles.saturation }>
+        <div className="saturation">
           <Saturation 
             hsl={ hsl }
             hsv={ hsv }
@@ -81,10 +24,6 @@ export const ColorPicker = ({ hex, hsl, hsv, onChange, color}) => {
             onChange={ onChange }/>
         </div>
 
-      </div>
-      <div style={ styles.swatch }>
-
-      </div>
     </div>
   )
 }

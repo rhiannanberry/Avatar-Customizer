@@ -93,7 +93,6 @@ export default class Editor extends Component{
     getGLB() {
         const exporter = new GLTFExporter();
         const fullscene = this.props.models[this.bodyType][this.hairType].fullscene;
-        console.log(this.props.models[this.bodyType][this.hairType].fullscene)
 
         new THREE.TextureLoader().load(this.getMergedTextureURL(), (tex) => {
             fullscene.scene.traverse(node => {
@@ -159,7 +158,6 @@ export default class Editor extends Component{
                     canDisable={false}
                     onChange={(src) => {
                         var loc = ""
-                        console.log(src)
                         switch(src) {
                             case body: loc = "Body"; break;
                             case head: loc = "Head"; break;
