@@ -15,6 +15,14 @@ import cs from "../includes/models/merged/model_curvy_short.glb";
 import cb from "../includes/models/merged/model_curvy_blair.glb";
 import cl from "../includes/models/merged/model_curvy_long.glb";
 
+import curvy from "../includes/models/merged/model_body_curvy.glb"
+import straight from "../includes/models/merged/model_body_straight.glb"
+
+import none from "../includes/models/merged/model_head_none.glb"
+import short from "../includes/models/merged/model_head_short.glb"
+import blair from "../includes/models/merged/model_head_blair.glb"
+import long from "../includes/models/merged/model_head_long.glb"
+
 const modelTypes = [
   {body : "straight", hair: "none", src: sn},
   {body : "straight", hair: "short", src: ss},
@@ -25,6 +33,32 @@ const modelTypes = [
   {body : "curvy", hair: "blair", src: cb },
   {body : "curvy", hair: "long", src: cl},
 ]
+
+const scaleAudio = {
+  gltfExtensions: {
+    MOZ_hubs_components: {
+      "scale-audio-feedback": {
+        maxScale: 1.5,
+        minScale: 1
+      }
+    }
+  }
+}
+
+var modelParts = {
+  fullscene : null, 
+  body : {
+    'curvy': { src : curvy, model: null },
+    'straight': { src : straight, model: null }
+  },
+  head : {
+    'none': { src : none, model: null },
+    'short': { src : short, model: null },
+    'blair': { src : blair, model: null },
+    'long': { src : long, model: null },
+  }
+
+}
 
 import Editor from "./Editor"
 import { until } from "./util";
@@ -83,6 +117,9 @@ async function init() {
   var models = {}
   var cnt = 0;
 
+
+
+
   function processModel(src, bodyType, hair, val, success) {
     var mod = null;
     var fullscene = null;
@@ -93,9 +130,23 @@ async function init() {
       val.scene.scale.x = 30;
       val.scene.scale.y = 30;
       val.scene.scale.z = 30;
+
+      fullscene.scene.traverse(node=> {
+        if (node.name == "AvatarRoot") {
+          delete node.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback']
+        }
+
+
+
+        if (node.name == "Head") {
+          node.userData = {...node.userData, ...scaleAudio}
+        }
+      })
+
       val.scene.traverse(node => {
+
         if (node.name == "Body") {
-          
+          //console.log(node.parent)
           mod = node
           mod.visible = false;
         }
