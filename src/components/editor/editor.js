@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import * as THREE from "three";
 import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter"
+import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils.js"
 
 import PropTypes from "prop-types";
 import Material from "../material"
@@ -22,6 +23,8 @@ const bodyTypes = ["straight", "curvy"]
 export default class Editor extends Component{
     static propTypes = {
         models : PropTypes.object,
+        body: PropTypes.object,
+        hair: PropTypes.object,
         model : PropTypes.object
     }
 
@@ -66,7 +69,8 @@ export default class Editor extends Component{
                 this.createMaterials(this.props.models[b][h].model, this.materials);
             })
         });
-
+        this.props.body.setMaterials(this.materials)
+        this.props.hair.setMaterials(this.materials)
         this.props.models[this.bodyType][this.hairType].model.visible = true;
 
         this.changePage("Body")
@@ -93,16 +97,22 @@ export default class Editor extends Component{
     getGLB() {
         const exporter = new GLTFExporter();
         const fullscene = this.props.models[this.bodyType][this.hairType].fullscene;
+        var base = this.props.body.exportModel();
+        var hairModel = this.props.hair.exportModel();
+        base.scene.children[0].children[1].name = "Body";
+        base.scene.children[0].children[1].geometry = BufferGeometryUtils.mergeBufferGeometries([base.scene.children[0].children[1].geometry, hairModel.scene.children[0].children[1].geometry],false)
 
         new THREE.TextureLoader().load(this.getMergedTextureURL(), (tex) => {
             fullscene.scene.traverse(node => {
                 if (node.name == "Body") {
+                    base.scene.children[0].children[1].material.map = tex;
+                    base.scene.children[0].children[1].material.map.flipY = false;
                     node.material.map = tex;
                     node.material.map.flipY = false;
                 }
             });
 
-            exporter.parse(this.props.models[this.bodyType][this.hairType].fullscene.scene, (gltf) => {
+            exporter.parse(base.scene, (gltf) => {
                 const blob = new Blob([gltf], {type: 'application/octet-stream'});
                 const el = document.createElement("a");
                 el.style.display = "none";
@@ -170,9 +180,9 @@ export default class Editor extends Component{
                 
                 
             </div>
-            <BodyEditor ref={this.body} model={activeModel} onChange={(b) => this.updateBodyType(b)} selected={this.bodyType}/>
-            <HeadEditor ref={this.head} model={activeModel} onChange={(h) => this.updateHairType(h)} selected={this.hairType}/>
-            <ShirtEditor ref={this.shirt} model={activeModel} />
+            <BodyEditor ref={this.body} model={activeModel} modelPart={this.props.body} onChange={(b) => this.updateBodyType(b)} selected={this.bodyType}/>
+            <HeadEditor ref={this.head} model={activeModel} modelPart={this.props.hair} onChange={(h) => this.updateHairType(h)} selected={this.hairType}/>
+            <ShirtEditor ref={this.shirt} model={activeModel} modelPart={this.props.body}/>
             <button onClick={e => this.downloadMergedTexture()}>Download Texture</button>
             <button onClick={e => this.getGLB(e)}>Download Model</button>
         </>

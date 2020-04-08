@@ -7,3 +7,7 @@ export async function until(fn) {
     await sleep(0);
   }
 }
+
+export function getRandom( arr ) {
+  arr[Math.floor(Math.random() * Math.floor(arr.length))]
+} 

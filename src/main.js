@@ -3,8 +3,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { cloneDeep } from "lodash"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils.js"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import styles from "./stylesheets/main.scss";
+
+import ModelPart from "./model-part.js"
 
 import sn from "../includes/models/merged/model_straight_none.glb";
 import ss from "../includes/models/merged/model_straight_short.glb";
@@ -23,6 +26,9 @@ import short from "../includes/models/merged/model_head_short.glb"
 import blair from "../includes/models/merged/model_head_blair.glb"
 import long from "../includes/models/merged/model_head_long.glb"
 
+import bdy from "../includes/models/merged/model_body.glb"
+import hr from "../includes/models/merged/model_hair.glb"
+
 const modelTypes = [
   {body : "straight", hair: "none", src: sn},
   {body : "straight", hair: "short", src: ss},
@@ -38,7 +44,7 @@ const scaleAudio = {
   gltfExtensions: {
     MOZ_hubs_components: {
       "scale-audio-feedback": {
-        maxScale: 1.5,
+        maxScale: 1.25,
         minScale: 1
       }
     }
@@ -46,19 +52,12 @@ const scaleAudio = {
 }
 
 var modelParts = {
-  fullscene : null, 
-  body : {
-    'curvy': { src : curvy, model: null },
-    'straight': { src : straight, model: null }
-  },
-  head : {
-    'none': { src : none, model: null },
-    'short': { src : short, model: null },
-    'blair': { src : blair, model: null },
-    'long': { src : long, model: null },
-  }
+  exportScene : {},
+  body: {scene : null},
+  hair: {scene : null}
 
 }
+
 
 import Editor from "./Editor"
 import { until } from "./util";
@@ -118,14 +117,14 @@ async function init() {
   var cnt = 0;
 
 
-
-
   function processModel(src, bodyType, hair, val, success) {
     var mod = null;
     var fullscene = null;
 
     if (success) {
       fullscene = cloneDeep(val)
+
+      //console.log(val)
 
       val.scene.scale.x = 30;
       val.scene.scale.y = 30;
@@ -173,10 +172,13 @@ async function init() {
                 );
   });
 
+  const bod = await new ModelPart(bdy,scene,30)
+  const har = await new ModelPart(hr,scene,30)
+  
   await until(()=>{return cnt==8})
   ReactDOM.render(
     <>
-    <Editor models={models}/>
+    <Editor models={models} modelParts={modelParts} body={bod} hair={har}/>
     </>,
     document.getElementById("options")
   )

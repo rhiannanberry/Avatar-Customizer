@@ -38,6 +38,7 @@ var assets = {
 export default class BodyEditor extends Component{
     static propTypes = {
       model: PropTypes.object,
+      modelPart: PropTypes.object,
       onChange: PropTypes.func
     }
 
@@ -73,7 +74,7 @@ export default class BodyEditor extends Component{
                 canDisable={false}
                 onChange={(src) => {
                   this.props.onChange((src == straight) ? 'straight' : 'curvy')
-                  
+                  this.props.modelPart.setSelected((src == curvy) ? 1 : 2)
                 }}
               />
             </div>

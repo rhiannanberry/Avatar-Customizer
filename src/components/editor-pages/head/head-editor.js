@@ -46,15 +46,16 @@ var assets = {
 export default class HeadEditor extends Component {
     static propTypes = {
       model: PropTypes.object,
+      modelPart: PropTypes.object,
       onChange: PropTypes.func
     }
 
     constructor(props) {
       super(props);
 
-      assets.hair.materials = [new Material(this.props.model.material.clone(), "hair", [hair]),
-                                new Material(this.props.model.material.clone(), "eyebrows", [eyebrows])];
-      assets.eyes.materials = [new Material(this.props.model.material.clone(), "eyes", [eyes])];
+      assets.hair.materials = [new Material(this.props.modelPart.getMaterial().clone(), "hair", [hair]),
+                                new Material(this.props.modelPart.getMaterial().clone(), "eyebrows", [eyebrows])];
+      assets.eyes.materials = [new Material(this.props.modelPart.getMaterial().clone(), "eyes", [eyes])];
 
       this.materials = [
         ...assets.hair.materials,
@@ -89,7 +90,9 @@ export default class HeadEditor extends Component {
                 canDisable={false}
                 onChange={(src) => {
                   const ind = assets.hairModel.textures.findIndex((e) => {return e == src});
-                  this.props.onChange(assets.hairModel.textureNames[ind]);
+                  console.log(assets.hairModel.textureNames[ind])
+                  this.props.modelPart.setSelectedByString(assets.hairModel.textureNames[ind])
+                  //this.props.onChange(assets.hairModel.textureNames[ind]);
                                   
                 }}
               />
