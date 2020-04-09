@@ -42,6 +42,10 @@ export default class BodyEditor extends Component{
       onChange: PropTypes.func
     }
 
+    static defaultProps = {
+      onChange: () => {}
+    }
+
     constructor(props) {
       super(props);
 

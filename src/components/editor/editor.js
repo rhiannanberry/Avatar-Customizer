@@ -71,7 +71,7 @@ export default class Editor extends Component{
         });
         this.props.body.setMaterials(this.materials)
         this.props.hair.setMaterials(this.materials)
-        this.props.models[this.bodyType][this.hairType].model.visible = true;
+        //this.props.models[this.bodyType][this.hairType].model.visible = true;
 
         this.changePage("Body")
     }
@@ -82,17 +82,6 @@ export default class Editor extends Component{
         this.shirt.current.editorPage.current.setActive(value === "Shirt");
     }
 
-    updateHairType(hairType) {
-        this.props.models[this.bodyType][this.hairType].model.visible = false;
-        this.props.models[this.bodyType][hairType].model.visible = true;
-        this.hairType = hairType;
-    }
-
-    updateBodyType(bodyType) {
-        this.props.models[this.bodyType][this.hairType].model.visible = false;
-        this.props.models[bodyType][this.hairType].model.visible = true;
-        this.bodyType = bodyType;
-    }
 
     getGLB() {
         const exporter = new GLTFExporter();
@@ -137,12 +126,7 @@ export default class Editor extends Component{
             ctx.drawImage(mat.getBakedTexture(), 0, 0);
         });
 
-        return canvas.toDataURL("image/png", 1.0);
-
-        return ( new Promise((resolve,reject) => {
-            new THREE.ImageLoader().load(canvas.toDataURL("image/png", 1.0), resolve, undefined, reject)
-        }
-        ));    
+        return canvas.toDataURL("image/png", 1.0);   
     }
 
     downloadMergedTexture() {
@@ -180,8 +164,8 @@ export default class Editor extends Component{
                 
                 
             </div>
-            <BodyEditor ref={this.body} model={activeModel} modelPart={this.props.body} onChange={(b) => this.updateBodyType(b)} selected={this.bodyType}/>
-            <HeadEditor ref={this.head} model={activeModel} modelPart={this.props.hair} onChange={(h) => this.updateHairType(h)} selected={this.hairType}/>
+            <BodyEditor ref={this.body} model={activeModel} modelPart={this.props.body} selected={this.bodyType}/>
+            <HeadEditor ref={this.head} model={activeModel} modelPart={this.props.hair} selected={this.hairType}/>
             <ShirtEditor ref={this.shirt} model={activeModel} modelPart={this.props.body}/>
             <button onClick={e => this.downloadMergedTexture()}>Download Texture</button>
             <button onClick={e => this.getGLB(e)}>Download Model</button>
