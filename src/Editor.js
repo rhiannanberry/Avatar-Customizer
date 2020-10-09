@@ -1,1 +1,1 @@
-export default from "./components/editor/Editor.js";
+export default from "./components/editor/editor.js";

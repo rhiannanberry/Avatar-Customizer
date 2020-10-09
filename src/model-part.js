@@ -11,6 +11,7 @@ export default class ModelPart {
                 src,
                 (val) => {
                     this.model = cloneDeep(val);
+                    console.log(val)
                     this.previewModel = val;
                     this.options = ([null]).concat(
                         val.scene.children[0].children.slice(1,-1).map((v) => {return v.name})
@@ -54,7 +55,12 @@ export default class ModelPart {
             })
         })
     }
-
+/*
+https://threejs.org/docs/#api/en/objects/SkinnedMesh
+https://threejs.org/docs/#examples/en/utils/BufferGeometryUtils
+https://stackoverflow.com/questions/45122359/three-js-how-to-merge-two-buffergeometries-and-keep-transforms
+https://gltf-viewer.donmccurdy.com/
+*/
     setSelected(index) {
         this.selected = index;
         this.previewModel.scene.children[0].children.forEach((v,i) => {

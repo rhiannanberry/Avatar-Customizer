@@ -45,14 +45,12 @@ var assets = {
 
 export default class HeadEditor extends Component {
     static propTypes = {
-      model: PropTypes.object,
       modelPart: PropTypes.object,
       onChange: PropTypes.func
     }
 
     constructor(props) {
-      super(props);
-
+      super(props);      
       assets.hair.materials = [new Material(this.props.modelPart.getMaterial().clone(), "hair", [hair]),
                                 new Material(this.props.modelPart.getMaterial().clone(), "eyebrows", [eyebrows])];
       assets.eyes.materials = [new Material(this.props.modelPart.getMaterial().clone(), "eyes", [eyes])];

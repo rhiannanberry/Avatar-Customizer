@@ -6,6 +6,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils.js"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import styles from "./stylesheets/main.scss";
+import merge_models from "./test_merge.js"
 
 import ModelPart from "./model-part.js"
 
@@ -17,14 +18,6 @@ import cn from "../includes/models/merged/model_curvy_none.glb";
 import cs from "../includes/models/merged/model_curvy_short.glb";
 import cb from "../includes/models/merged/model_curvy_blair.glb";
 import cl from "../includes/models/merged/model_curvy_long.glb";
-
-import curvy from "../includes/models/merged/model_body_curvy.glb"
-import straight from "../includes/models/merged/model_body_straight.glb"
-
-import none from "../includes/models/merged/model_head_none.glb"
-import short from "../includes/models/merged/model_head_short.glb"
-import blair from "../includes/models/merged/model_head_blair.glb"
-import long from "../includes/models/merged/model_head_long.glb"
 
 import bdy from "../includes/models/merged/model_body.glb"
 import hr from "../includes/models/merged/model_hair.glb"
@@ -39,7 +32,7 @@ const modelTypes = [
   {body : "curvy", hair: "blair", src: cb },
   {body : "curvy", hair: "long", src: cl},
 ]
-
+//LOOK INTO GLTF EXPORTER. You might be able to combine parts and skeletons and such, then export as one thing
 const scaleAudio = {
   gltfExtensions: {
     MOZ_hubs_components: {
@@ -50,6 +43,9 @@ const scaleAudio = {
     }
   }
 }
+
+var mixer= null;
+var clock = new THREE.Clock();
 
 var modelParts = {
   exportScene : {},
@@ -107,6 +103,8 @@ async function init() {
   controls.update();
 
   function render() {
+    var delta = clock.getDelta();
+    mixer.update(delta);
     renderer.render(scene, camera);
   }
 
@@ -116,15 +114,14 @@ async function init() {
   var models = {}
   var cnt = 0;
 
+  
 
-  function processModel(src, bodyType, hair, val, success) {
+  function processModel(bodyType, hair, val, success) {
     var mod = null;
     var fullscene = null;
 
     if (success) {
       fullscene = cloneDeep(val)
-
-      //console.log(val)
 
       val.scene.scale.x = 30;
       val.scene.scale.y = 30;
@@ -150,6 +147,13 @@ async function init() {
           mod.visible = false;
         }
       })
+      if (cnt == 0) {
+        mixer = new THREE.AnimationMixer(val.scene);
+        
+      }
+      if (cnt == 1) {
+        mixer.clipAction(THREE.AnimationClip.findByName(val.animations, "idle")).play()
+      }
       scene.add(val.scene);
     } else {
       console.log(val);
@@ -166,9 +170,9 @@ async function init() {
   
   modelTypes.forEach(model => {
     _loader.load( model.src,
-                  (val) => {processModel(model.src, model.body, model.hair, val, true)},
+                  (val) => {processModel(model.body, model.hair, val, true)},
                   undefined,
-                  (val) => {processModel(model.src, model.body, model.hair, val, false)}
+                  (val) => {processModel(model.body, model.hair, val, false)}
                 );
   });
 
@@ -176,16 +180,19 @@ async function init() {
   const har = await new ModelPart(hr,scene,30)
   
   await until(()=>{return cnt==8})
+  
   ReactDOM.render(
     <>
     <Editor models={models} modelParts={modelParts} body={bod} hair={har}/>
     </>,
     document.getElementById("options")
   )
-
+  
   setInterval(() => {
     render();
   }, 100);
+
+  
 }
 
 window.onload = init;

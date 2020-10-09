@@ -37,7 +37,6 @@ var assets = {
 
 export default class BodyEditor extends Component{
     static propTypes = {
-      model: PropTypes.object,
       modelPart: PropTypes.object,
       onChange: PropTypes.func
     }
@@ -48,9 +47,9 @@ export default class BodyEditor extends Component{
 
     constructor(props) {
       super(props);
-
-      assets.skin.materials = [new Material(this.props.model.material.clone(), "skin", [skin])];
-      assets.blush.materials = [new Material(this.props.model.material.clone(), "blush", [blush])];
+      var base_material = this.props.modelPart.getMaterial().clone();
+      assets.skin.materials = [new Material(base_material, "skin", [skin])];
+      assets.blush.materials = [new Material(base_material, "blush", [blush])];
 
       this.materials = [ ...assets.skin.materials, ...assets.blush.materials]
       

@@ -42,20 +42,9 @@ export default class Editor extends Component{
         this.jacket = React.createRef();
 
     }
-
-    createMaterials(model, materials) {
-        model.material = [];
-        model.geometry.clearGroups();
-
-        for (var i=0; i<materials.length; i++) {
-            model.geometry.addGroup(0, Infinity, i);
-            model.material.push(materials[i].material);
-        }
-    }
     
     componentDidMount() {
-        const currentModel = this.props.models[this.bodyType][this.hairType].model;
-        const bgMaterial = currentModel.material.clone();
+        const bgMaterial = this.props.body.model.scene.children[0].children[1].material.clone();
         this.materials = [
             new Material(bgMaterial, "", null),
             ...this.body.current.materials,
@@ -63,12 +52,7 @@ export default class Editor extends Component{
             ...this.shirt.current.materials,
             //...this.jacket.current.materials,
         ]
-        
-        Object.keys(this.props.models).forEach((b) => {
-            Object.keys(this.props.models[b]).forEach((h) => {
-                this.createMaterials(this.props.models[b][h].model, this.materials);
-            })
-        });
+      
         this.props.body.setMaterials(this.materials)
         this.props.hair.setMaterials(this.materials)
         //this.props.models[this.bodyType][this.hairType].model.visible = true;
@@ -164,8 +148,8 @@ export default class Editor extends Component{
                 
                 
             </div>
-            <BodyEditor ref={this.body} model={activeModel} modelPart={this.props.body} selected={this.bodyType}/>
-            <HeadEditor ref={this.head} model={activeModel} modelPart={this.props.hair} selected={this.hairType}/>
+            <BodyEditor ref={this.body} modelPart={this.props.body} selected={this.bodyType}/>
+            <HeadEditor ref={this.head} modelPart={this.props.hair} selected={this.hairType}/>
             <ShirtEditor ref={this.shirt} model={activeModel} modelPart={this.props.body}/>
             <button onClick={e => this.downloadMergedTexture()}>Download Texture</button>
             <button onClick={e => this.getGLB(e)}>Download Model</button>
