@@ -52,7 +52,7 @@
     "stylelint": "^13.0.0",
     "stylelint-config-recommended-scss": "^4.1.0",
     "stylelint-scss": "^3.14.0",
-    "three": "^0.112.1",
+    "three": "^0.125.0",
     "three-gltf2-loader": "^1.2.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.4",
