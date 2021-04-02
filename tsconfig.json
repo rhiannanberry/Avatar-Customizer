@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outDir": "./docs/",
+        "noImplicitAny": true,
+        "module": "es6",
+        "target": "es5",
+        "allowJs": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "baseUrl" : "./",
+        "moduleResolution": "node", 
+        "allowSyntheticDefaultImports": true
+    }
+}

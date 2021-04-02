@@ -10,6 +10,8 @@ import merge_models from "./test_merge.js"
 
 import ModelPart from "./model-part.js"
 
+import BodyPage from "./components/editor-pages/body/body_v2";
+
 import sn from "../includes/models/merged/model_straight_none.glb";
 import ss from "../includes/models/merged/model_straight_short.glb";
 import sb from "../includes/models/merged/model_straight_blair.glb";
@@ -21,6 +23,9 @@ import cl from "../includes/models/merged/model_curvy_long.glb";
 
 import bdy from "../includes/models/merged/model_body.glb"
 import hr from "../includes/models/merged/model_hair.glb"
+
+import AvatarBase from "./models/avatar_base";
+import AvatarPart from "./models/avatar_part";
 
 const modelTypes = [
   {body : "straight", hair: "none", src: sn},
@@ -54,8 +59,10 @@ var modelParts = {
 
 }
 
+let avatarPart = null;
 
-import Editor from "./Editor"
+
+import Editor from "./components/editor/editor";
 import { until } from "./util";
 
 const TEXTURES = "../includes/textures/";
@@ -114,8 +121,6 @@ async function init() {
   var models = {}
   var cnt = 0;
 
-  
-
   function processModel(bodyType, hair, val, success) {
     var mod = null;
     var fullscene = null;
@@ -154,7 +159,7 @@ async function init() {
       if (cnt == 1) {
         mixer.clipAction(THREE.AnimationClip.findByName(val.animations, "idle")).play()
       }
-      scene.add(val.scene);
+      //scene.add(val.scene);
     } else {
       console.log(val);
     }
@@ -167,7 +172,32 @@ async function init() {
     cnt+=1;
   }
 
+  const bodyScene = await load(bdy);
+  const hairScene = await load(hr);
+  console.log(bodyScene)
+  console.log(hairScene)
+  const sc = bodyScene.scene;
+  const avatarRoot = bodyScene.scene.children[0];
+  const skeleton = avatarRoot.children[1].skeleton;
+  const bodySkinnedMeshes = avatarRoot.children.slice(1);
   
+  avatarRoot.children.splice(1, avatarRoot.children.length - 1);
+  const avatarBase = new AvatarBase(bodyScene, skeleton);
+  avatarPart = new AvatarPart(true, true, bodySkinnedMeshes);
+  avatarBase.addAvatarPart(avatarPart);
+
+  const hairSkinnedMeshes = hairScene.scene.children[0].children.slice(1);
+ 
+  const hairPart = new AvatarPart(false,true, hairSkinnedMeshes);
+  avatarBase.addAvatarPart(hairPart);
+
+  sc.scale.x = 30;
+  sc.scale.y = 30;
+  sc.scale.z = 30;
+
+  scene.add(sc);
+  console.log(scene)
+
   modelTypes.forEach(model => {
     _loader.load( model.src,
                   (val) => {processModel(model.body, model.hair, val, true)},
@@ -183,11 +213,12 @@ async function init() {
   
   ReactDOM.render(
     <>
-    <Editor models={models} modelParts={modelParts} body={bod} hair={har}/>
+    <BodyPage avatarPart={avatarPart} hairPart={hairPart}></BodyPage>
     </>,
     document.getElementById("options")
-  )
-  
+    )
+    
+    //<Editor models={models} modelParts={modelParts} body={bod} hair={har}/>
   setInterval(() => {
     render();
   }, 100);
@@ -196,3 +227,20 @@ async function init() {
 }
 
 window.onload = init;
+
+
+function load(src) {
+  return new Promise((resolve, reject) => {
+      const _loader = new GLTFLoader();
+      _loader.load(
+          src,
+          (val) => {
+              resolve(val);
+          },
+          undefined,
+          (err) => {
+              reject(err);
+          }
+      )
+  })
+}

@@ -11,23 +11,24 @@ export default class ModelPart {
                 src,
                 (val) => {
                     this.model = cloneDeep(val);
-                    console.log(val)
                     this.previewModel = val;
                     this.options = ([null]).concat(
                         val.scene.children[0].children.slice(1,-1).map((v) => {return v.name})
-                    );
-                    //select any value but zero
-                    this.selected = selected ?
+                        );
+                        //select any value but zero
+                        this.selected = selected ?
                         selected :
                         1+Math.floor(Math.random() * Math.floor(this.options.length-1));
-
-                    this.setSelected(this.selected)
-
+                        
+                        this.setSelected(this.selected)
+                        
+                    console.log(val.scene.position)
+                    console.log(val.scene)
                     val.scene.scale.x = scale;
                     val.scene.scale.y = scale;
                     val.scene.scale.z = scale;
 
-                    scene.add(val.scene);
+                    //scene.add(val.scene);
 
                     resolve(this);
                 },

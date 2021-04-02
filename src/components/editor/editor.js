@@ -153,6 +153,8 @@ export default class Editor extends Component{
             <ShirtEditor ref={this.shirt} model={activeModel} modelPart={this.props.body}/>
             <button onClick={e => this.downloadMergedTexture()}>Download Texture</button>
             <button onClick={e => this.getGLB(e)}>Download Model</button>
+            <input type="radio" id="a" name="body" value="a"></input>
+            <input type="radio" id="b" name="body" value="b"></input>
         </>
         );
     }

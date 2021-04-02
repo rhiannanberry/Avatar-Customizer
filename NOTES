@@ -1,0 +1,100 @@
+gltf:
+    animations
+    scene
+    children
+        children
+            type: Bones 1
+            type: SkinnedMesh 1 or +
+                geometry: BufferedGeometry
+                skeleton
+                material: 1 or +
+                    texture/map 1
+
+
+AvatarBase
+    MODEL
+        Materials[]
+        bones
+        animations[]
+        AvatarPart[]
+    VIEW
+        download texture
+        download model
+    CONTROLLER
+        helper
+            download data
+            flatten textures
+            flatten skinned meshes/scene/blah blah
+        download texture
+        download model+texture
+
+Material
+    MODEL
+        SEPARATE "isVisible" toggle
+        3js material
+    CONTROLLER
+        export: return if visible ? flattened texture + color : null
+
+BaseMaterial >> Material
+    MODEL
+        isRequired
+        3js material
+            isActive
+            color
+    VIEW
+        color editor
+    CONTROLLER
+        disable (if !isRequired)
+        setColor
+
+LayerMaterial >> Material
+    MODEL
+        3js material
+            isActive
+    CONTROLLER
+        disable
+
+CustomLayerMaterial >> Material
+    MODEL
+        3js material
+    CONTROLLER
+        disable
+        upload/enable/set new texture (returns true or false if successful)
+
+LayerMaterialGroup
+    MODEL
+        selected
+        LayerMaterial[]
+        CustomLayerMaterial
+    VIEW
+        disable/deselect button
+        upload texture button
+        layer material/texture buttons
+    CONTROLLER
+        set selected
+        deselect
+
+avatar part model:
+    -isRequired (at least 1)
+    -isSingular (at most 1)
+    -sharesMaterials
+    -selectedSkinnedMeshes (0 to *)
+    -skinnedmeshes[] //visibility should be set on these for isActive or which is selected
+
+    preprocess/constructor(skinnedmeshes[] materials[] bones sharesMaterials)
+        remove existing three js mats from skinnedmeshes and at all materials.material
+        set skeleton on each skinned mesh to the bones
+
+avatar part Views
+    pickPart UI//currently, parts are mutually exclusive but it is possible to have multiples (accessories)
+
+avatar part controller
+    deselect IF !isRequired
+    setSelected
+        IF isSingular
+        
+
+    postprocess for export
+        if !sharesMaterials
+            for all skinned meshes, if notVisible, set their materials as 
+        return selectedSkinnedMeshses
