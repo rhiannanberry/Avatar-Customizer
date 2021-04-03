@@ -21,6 +21,7 @@ interface RadioProps {
     color: string;
     onClickCallback: Function;
     selected: Boolean;
+    setTitle: Boolean;
     value: string|number;
 }
 
@@ -33,6 +34,7 @@ export class Radio extends Component {
         color: PropTypes.string,
         onClickCallback: PropTypes.func,
         selected: PropTypes.bool,
+        setTitle: PropTypes.bool,
         value: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number
@@ -44,6 +46,7 @@ export class Radio extends Component {
         children: null,
         color: "#b8b8b8",
         selected: false,
+        setTitle: false,
         // @ts-ignore
         value: null
     }
@@ -66,7 +69,7 @@ export class Radio extends Component {
             boxShadow: this.props.selected ? `0 0 6px ${this.props.color}` : null
         };
         return (
-            <span className="swatch" onClick={this.onClickValue}>
+            <span className="swatch" onClick={this.onClickValue} title={this.props.setTitle? this.value as string : null}>
                 <div style={swatchStyle} className="inner">
                     {this.props.children}
                 </div>
@@ -76,13 +79,13 @@ export class Radio extends Component {
 }
 
 
-interface RadioGroupProps {
+interface ColorRadioGroupProps {
     material: Material;
     colors: string[];
 }
 
-export class RadioGroup extends Component {
-    props: RadioGroupProps;
+export class ColorRadioGroup extends Component {
+    props: ColorRadioGroupProps;
     disabled: Boolean;
     selectedColor: string;
     customColor: string;
@@ -92,7 +95,7 @@ export class RadioGroup extends Component {
         colors: PropTypes.arrayOf(PropTypes.string)
     }
 
-    constructor(props: RadioGroupProps) {
+    constructor(props: ColorRadioGroupProps) {
         super(props);
 
         this.setColor = this.setColor.bind(this);
@@ -158,16 +161,21 @@ export class RadioGroup extends Component {
         })
 
         const colors = this.props.colors.map((color, i) => 
-            <Radio key={i} color={color} onClickCallback={this.setColor} selected={!this.disabled && this.selectedColor == color}></Radio>
+            <Radio key={i} 
+                    color={color} 
+                    onClickCallback={this.setColor} 
+                    selected={!this.disabled && this.selectedColor == color} 
+                    setTitle />
         );
 
+        //TODO: make setting title on custom color work
         const customColorButton = (
             <Radio onClickCallback={this.setToCustomColor} 
-                            selected={!isSelected}
-                            color={this.customColor}
-                            >
-                            <FontAwesomeIcon className="icon" icon={faPalette} />
-                    </Radio>
+                selected={!isSelected}
+                color={this.customColor}
+                setTitle >
+                <FontAwesomeIcon className="icon" icon={faPalette} />
+            </Radio>
         )
 
         return (
@@ -196,7 +204,7 @@ export class AvatarPartRadioGroup extends Component {
         iconPaths: PropTypes.arrayOf(PropTypes.string)
     }
 
-    constructor(props: RadioGroupProps) {
+    constructor(props: ColorRadioGroupProps) {
         super(props);
 
         this.isRequired = this.props.avatarPart.isRequired;
@@ -236,6 +244,54 @@ export class AvatarPartRadioGroup extends Component {
             <div className="swatchContainer">
                 {disableButton}
                 {parts}
+            </div>
+        );
+    }
+}
+
+
+interface PageRadioGroupProps {
+    iconPaths: string[],
+    pageNames: string[],
+    onClickCallback: Function
+}
+export class PageRadioGroup extends Component {
+    props: PageRadioGroupProps;
+    selectedPage: string;
+
+    static propTypes = {
+        iconPaths: PropTypes.arrayOf(PropTypes.string),
+        pageNames: PropTypes.arrayOf(PropTypes.string),
+        onClickCallback: PropTypes.func
+    }
+
+    constructor(props: PageRadioGroupProps) {
+        super(props);
+
+        this.selectedPage = this.props.pageNames[0];
+        this.togglePage = this.togglePage.bind(this);
+    }
+
+    togglePage(pageName: string) {
+        this.selectedPage = pageName;
+        this.props.onClickCallback(pageName);
+        this.forceUpdate();
+    }
+
+    render() {
+        const buttons = this.props.iconPaths.map((path, i) => 
+            <Radio key={i} 
+                onClickCallback={this.togglePage} 
+                value={this.props.pageNames[i]}
+                selected={this.selectedPage == this.props.pageNames[i]}
+                setTitle>
+                <img className="icon" src={path}/>
+            </Radio>
+        );
+
+        return (
+            <div className="swatchContainer">
+                {buttons}
             </div>
         );
     }
