@@ -3,7 +3,9 @@ import ReactDOM from "react-dom"
 import * as PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import { faBan } from "@fortawesome/free-solid-svg-icons/faBan";
+import { faPalette } from "@fortawesome/free-solid-svg-icons/faPalette";
 
 import { Material } from "../models/materials/material";
 import { Hue, Saturation} from 'react-color/lib/components/common'
@@ -40,7 +42,7 @@ export class Radio extends Component {
     static defaultProps = {
         // @ts-ignore
         children: null,
-        color: "#e8e8e8",
+        color: "#b8b8b8",
         selected: false,
         // @ts-ignore
         value: null
@@ -83,6 +85,7 @@ export class RadioGroup extends Component {
     props: RadioGroupProps;
     disabled: Boolean;
     selectedColor: string;
+    customColor: string;
 
     static propTypes = {
         material: PropTypes.instanceOf(Material),
@@ -93,7 +96,12 @@ export class RadioGroup extends Component {
         super(props);
 
         this.setColor = this.setColor.bind(this);
+        this.setCustomColor = this.setCustomColor.bind(this);
+        this.setToCustomColor = this.setToCustomColor.bind(this);
+
         this.disableMaterial = this.disableMaterial.bind(this);
+
+        this.customColor = "#ffaabb";
 
     }
     
@@ -107,6 +115,17 @@ export class RadioGroup extends Component {
         this.props.material.material.visible = true;
         this.props.material.material.color.setStyle(color);
         this.forceUpdate();
+    }
+
+    setCustomColor(color: object) {
+        // @ts-ignore
+        this.customColor = color.hex;
+        //@ts-ignore
+        this.setColor(color.hex);
+    }
+
+    setToCustomColor() {
+        this.setColor(this.customColor);
     }
 
     disableMaterial() {
@@ -124,6 +143,8 @@ export class RadioGroup extends Component {
     render() {
         const isDisabled = this.props.material.material.visible;
         const isRequired = this.props.material.isRequired;
+
+        let isSelected = this.disabled;
     
         const disableButton = isRequired 
                 ? null 
@@ -132,14 +153,29 @@ export class RadioGroup extends Component {
                             <FontAwesomeIcon className="icon" icon={faBan}/>
                     </Radio>;
 
+        this.props.colors.forEach(color => {
+            isSelected = isSelected || (this.selectedColor == color);
+        })
+
         const colors = this.props.colors.map((color, i) => 
             <Radio key={i} color={color} onClickCallback={this.setColor} selected={!this.disabled && this.selectedColor == color}></Radio>
         );
+
+        const customColorButton = (
+            <Radio onClickCallback={this.setToCustomColor} 
+                            selected={!isSelected}
+                            color={this.customColor}
+                            >
+                            <FontAwesomeIcon className="icon" icon={faPalette} />
+                    </Radio>
+        )
 
         return (
             <div className="swatchContainer">
                 {disableButton}
                 {colors}
+                {customColorButton}
+                <MyColorPicker color={this.customColor} onChange={this.setCustomColor}/>
             </div>
         );
     }
@@ -200,7 +236,6 @@ export class AvatarPartRadioGroup extends Component {
             <div className="swatchContainer">
                 {disableButton}
                 {parts}
-                <MyColorPicker color="#ffffff"/>
             </div>
         );
     }
