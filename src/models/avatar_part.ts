@@ -7,6 +7,7 @@ export default class AvatarPart {
     //private sharesMaterials: Boolean = true;
     private selectedSkinnedMeshes: number[] = [];
     private skinnedMeshes: THREE.SkinnedMesh[];
+    materials: Material[];
 
     constructor(isRequired: Boolean, isSingular:Boolean, skinnedMeshes: THREE.SkinnedMesh[]) {
         this.isRequired = isRequired;
@@ -26,21 +27,16 @@ export default class AvatarPart {
         })
     }
 
-    assignNewMaterials(materials: THREE.MeshStandardMaterial[] | Material[]) {
+    assignNewMaterials(materials: Material[]) {
         this.skinnedMeshes.forEach(mesh => {
             mesh.material = [];
             mesh.geometry.clearGroups();
-            materials.forEach((material: THREE.MeshStandardMaterial | Material, i: number) => {
+            materials.forEach((material: Material, i: number) => {
                 mesh.geometry.addGroup(0, Infinity, i);
-                if (material instanceof Material){
-                    // @ts-ignore
-                    mesh.material.push(material.material);
-                } else {
-                    // @ts-ignore
-                    mesh.material.push(material);
-                }
-                
+                // @ts-ignore
+                mesh.material.push(material.material);                
             })
+            this.materials = materials;
         })
     }
 

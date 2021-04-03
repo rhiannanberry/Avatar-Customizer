@@ -80,7 +80,7 @@ export class Radio extends Component {
 
 
 interface ColorRadioGroupProps {
-    material: Material;
+    materials: Material[];
     colors: string[];
 }
 
@@ -91,7 +91,7 @@ export class ColorRadioGroup extends Component {
     customColor: string;
 
     static propTypes = {
-        material: PropTypes.instanceOf(Material),
+        materials: PropTypes.arrayOf(PropTypes.instanceOf(Material)),
         colors: PropTypes.arrayOf(PropTypes.string)
     }
 
@@ -115,8 +115,10 @@ export class ColorRadioGroup extends Component {
     setColor(color: string) {
         this.disabled = false;
         this.selectedColor = color;
-        this.props.material.material.visible = true;
-        this.props.material.material.color.setStyle(color);
+        this.props.materials.forEach(material => {
+            material.material.visible = true;
+            material.material.color.setStyle(color);
+        })
         this.forceUpdate();
     }
 
@@ -133,7 +135,9 @@ export class ColorRadioGroup extends Component {
 
     disableMaterial() {
         this.disabled = true;
-        this.props.material.material.visible = false;
+        this.props.materials.forEach(material => {
+            material.material.visible = false;
+        })
         this.forceUpdate();
     }
 
@@ -144,8 +148,8 @@ export class ColorRadioGroup extends Component {
     }
 
     render() {
-        const isDisabled = this.props.material.material.visible;
-        const isRequired = this.props.material.isRequired;
+        const isDisabled = this.props.materials[0].material.visible;
+        const isRequired = this.props.materials[0].isRequired;
 
         let isSelected = this.disabled;
     

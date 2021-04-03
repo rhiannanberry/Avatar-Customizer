@@ -8,6 +8,7 @@ import { AvatarPartRadioGroup, Radio, ColorRadioGroup, PageRadioGroup } from "..
 
 import blush from "../../../images/textures/blush_default.png";
 import eyes from "../../../images/textures/eyes_default.png";
+import eyebrows from "../../../images/textures/eyebrows_default.png";
 import eyeWhites from "../../../images/textures/eye_whites.png";
 import hair from "../../../images/textures/hair_default.png";
 import shirt from "../../../images/textures/shirt_default.png";
@@ -26,6 +27,7 @@ import messy from "../../../images/icons/icons_hair_messy.png";
 export default class BodyPage extends Component {
     blushMaterial: Material;
     eyesMaterial: Material;
+    eyebrowsMaterial: Material;
     eyeWhitesMaterial: Material;
     hairMaterial: Material;
     shirtMaterial: Material;
@@ -43,6 +45,7 @@ export default class BodyPage extends Component {
 
         this.blushMaterial = new Material(blush);
         this.eyesMaterial = new BaseMaterial(eyes);
+        this.eyebrowsMaterial = new BaseMaterial(eyebrows);
         this.eyeWhitesMaterial = new BaseMaterial(eyeWhites);
         this.hairMaterial = new BaseMaterial(hair);
         this.shirtMaterial = new BaseMaterial(shirt);
@@ -54,8 +57,9 @@ export default class BodyPage extends Component {
                 this.skinMaterial,
                 this.eyeWhitesMaterial,
                 this.eyesMaterial,
+                this.eyebrowsMaterial,
                 this.blushMaterial, 
-                this.shirtMaterial, 
+                this.shirtMaterial,
             ]);
         this.props.hairPart.assignNewMaterials(
             [
@@ -88,12 +92,12 @@ export default class BodyPage extends Component {
                         />
                     Skin Color
                     <ColorRadioGroup
-                        material={this.skinMaterial}
+                        materials={[this.skinMaterial]}
                         colors= {["#503335", "#592f2a", "#a1665e", "#c58c85", "#d1a3a4", "#ecbcb4", "#FFE2DC"]}
                         />
                     Blush Color
                     <ColorRadioGroup
-                        material={this.blushMaterial}
+                        materials={[this.blushMaterial]}
                         colors= {["#551F25", "#82333C", "#983E38", "#DC6961","#e3b9a1"]}
                         />
                 </div>
@@ -105,12 +109,12 @@ export default class BodyPage extends Component {
                         />
                     Hair Color
                     <ColorRadioGroup
-                        material={this.hairMaterial}
+                        materials={[this.hairMaterial, this.eyebrowsMaterial]}
                         colors= {["#2F2321", "#5C4033", "#C04532", "#B9775A", "#E6C690", "#FCE3B8", "#E6E6E6"]}
                         />
                     Eye Color
                     <ColorRadioGroup
-                        material={this.eyesMaterial}
+                        materials={[this.eyesMaterial]}
                         colors= {["#552919", "#915139", "#917839", "#718233", "#338251", "#335A82"]}
                         />
                 </div>

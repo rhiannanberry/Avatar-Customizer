@@ -5,6 +5,7 @@ import { cloneDeep } from "lodash"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils.js"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter"
 import styles from "./stylesheets/main.scss";
 import merge_models from "./test_merge.js"
 
@@ -39,7 +40,7 @@ const modelTypes = [
 ]
 //LOOK INTO GLTF EXPORTER. You might be able to combine parts and skeletons and such, then export as one thing
 const scaleAudio = {
-  gltfExtensions: {
+  extensions: {
     MOZ_hubs_components: {
       "scale-audio-feedback": {
         maxScale: 1.25,
@@ -174,10 +175,32 @@ async function init() {
 
   const bodyScene = await load(bdy);
   const hairScene = await load(hr);
-  console.log(bodyScene)
-  console.log(hairScene)
+
   const sc = bodyScene.scene;
   const avatarRoot = bodyScene.scene.children[0];
+
+  sc.scale.x = 30;
+  sc.scale.y = 30;
+  sc.scale.z = 30;
+  //TODO: actually scour the whole model for extensions and delete, then re-add in correct spot
+  // OR fix model. idk.
+  //TODO: make little editor for adding gltf extensions easily
+  if (avatarRoot.userData.gltfExtensions) {
+    delete avatarRoot.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback'];
+  }
+  avatarRoot.traverse(node => {
+    if (node.name == "Neck") {
+      node.userData.gltfExtensions= {
+        MOZ_hubs_components: {
+          version:4, 
+          "scale-audio-feedback": {
+            maxScale: 1.5,
+            minScale: 1
+          }
+        }
+      }
+    }
+  })
   const skeleton = avatarRoot.children[1].skeleton;
   const bodySkinnedMeshes = avatarRoot.children.slice(1);
   
@@ -191,9 +214,7 @@ async function init() {
   const hairPart = new AvatarPart(false,true, hairSkinnedMeshes);
   avatarBase.addAvatarPart(hairPart);
 
-  sc.scale.x = 30;
-  sc.scale.y = 30;
-  sc.scale.z = 30;
+
 
   scene.add(sc);
   console.log(scene)
@@ -210,10 +231,29 @@ async function init() {
   const har = await new ModelPart(hr,scene,30)
   
   await until(()=>{return cnt==8})
+
+  function exportGLB() {
+    const exporter = new GLTFExporter();
+    avatarBase.getMergedGLTF().then(val => {
+      exporter.parse(val.scene, (glb) => {
+        console.log(glb)
+        avatarBase.postExportRestore();
+        const blob = new Blob([glb], {type: 'model/gltf-binary'});
+        const el = document.createElement("a");
+        el.style.display = "none";
+        el.href = URL.createObjectURL(blob);
+        el.download = "custom_avatar.glb"
+        el.click();
+        el.remove();
+      }, {animations: val.animations, binary: true, includeCustomExtensions: true})
+    
+    })
+  }
   
   ReactDOM.render(
     <>
     <BodyPage avatarPart={avatarPart} hairPart={hairPart}></BodyPage>
+    <button onClick={exportGLB}>EXPORT</button>
     </>,
     document.getElementById("options")
     )

@@ -8,7 +8,6 @@ import Material from "../material"
 import Swatches from "../color-picker2"
 
 import BodyEditor from "../editor-pages/body/body-editor"
-import HeadEditor from "../editor-pages/head/head-editor"
 import ShirtEditor from "../editor-pages/shirt/shirt-editor"
 
 import body from "./icons_body.png"
@@ -16,6 +15,7 @@ import head from "./icons_head.png"
 import shirt from "./icons_shirt.png"
 
 import "../../stylesheets/editor"
+import "../../stylesheets/buttons"
 
 const hairTypes = ["none", "short", "blair", "long"];
 const bodyTypes = ["straight", "curvy"]
@@ -149,7 +149,6 @@ export default class Editor extends Component{
                 
             </div>
             <BodyEditor ref={this.body} modelPart={this.props.body} selected={this.bodyType}/>
-            <HeadEditor ref={this.head} modelPart={this.props.hair} selected={this.hairType}/>
             <ShirtEditor ref={this.shirt} model={activeModel} modelPart={this.props.body}/>
             <button onClick={e => this.downloadMergedTexture()}>Download Texture</button>
             <button onClick={e => this.getGLB(e)}>Download Model</button>

@@ -9,6 +9,7 @@ export default class AvatarBase {
     private skeleton: THREE.Skeleton;
     private materials: Material[];
     private avatarParts: AvatarPart[] = [];
+    private avatarRootChildren: THREE.Object3D[];
 
     constructor(fullScene: Object, skeleton: THREE.Skeleton) { //should be a scene with "avatar root"
         this.fullScene = fullScene;
@@ -16,7 +17,7 @@ export default class AvatarBase {
     }
 
     addAvatarPart(avatarPart: AvatarPart) {
-        avatarPart.assignSkeleton(this.skeleton); //TODO: Figure out why this is insane
+        //avatarPart.assignSkeleton(this.skeleton); //TODO: Figure out why this is insane
         this.avatarParts.push(avatarPart);
         console.log(this.avatarRoot)
         avatarPart.meshes.forEach((mesh) => {
@@ -32,19 +33,33 @@ export default class AvatarBase {
         });
 
         const skinnedMesh = new THREE.SkinnedMesh(BufferGeometryUtils.mergeBufferGeometries(geometries), material);
-        skinnedMesh.bind(this.skeleton);
+        skinnedMesh.skeleton = this.skeleton;
         skinnedMesh.name = "Avatar";
-        
-        //TODO: Make sure this isn;t fucking up the skeleton attachment
-        const fullSceneExport = cloneDeep(this.fullScene);
 
         //@ts-ignore
-        let sceneObjects = fullSceneExport.scene.children[0].children;
+        const sc = this.fullScene.scene as THREE.Scene;
+        sc.scale.x = 1;
+        sc.scale.y = 1;
+        sc.scale.z = 1;
 
-        sceneObjects.splice(1, sceneObjects.length - 1);
+        const avatarRoot = sc.children[0];
+
+        this.avatarRootChildren = avatarRoot.children.map(child => child);
+
+        const bones = avatarRoot.children[0];
+        const p1 = avatarRoot.children[1];
+/*
+        skinnedMesh.position.x = p1.position.x;
+        skinnedMesh.position.y = p1.position.y;
+        skinnedMesh.position.z = p1.position.z;
+*/
+        avatarRoot.remove(...avatarRoot.children);
+
+        avatarRoot.add(bones);
+        avatarRoot.add(skinnedMesh)
+        console.log(sc);
         //@ts-ignore
-        fullSceneExport.scene.children.push(skinnedMesh);
-        return fullSceneExport;
+        return this.fullScene;
     }
 
     private async getMergedMaterial() {
@@ -54,15 +69,34 @@ export default class AvatarBase {
         return mergedMaterial;
     }
 
+    postExportRestore() {
+        //@ts-ignore
+        const sc = this.fullScene.scene as THREE.Scene;
+        sc.scale.x = 30;
+        sc.scale.y = 30;
+        sc.scale.z = 30;
+        this.avatarRoot.remove(...this.avatarRoot.children);
+        this.avatarRootChildren.forEach(child => {
+            this.avatarRoot.add(child);
+        })
+    }
+
     getMergedTexture() : string {
         const canvas = window.document.createElement("canvas");
         canvas.width = 1024;
         canvas.height = 1024;
 
         const ctx = canvas.getContext("2d");
-        this.materials.forEach( material => {
-            ctx.drawImage(material.getFlattenedTexture(), 0, 0);
+        this.avatarParts.forEach( avatarPart => {
+            avatarPart.materials.forEach( material => {
+                if (material.material.visible) {
+                    ctx.drawImage(material.getFlattenedTexture(), 0, 0);
+                }
+            })
         });
+        /*this.materials.forEach( material => {
+            ctx.drawImage(material.getFlattenedTexture(), 0, 0);
+        });*/
         return canvas.toDataURL("image/png", 1.0);
     }
 
