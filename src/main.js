@@ -5,8 +5,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {GLTFExporter} from "three/examples/jsm/exporters/GLTFExporter"
 import styles from "./stylesheets/main.scss";
+import buttonStyle from "./stylesheets/buttons.scss";
+import editorStyle from "./stylesheets/editor.scss";
 
-import BodyPage from "./components/editor-pages/body/body_v2";
+import Editor from "./components/editor";
 
 import bdy from "../includes/models/merged/model_body.glb"
 import hr from "../includes/models/merged/model_hair.glb"
@@ -16,8 +18,6 @@ import AvatarPart from "./models/avatar_part";
 
 var mixer= null;
 var clock = new THREE.Clock();
-
-import Editor from "./components/editor/editor";
 
 function applyExtenstions() {
   THREE.Color.prototype.getHexStringFull = function getHexStringFull() {
@@ -53,6 +53,7 @@ async function init() {
 
   // ambient
   scene.add(new THREE.AmbientLight(0xffffff));
+  scene.background = new THREE.Color(0x413b45);
 
   // light
   camera.position.set(0, 15, 20);
@@ -132,7 +133,7 @@ async function init() {
   
   ReactDOM.render(
     <>
-    <BodyPage bodyPart={avatarPart} hairPart={hairPart}></BodyPage>
+    <Editor bodyPart={avatarPart} hairPart={hairPart}></Editor>
     <button onClick={exportGLB}>EXPORT</button>
     </>,
     document.getElementById("options")
@@ -141,8 +142,6 @@ async function init() {
   setInterval(() => {
     render();
   }, 100);
-
-  
 }
 
 window.onload = init;
