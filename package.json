@@ -27,6 +27,7 @@
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.12",
     "@types/three": "^0.126.2",
+    "@types/tinycolor2": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "awesome-typescript-loader": "^5.2.1",

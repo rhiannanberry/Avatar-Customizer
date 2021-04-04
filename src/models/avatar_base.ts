@@ -43,16 +43,9 @@ export default class AvatarBase {
         sc.scale.z = 1;
 
         const avatarRoot = sc.children[0];
-
         this.avatarRootChildren = avatarRoot.children.map(child => child);
-
         const bones = avatarRoot.children[0];
-        const p1 = avatarRoot.children[1];
-/*
-        skinnedMesh.position.x = p1.position.x;
-        skinnedMesh.position.y = p1.position.y;
-        skinnedMesh.position.z = p1.position.z;
-*/
+
         avatarRoot.remove(...avatarRoot.children);
 
         avatarRoot.add(bones);
@@ -94,9 +87,6 @@ export default class AvatarBase {
                 }
             })
         });
-        /*this.materials.forEach( material => {
-            ctx.drawImage(material.getFlattenedTexture(), 0, 0);
-        });*/
         return canvas.toDataURL("image/png", 1.0);
     }
 

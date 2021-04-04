@@ -4,18 +4,22 @@ import * as PropTypes from "prop-types";
 import AvatarPart from "../../../models/avatar_part";
 import { Material } from "../../../models/materials/material";
 import { BaseMaterial } from "../../../models/materials/base_material";
-import { AvatarPartRadioGroup, Radio, ColorRadioGroup, PageRadioGroup } from "../../color_swatches";
+import AvatarPartRadioGroup from "../../avatar_part_radio_group";
+import ColorRadioGroup from "../../color_radio_group";
+import PageRadioGroup from "../../page_radio_group";
 
 import blush from "../../../images/textures/blush_default.png";
 import eyes from "../../../images/textures/eyes_default.png";
 import eyebrows from "../../../images/textures/eyebrows_default.png";
 import eyeWhites from "../../../images/textures/eye_whites.png";
 import hair from "../../../images/textures/hair_default.png";
+import jacket from "../../../images/textures/jacket_default.png";
 import shirt from "../../../images/textures/shirt_default.png";
 import skin from "../../../images/textures/skin_default.png";
 
 import bodyPage from "../../../images/icons/icons_body.png";
 import headPage from "../../../images/icons/icons_head.png";
+import shirtPage from "../../../images/icons//icons_shirt.png";
 //import bodyPage from "../../../images/icons/icons_body.png";
 
 import curvy from "../../../images/icons/icons_curvy.png";
@@ -30,13 +34,14 @@ export default class BodyPage extends Component {
     eyebrowsMaterial: Material;
     eyeWhitesMaterial: Material;
     hairMaterial: Material;
+    jacketMaterial: Material;
     shirtMaterial: Material;
     skinMaterial: Material;
     selectedPage: string;
     props: BodyProps;
 
     static propTypes = {
-        avatarPart: PropTypes.instanceOf(AvatarPart),
+        bodyPart: PropTypes.instanceOf(AvatarPart),
         hairPart: PropTypes.instanceOf(AvatarPart)
     }
 
@@ -48,11 +53,12 @@ export default class BodyPage extends Component {
         this.eyebrowsMaterial = new BaseMaterial(eyebrows);
         this.eyeWhitesMaterial = new BaseMaterial(eyeWhites);
         this.hairMaterial = new BaseMaterial(hair);
+        this.jacketMaterial = new Material(jacket);
         this.shirtMaterial = new BaseMaterial(shirt);
         this.skinMaterial = new BaseMaterial(skin);
 
 
-        this.props.avatarPart.assignNewMaterials(
+        this.props.bodyPart.assignNewMaterials(
             [   
                 this.skinMaterial,
                 this.eyeWhitesMaterial,
@@ -60,6 +66,7 @@ export default class BodyPage extends Component {
                 this.eyebrowsMaterial,
                 this.blushMaterial, 
                 this.shirtMaterial,
+                this.jacketMaterial
             ]);
         this.props.hairPart.assignNewMaterials(
             [
@@ -80,14 +87,14 @@ export default class BodyPage extends Component {
         return (
             <div>
                 <PageRadioGroup 
-                    iconPaths={[bodyPage, headPage]}
-                    pageNames={["Body", "Hair and Eyes"]}
+                    iconPaths={[bodyPage, headPage, shirtPage]}
+                    pageNames={["Body", "Hair and Eyes", "Top"]}
                     onClickCallback={this.changePage}
                 />
                 <div style={{display: this.selectedPage== "Body" ? "block" : "none"}}>
                     Body Shape
                     <AvatarPartRadioGroup
-                        avatarPart={this.props.avatarPart}
+                        avatarPart={this.props.bodyPart}
                         iconPaths={[curvy, straight]}
                         />
                     Skin Color
@@ -118,12 +125,24 @@ export default class BodyPage extends Component {
                         colors= {["#552919", "#915139", "#917839", "#718233", "#338251", "#335A82"]}
                         />
                 </div>
+                <div style={{display: this.selectedPage== "Top" ? "block" : "none"}}>
+                    Shirt Color
+                    <ColorRadioGroup
+                        materials={[this.shirtMaterial]}
+                        colors={["#f2f2f2", "#cedded", "#92a1b1", "#3479b7","#7d0c1e","#262525"]}
+                        />
+                    Jacket
+                    <ColorRadioGroup
+                        materials={[this.jacketMaterial]}
+                        colors={["#f2f2f2", "#cedded", "#92a1b1", "#3479b7","#7d0c1e","#262525"]}
+                        />
+                </div>
             </div>
         )
     }
 }
 
 interface BodyProps {
-    avatarPart: AvatarPart
+    bodyPart: AvatarPart
     hairPart: AvatarPart
 }
