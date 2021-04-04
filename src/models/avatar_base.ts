@@ -13,15 +13,33 @@ export default class AvatarBase {
     private avatarRootChildren: THREE.Object3D[];
 
     constructor(fullScene: GLTF, skeleton: THREE.Skeleton) {
-        //should be a scene with "avatar root"
         this.fullScene = fullScene;
         this.skeleton = skeleton;
+
+        if (this.avatarRoot.userData.gltfExtensions) {
+            delete this.avatarRoot.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback'];
+        }
+
+        this.avatarRoot.traverse(node => {
+            if (node.name == 'Neck') {
+                node.userData = {
+                    gltfExtensions: {
+                        MOZ_hubs_components: {
+                            version: 4,
+                            'scale-audio-feedback': {
+                                maxScale: 1.5,
+                                minScale: 1,
+                            },
+                        },
+                    },
+                };
+            }
+        });
     }
 
     addAvatarPart(avatarPart: AvatarPart): void {
         //avatarPart.assignSkeleton(this.skeleton); //TODO: Figure out why this is insane
         this.avatarParts.push(avatarPart);
-        console.log(this.avatarRoot);
         avatarPart.meshes.forEach(mesh => {
             this.avatarRoot.add(mesh);
         });

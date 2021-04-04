@@ -13,7 +13,7 @@ const babelConfig = JSON.parse(
 
 
 module.exports = {
-  entry: ['./src/main.js'],
+  entry: ['./src/main.tsx'],
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: '[name].js'
