@@ -9,6 +9,10 @@
         "jsx": "react",
         "baseUrl" : "./",
         "moduleResolution": "node", 
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./src/custom_types"
+        ]
     }
 }

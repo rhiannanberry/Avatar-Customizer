@@ -1,9 +1,9 @@
-import React, {Component,} from 'react';
-import * as PropTypes from "prop-types";
-import { CustomPicker } from 'react-color';
-import * as tinycolor from 'tinycolor2';
+import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
+import { CustomPicker, ColorResult } from 'react-color';
+import tinycolor from 'tinycolor2';
 
-import {Hue, Saturation} from 'react-color/lib/components/common';
+import { Hue, Saturation } from 'react-color/lib/components/common';
 
 interface MyColorPickerProps {
     color: string;
@@ -15,13 +15,13 @@ class MyColorPicker extends Component {
     state = {
         hsl: { h: 0, s: 0, l: 0 },
         hsv: { h: 0, s: 0, v: 0 },
-        hex: 'aaaaaa'
+        hex: 'aaaaaa',
     };
 
     static propTypes = {
         color: PropTypes.string,
-        onChange: PropTypes.func
-    }
+        onChange: PropTypes.func,
+    };
 
     constructor(props: MyColorPickerProps) {
         super(props);
@@ -29,18 +29,19 @@ class MyColorPicker extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         const color = tinycolor(this.props.color);
         this.setState({
             hsv: color.toHsv(),
             hsl: color.toHsl(),
             hex: color.toHex(),
-        })
+        });
     }
 
-    // @ts-ignore
-    onChange(e) {
-        const color = tinycolor(e);
+    // e actually takes the form of hsl or hsv exclusively. do not believe the lies!!
+    onChange(c: ColorResult): void {
+        // @ts-ignore
+        const color = tinycolor(c);
         this.setState({
             hsv: color.toHsv(),
             hsl: color.toHsl(),
@@ -50,41 +51,43 @@ class MyColorPicker extends Component {
         this.props.onChange(color.toHex());
     }
 
-    render() {
+    render(): JSX.Element {
         const style = {
             width: '100%',
             position: 'relative',
             display: 'block',
-            height: '60px'
+            height: '60px',
         } as React.CSSProperties;
-        
+
         const saturationStyle = {
             height: '80%',
-            position: 'relative'
+            position: 'relative',
         } as React.CSSProperties;
 
         const hueStyle = {
             height: '20%',
-            position: 'relative'
+            position: 'relative',
         } as React.CSSProperties;
 
-        return(
-            <span style={style} >
+        return (
+            <span style={style}>
                 <div style={saturationStyle}>
-                    <Saturation 
+                    <Saturation
                         // @ts-ignore
-                        hsl={this.state.hsl} 
-                        hsv={this.state.hsv} 
-                        onChange={this.onChange}/>
+                        hsl={this.state.hsl}
+                        hsv={this.state.hsv}
+                        onChange={this.onChange}
+                    />
                 </div>
                 <div style={hueStyle}>
-                    <Hue 
+                    <Hue
                         // @ts-ignore
-                        hsl={this.state.hsl} 
-                        onChange={this.onChange}/>
+                        hsl={this.state.hsl}
+                        onChange={this.onChange}
+                    />
                 </div>
             </span>
-        )
+        );
     }
 }
 

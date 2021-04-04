@@ -1,9 +1,10 @@
-import * as THREE from "three";
+import * as THREE from 'three';
+import load from '../../util';
 export class Material {
-    material : THREE.MeshStandardMaterial;
-    isRequired: Boolean;
+    material: THREE.MeshStandardMaterial;
+    isRequired: boolean;
 
-    constructor(textureURL : string = null, isRequired: Boolean = false) {
+    constructor(textureURL: string = null, isRequired = false) {
         this.isRequired = isRequired;
         this.material = new THREE.MeshStandardMaterial();
         this.material.transparent = true;
@@ -13,52 +14,37 @@ export class Material {
                 this.material.map = texture as THREE.Texture;
                 this.material.map.flipY = false;
                 this.material.needsUpdate = true;
-            })
+            });
         }
     }
 
-    getFlattenedTexture(): null | HTMLCanvasElement { //figure out return type
+    getFlattenedTexture(): null | HTMLCanvasElement {
+        //figure out return type
         if (!this.material.visible) {
             return null;
         }
 
         const texture = this.material.map.image;
-        const color : THREE.Color = this.material.color;
+        const color: THREE.Color = this.material.color;
 
-        const canvas = window.document.createElement("canvas");
+        const canvas = window.document.createElement('canvas');
         canvas.width = 1024;
         canvas.height = 1024;
 
-        const ctx = canvas.getContext("2d");
-        ctx.globalCompositeOperation = "copy";
+        const ctx = canvas.getContext('2d');
+        ctx.globalCompositeOperation = 'copy';
         ctx.drawImage(texture, 0, 0);
 
-        if (color.equals(new THREE.Color("white"))) {
+        if (color.equals(new THREE.Color('white'))) {
             return canvas;
         }
 
-        ctx.globalCompositeOperation = "multiply";
+        ctx.globalCompositeOperation = 'multiply';
         ctx.fillStyle = color.getStyle();
         ctx.fillRect(0, 0, 1024, 1024);
-        ctx.globalCompositeOperation = "destination-atop";
+        ctx.globalCompositeOperation = 'destination-atop';
         ctx.drawImage(texture, 0, 0);
 
         return canvas;
     }
-}
-
-function load(src : string) {
-    return new Promise((resolve, reject) => {
-        const _loader = new THREE.TextureLoader();
-        _loader.load(
-            src,
-            (val) => {
-                resolve(val);
-            },
-            undefined,
-            (err) => {
-                reject(err);
-            }
-        )
-    })
 }

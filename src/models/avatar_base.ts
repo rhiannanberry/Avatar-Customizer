@@ -1,43 +1,44 @@
-import * as THREE from "three";
-import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils";
-import { cloneDeep } from "lodash";
-import AvatarPart from "./avatar_part";
-import { Material } from "./materials/material";
+import * as THREE from 'three';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import load from '../util';
+import AvatarPart from './avatar_part';
+import { Material } from './materials/material';
 
 export default class AvatarBase {
-    private fullScene: Object;
+    private fullScene: GLTF;
     private skeleton: THREE.Skeleton;
     private materials: Material[];
     private avatarParts: AvatarPart[] = [];
     private avatarRootChildren: THREE.Object3D[];
 
-    constructor(fullScene: Object, skeleton: THREE.Skeleton) { //should be a scene with "avatar root"
+    constructor(fullScene: GLTF, skeleton: THREE.Skeleton) {
+        //should be a scene with "avatar root"
         this.fullScene = fullScene;
         this.skeleton = skeleton;
     }
 
-    addAvatarPart(avatarPart: AvatarPart) {
+    addAvatarPart(avatarPart: AvatarPart): void {
         //avatarPart.assignSkeleton(this.skeleton); //TODO: Figure out why this is insane
         this.avatarParts.push(avatarPart);
-        console.log(this.avatarRoot)
-        avatarPart.meshes.forEach((mesh) => {
+        console.log(this.avatarRoot);
+        avatarPart.meshes.forEach(mesh => {
             this.avatarRoot.add(mesh);
-        })
+        });
     }
 
-    async getMergedGLTF() {
+    async getMergedGLTF(): Promise<GLTF> {
         const material = await this.getMergedMaterial();
-        let geometries:THREE.BufferGeometry[] = [];
+        let geometries: THREE.BufferGeometry[] = [];
         this.avatarParts.forEach(part => {
             geometries = geometries.concat(part.getSelectedMeshes().map(mesh => mesh.geometry));
         });
 
         const skinnedMesh = new THREE.SkinnedMesh(BufferGeometryUtils.mergeBufferGeometries(geometries), material);
         skinnedMesh.skeleton = this.skeleton;
-        skinnedMesh.name = "Avatar";
+        skinnedMesh.name = 'Avatar';
 
-        //@ts-ignore
-        const sc = this.fullScene.scene as THREE.Scene;
+        const sc = this.fullScene.scene;
         sc.scale.x = 1;
         sc.scale.y = 1;
         sc.scale.z = 1;
@@ -49,64 +50,46 @@ export default class AvatarBase {
         avatarRoot.remove(...avatarRoot.children);
 
         avatarRoot.add(bones);
-        avatarRoot.add(skinnedMesh)
+        avatarRoot.add(skinnedMesh);
         console.log(sc);
-        //@ts-ignore
         return this.fullScene;
     }
 
-    private async getMergedMaterial() {
-        let texture = await load(this.getMergedTexture());
-        const mergedMaterial = new THREE.MeshStandardMaterial({map: texture as THREE.Texture});
+    private async getMergedMaterial(): Promise<THREE.MeshStandardMaterial> {
+        const texture = await load(this.getMergedTexture());
+        const mergedMaterial = new THREE.MeshStandardMaterial({ map: texture as THREE.Texture });
         mergedMaterial.map.flipY = false;
         return mergedMaterial;
     }
 
-    postExportRestore() {
-        //@ts-ignore
-        const sc = this.fullScene.scene as THREE.Scene;
+    postExportRestore(): void {
+        const sc = this.fullScene.scene;
         sc.scale.x = 30;
         sc.scale.y = 30;
         sc.scale.z = 30;
         this.avatarRoot.remove(...this.avatarRoot.children);
         this.avatarRootChildren.forEach(child => {
             this.avatarRoot.add(child);
-        })
+        });
     }
 
-    getMergedTexture() : string {
-        const canvas = window.document.createElement("canvas");
+    getMergedTexture(): string {
+        const canvas = window.document.createElement('canvas');
         canvas.width = 1024;
         canvas.height = 1024;
 
-        const ctx = canvas.getContext("2d");
-        this.avatarParts.forEach( avatarPart => {
-            avatarPart.materials.forEach( material => {
+        const ctx = canvas.getContext('2d');
+        this.avatarParts.forEach(avatarPart => {
+            avatarPart.materials.forEach(material => {
                 if (material.material.visible) {
                     ctx.drawImage(material.getFlattenedTexture(), 0, 0);
                 }
-            })
+            });
         });
-        return canvas.toDataURL("image/png", 1.0);
+        return canvas.toDataURL('image/png', 1.0);
     }
 
-    get avatarRoot() {
-        // @ts-ignore
+    get avatarRoot(): THREE.Object3D {
         return this.fullScene.scene.children[0];
     }
-}
-function load(src : string) {
-    return new Promise((resolve, reject) => {
-        const _loader = new THREE.TextureLoader();
-        _loader.load(
-            src,
-            (val) => {
-                resolve(val);
-            },
-            undefined,
-            (err) => {
-                reject(err);
-            }
-        )
-    })
 }

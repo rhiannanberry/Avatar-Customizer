@@ -1,5 +1,17 @@
 module.exports = {
-    parser: "babel-eslint",
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+      ecmaVersion: 2020,
+      sourceType: "module",
+      ecmaFeatures: {
+        jsx: true
+      }
+    },
+    settings: {
+      react: {
+        version: "detect"
+      }
+    },
     env: {
       browser: true,
       es6: true,
@@ -10,15 +22,13 @@ module.exports = {
       AFRAME: true,
       NAF: true
     },
-    plugins: ["prettier", "react"],
+    extends: [
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended",
+      "prettier/@typescript-eslint",
+      "plugin:prettier/recommended"
+    ],
     rules: {
-      "prettier/prettier": "error",
-      "prefer-const": "error",
-      "no-use-before-define": "error",
-      "no-var": "error",
-      "no-throw-literal": "error",
-      // Light console usage is useful but remove debug logs before merging to master.
-      "no-console": "off"
-    },
-    extends: ["prettier", "plugin:react/recommended", "eslint:recommended"]
+
+    }
   };

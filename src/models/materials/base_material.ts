@@ -1,7 +1,7 @@
-import { Material } from "./material";
+import { Material } from './material';
 
 export class BaseMaterial extends Material {
-    constructor(textureURL : string = null) {
+    constructor(textureURL: string = null) {
         super(textureURL, true);
     }
 }

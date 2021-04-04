@@ -1,24 +1,23 @@
-import * as THREE from "three";
-
+import * as THREE from 'three';
+import load from '../../util';
 
 export default class Texture {
     private texture: THREE.Texture;
-    // @ts-ignore
-    private texturePromise: Promise<T>;
-    private textureLoaded: Boolean = false;
-    private x:number;
-    private y:number;
-    private width:number;
-    private height:number;
+    private texturePromise: Promise<THREE.Texture>;
+    private textureLoaded = false;
+    private x: number;
+    private y: number;
+    private width: number;
+    private height: number;
 
-    constructor(path:string, x:number, y:number=476, width:number=220, height: number = 270) {
+    constructor(path: string, x: number, y = 476, width = 220, height = 270) {
         this.texturePromise = load(path);
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
-    async getTexture() {
+    async getTexture(): Promise<THREE.Texture> {
         if (this.textureLoaded) {
             return this.texture;
         } else {
@@ -30,7 +29,7 @@ export default class Texture {
             let w = this.width;
             let h = this.height;
 
-            if(differentSizes || !this.x || !this.y) {
+            if (differentSizes || !this.x || !this.y) {
                 const currentAspect = img.width / img.height;
                 const desiredAspect = this.width / this.height;
                 const fitToX = desiredAspect < currentAspect;
@@ -43,7 +42,7 @@ export default class Texture {
             canvas.height = 1024;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, this.x, this.y, w, h);
-            
+
             const actualVal = await load(canvas.toDataURL());
             const actualTexture = actualVal as THREE.Texture;
             actualTexture.flipY = false;
@@ -52,22 +51,4 @@ export default class Texture {
             return this.texture;
         }
     }
-}
-
-
-
-function load(src : string) {
-    return new Promise((resolve, reject) => {
-        const _loader = new THREE.TextureLoader();
-        _loader.load(
-            src,
-            (val) => {
-                resolve(val);
-            },
-            undefined,
-            (err) => {
-                reject(err);
-            }
-        )
-    })
 }

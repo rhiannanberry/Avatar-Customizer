@@ -1,13 +1,13 @@
-import React, { Component,  } from "react";
-import * as PropTypes from "prop-types";
+import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan } from "@fortawesome/free-solid-svg-icons/faBan";
-import { faUpload } from "@fortawesome/free-solid-svg-icons/faUpload";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
+import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload';
 
-import { Material } from "../models/materials/material";
-import Texture from "../models/materials/texture";
-import Radio from "./radio";
+import { Material } from '../models/materials/material';
+import Texture from '../models/materials/texture';
+import Radio from './radio';
 
 interface MaterialRadioGroupProps {
     material: Material;
@@ -18,23 +18,22 @@ interface MaterialRadioGroupProps {
 
 export default class MaterialRadioGroup extends Component {
     props: MaterialRadioGroupProps;
-    disabled: Boolean;
-    customSelected: Boolean;
-    selected: number;//just gonna go with key here
-    //@ts-ignore
-    file;
+    disabled: boolean;
+    customSelected: boolean;
+    selected: number; //just gonna go with key here
+    file: React.RefObject<HTMLInputElement>;
 
     static propTypes = {
         material: PropTypes.instanceOf(Material),
         textures: PropTypes.arrayOf(PropTypes.instanceOf(Texture)),
         texturePaths: PropTypes.arrayOf(PropTypes.string),
-        xPosition: PropTypes.number
-    }
+        xPosition: PropTypes.number,
+    };
 
     constructor(props: MaterialRadioGroupProps) {
         super(props);
 
-        this.file = React.createRef();
+        this.file = React.createRef<HTMLInputElement>();
 
         this.selected = -1;
         this.disabled = true;
@@ -47,7 +46,7 @@ export default class MaterialRadioGroup extends Component {
         this.triggerClick = this.triggerClick.bind(this);
     }
 
-    disable() {
+    disable(): void {
         this.selected = -1;
         this.disabled = true;
         this.customSelected = false;
@@ -55,7 +54,7 @@ export default class MaterialRadioGroup extends Component {
         this.forceUpdate();
     }
 
-    async toggleSelected(selected: number) {
+    async toggleSelected(selected: number): Promise<void> {
         if (selected == this.selected) {
             this.disable();
         } else {
@@ -69,12 +68,11 @@ export default class MaterialRadioGroup extends Component {
             this.forceUpdate();
         }
     }
-    triggerClick() {
-        //@ts-ignore
+    triggerClick(): void {
         this.file.current.click();
     }
 
-    async setCustom(e: React.ChangeEvent<HTMLInputElement>) {
+    async setCustom(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
         const path = window.URL.createObjectURL(e.target.files[0]);
         const texture = new Texture(path, this.props.xPosition);
         this.disabled = false;
@@ -86,37 +84,34 @@ export default class MaterialRadioGroup extends Component {
         this.forceUpdate();
     }
 
-    render() {
+    render(): JSX.Element {
         const disableButton = (
-            <Radio 
-                onClickCallback={this.disable} 
-                selected={this.disabled}>
-                    <FontAwesomeIcon className="icon" icon={faBan}/>
+            <Radio onClickCallback={this.disable} selected={this.disabled}>
+                <FontAwesomeIcon className="icon" icon={faBan} />
             </Radio>
         );
-        const textures = this.props.texturePaths.map((path, i) => 
-            <Radio 
+        const textures = this.props.texturePaths.map((path, i) => (
+            <Radio
                 key={i}
                 value={i}
                 onClickCallback={this.toggleSelected}
-                selected={!this.disabled && !this.customSelected && this.selected == i}>
-                <img className="icon" src={path}/>
+                selected={!this.disabled && !this.customSelected && this.selected == i}
+            >
+                <img className="icon" src={path} />
             </Radio>
-        )
+        ));
         const customButton = (
-            <Radio
-                onClickCallback={this.triggerClick}
-                selected={this.customSelected}>
-                <FontAwesomeIcon className="icon" icon={faUpload}/>
+            <Radio onClickCallback={(): void => this.file.current.click()} selected={this.customSelected}>
+                <FontAwesomeIcon className="icon" icon={faUpload} />
             </Radio>
-        )
+        );
         return (
             <div className="swatchContainer">
                 {disableButton}
                 {textures}
                 {customButton}
-                <input hidden ref={this.file} type="file" accept="image/png" onChange={this.setCustom}/>
+                <input hidden ref={this.file} type="file" accept="image/png" onChange={this.setCustom} />
             </div>
-        )
+        );
     }
 }
