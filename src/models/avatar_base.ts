@@ -9,16 +9,39 @@ export default class AvatarBase {
     private fullScene: GLTF;
     private skeleton: THREE.Skeleton;
     private materials: Material[];
-    private avatarParts: AvatarPart[] = [];
+    avatarParts: AvatarPart[] = [];
     private avatarRootChildren: THREE.Object3D[];
 
     constructor(fullScene: GLTF, skeleton: THREE.Skeleton) {
         this.fullScene = fullScene;
         this.skeleton = skeleton;
+        //delete this.avatarRoot.userData;
 
-        if (this.avatarRoot.userData.gltfExtensions) {
-            delete this.avatarRoot.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback'];
+        // TODO: WHY.... ISNT THE ANIMATION WORKING.....
+        this.avatarRoot.userData = {
+            name: 'AvatarRoot',
+            gltfExtensions: {
+                MOZ_hubs_components: {
+                    'loop-animation': {
+                        clip: 'idle_eyes',
+                        paused: false,
+                    },
+                },
+            },
         }
+
+        /*if (this.avatarRoot.userData.gltfExtensions) {
+            delete this.avatarRoot.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback'];
+        }*/
+
+        /*this.avatarRoot.userData.gltfExtensions = {
+            MOZ_hubs_components: {
+                'loop-animation': {
+                    clip: 'idle',
+                    paused: false,
+                },
+            },
+        };*/
 
         this.avatarRoot.traverse(node => {
             if (node.name == 'Neck') {
@@ -38,7 +61,6 @@ export default class AvatarBase {
     }
 
     addAvatarPart(avatarPart: AvatarPart): void {
-        //avatarPart.assignSkeleton(this.skeleton); //TODO: Figure out why this is insane
         this.avatarParts.push(avatarPart);
         avatarPart.meshes.forEach(mesh => {
             this.avatarRoot.add(mesh);
@@ -49,7 +71,9 @@ export default class AvatarBase {
         const material = await this.getMergedMaterial();
         let geometries: THREE.BufferGeometry[] = [];
         this.avatarParts.forEach(part => {
-            geometries = geometries.concat(part.getSelectedMeshes().map(mesh => mesh.geometry));
+            if (!part.disabled) {
+                geometries = geometries.concat(part.getSelectedMeshes().map(mesh => mesh.geometry));
+            }
         });
 
         const skinnedMesh = new THREE.SkinnedMesh(BufferGeometryUtils.mergeBufferGeometries(geometries), material);
@@ -57,9 +81,6 @@ export default class AvatarBase {
         skinnedMesh.name = 'Avatar';
 
         const sc = this.fullScene.scene;
-        sc.scale.x = 1;
-        sc.scale.y = 1;
-        sc.scale.z = 1;
 
         const avatarRoot = sc.children[0];
         this.avatarRootChildren = avatarRoot.children.map(child => child);
@@ -69,22 +90,18 @@ export default class AvatarBase {
 
         avatarRoot.add(bones);
         avatarRoot.add(skinnedMesh);
-        console.log(sc);
         return this.fullScene;
     }
 
     private async getMergedMaterial(): Promise<THREE.MeshStandardMaterial> {
         const texture = await load(this.getMergedTexture());
-        const mergedMaterial = new THREE.MeshStandardMaterial({ map: texture as THREE.Texture });
+        const mergedMaterial = new THREE.MeshStandardMaterial({ map: texture as THREE.Texture, skinning: true });
         mergedMaterial.map.flipY = false;
         return mergedMaterial;
     }
 
     postExportRestore(): void {
         const sc = this.fullScene.scene;
-        sc.scale.x = 30;
-        sc.scale.y = 30;
-        sc.scale.z = 30;
         this.avatarRoot.remove(...this.avatarRoot.children);
         this.avatarRootChildren.forEach(child => {
             this.avatarRoot.add(child);

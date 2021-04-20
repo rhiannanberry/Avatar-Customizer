@@ -6,7 +6,7 @@ export default class AvatarPart {
     isSingular: boolean;
     //private sharesMaterials: Boolean = true;
     private selectedSkinnedMeshes: number[] = [];
-    private skinnedMeshes: THREE.SkinnedMesh[];
+    skinnedMeshes: THREE.SkinnedMesh[];
     materials: Material[];
 
     constructor(isRequired: boolean, isSingular: boolean, skinnedMeshes: THREE.SkinnedMesh[]) {
@@ -23,7 +23,8 @@ export default class AvatarPart {
 
     assignSkeleton(skeleton: THREE.Skeleton): void {
         this.skinnedMeshes.forEach(mesh => {
-            mesh.bind(skeleton);
+            mesh.skeleton.dispose();
+            mesh.skeleton = skeleton;
         });
     }
 

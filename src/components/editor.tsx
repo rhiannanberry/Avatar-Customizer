@@ -14,6 +14,7 @@ import blush from '../images/textures/blush_default.png';
 import eyes from '../images/textures/eyes_default.png';
 import eyebrows from '../images/textures/eyebrows_default.png';
 import eyeWhites from '../images/textures/eye_whites.png';
+import glasses from '../images/textures/glasses_default.png';
 import hair from '../images/textures/hair_default.png';
 import jacket from '../images/textures/jacket_default.png';
 import shirt from '../images/textures/shirt_default.png';
@@ -34,6 +35,7 @@ import messy from '../images/icons/icons_hair_messy.png';
 
 interface EditorProps {
     bodyPart: AvatarPart;
+    glassesPart: AvatarPart;
     hairPart: AvatarPart;
 }
 
@@ -42,6 +44,7 @@ export default class Editor extends Component {
     eyesMaterial: Material;
     eyebrowsMaterial: Material;
     eyeWhitesMaterial: Material;
+    glassesMaterial: Material;
     hairMaterial: Material;
     jacketMaterial: Material;
     shirtMaterial: Material;
@@ -56,6 +59,7 @@ export default class Editor extends Component {
 
     static propTypes = {
         bodyPart: PropTypes.instanceOf(AvatarPart),
+        glassesPart: PropTypes.instanceOf(AvatarPart),
         hairPart: PropTypes.instanceOf(AvatarPart),
     };
 
@@ -74,6 +78,7 @@ export default class Editor extends Component {
         this.eyesMaterial = new BaseMaterial(eyes);
         this.eyebrowsMaterial = new BaseMaterial(eyebrows);
         this.eyeWhitesMaterial = new BaseMaterial(eyeWhites);
+        this.glassesMaterial = new BaseMaterial(glasses);
         this.backLogoMaterial = new Material();
         this.frontLogoMaterial = new Material();
         this.hairMaterial = new BaseMaterial(hair);
@@ -93,7 +98,7 @@ export default class Editor extends Component {
             this.backLogoMaterial,
         ]);
         this.props.hairPart.assignNewMaterials([this.hairMaterial]);
-
+        this.props.glassesPart.assignNewMaterials([this.glassesMaterial]);
         this.selectedPage = 'Body';
         this.changePage = this.changePage.bind(this);
     }
@@ -107,13 +112,17 @@ export default class Editor extends Component {
         return (
             <div>
                 <PageRadioGroup
-                    iconPaths={[bodyPage, headPage, shirtPage]}
-                    pageNames={['Body', 'Hair and Eyes', 'Top']}
+                    iconPaths={[bodyPage, headPage, shirtPage, shirtPage]}
+                    pageNames={['Body', 'Hair and Eyes', 'Top', 'Glasses']}
                     onClickCallback={this.changePage}
                 />
                 <div style={{ display: this.selectedPage == 'Body' ? 'block' : 'none' }}>
                     Body Shape
-                    <AvatarPartRadioGroup avatarPart={this.props.bodyPart} iconPaths={[curvy, straight]} />
+                    <AvatarPartRadioGroup
+                        avatarPart={this.props.bodyPart}
+                        iconPaths={[curvy, straight, straight]}
+                        labels={['curvy', 'soft', 'straight']}
+                    />
                     Skin Color
                     <ColorRadioGroup
                         materials={[this.skinMaterial]}
@@ -127,7 +136,11 @@ export default class Editor extends Component {
                 </div>
                 <div style={{ display: this.selectedPage == 'Hair and Eyes' ? 'block' : 'none' }}>
                     Hair Style
-                    <AvatarPartRadioGroup avatarPart={this.props.hairPart} iconPaths={[blair, long, messy]} />
+                    <AvatarPartRadioGroup
+                        avatarPart={this.props.hairPart}
+                        iconPaths={[blair, long, messy, messy, messy, messy]}
+                        labels={['blair', 'long', 'messy', 'messy', 'messy', 'messy']}
+                    />
                     Hair Color
                     <ColorRadioGroup
                         materials={[this.hairMaterial, this.eyebrowsMaterial]}
@@ -163,6 +176,19 @@ export default class Editor extends Component {
                         textures={this.backLogoTextures}
                         texturePaths={this.logoPaths}
                         xPosition={662}
+                    />
+                </div>
+                <div style={{ display: this.selectedPage == 'Glasses' ? 'block' : 'none' }}>
+                    Glasses
+                    <AvatarPartRadioGroup
+                        avatarPart={this.props.glassesPart}
+                        iconPaths={[blair, long, messy]}
+                        labels={['Cat Eye', 'Circle', 'Square']}
+                    />
+                    Color
+                    <ColorRadioGroup
+                        materials={[this.glassesMaterial]}
+                        colors={['#1a1616', '#a82b27', '#dab560', '#9a9a9a']}
                     />
                 </div>
             </div>

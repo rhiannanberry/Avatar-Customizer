@@ -36,6 +36,7 @@ export default class PageRadioGroup extends Component {
             <Radio
                 key={i}
                 onClickCallback={this.togglePage}
+                className="page"
                 value={this.props.pageNames[i]}
                 selected={this.selectedPage == this.props.pageNames[i]}
                 setTitle

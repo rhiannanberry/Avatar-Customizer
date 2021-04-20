@@ -86,7 +86,7 @@ export default class MaterialRadioGroup extends Component {
 
     render(): JSX.Element {
         const disableButton = (
-            <Radio onClickCallback={this.disable} selected={this.disabled}>
+            <Radio onClickCallback={this.disable} selected={this.disabled} className="texture">
                 <FontAwesomeIcon className="icon" icon={faBan} />
             </Radio>
         );
@@ -96,12 +96,17 @@ export default class MaterialRadioGroup extends Component {
                 value={i}
                 onClickCallback={this.toggleSelected}
                 selected={!this.disabled && !this.customSelected && this.selected == i}
+                className="texture"
             >
                 <img className="icon" src={path} />
             </Radio>
         ));
         const customButton = (
-            <Radio onClickCallback={(): void => this.file.current.click()} selected={this.customSelected}>
+            <Radio
+                onClickCallback={(): void => this.file.current.click()}
+                selected={this.customSelected}
+                className="texture"
+            >
                 <FontAwesomeIcon className="icon" icon={faUpload} />
             </Radio>
         );

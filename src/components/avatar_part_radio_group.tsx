@@ -10,6 +10,7 @@ import Radio from './radio';
 interface AvatarPartRadioGroupProps {
     avatarPart: AvatarPart;
     iconPaths: string[];
+    labels: string[];
 }
 
 export default class AvatarPartRadioGroup extends Component {
@@ -20,6 +21,7 @@ export default class AvatarPartRadioGroup extends Component {
     static propTypes = {
         avatarPart: PropTypes.instanceOf(AvatarPart),
         iconPaths: PropTypes.arrayOf(PropTypes.string),
+        labels: PropTypes.arrayOf(PropTypes.string),
     };
 
     constructor(props: AvatarPartRadioGroupProps) {
@@ -55,7 +57,7 @@ export default class AvatarPartRadioGroup extends Component {
 
     render(): JSX.Element {
         const disableButton = this.isRequired ? null : (
-            <Radio onClickCallback={this.disablePart} selected={this.props.avatarPart.disabled}>
+            <Radio onClickCallback={this.disablePart} selected={this.props.avatarPart.disabled} className="part">
                 <FontAwesomeIcon className="icon" icon={faBan} />
             </Radio>
         );
@@ -63,6 +65,7 @@ export default class AvatarPartRadioGroup extends Component {
         const parts = this.props.iconPaths.map((path, i) => (
             <Radio
                 key={i}
+                className="part"
                 onClickCallback={this.togglePart}
                 value={i}
                 selected={!this.props.avatarPart.disabled && this.props.avatarPart.isSelected(i)}

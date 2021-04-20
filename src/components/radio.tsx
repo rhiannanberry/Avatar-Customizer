@@ -7,7 +7,9 @@ interface RadioProps {
     onClickCallback: Function;
     selected: boolean;
     setTitle: boolean;
+    className?: string;
     value?: string | number;
+    label?: string;
 }
 
 export default class Radio extends Component {
@@ -20,6 +22,8 @@ export default class Radio extends Component {
         selected: PropTypes.bool,
         setTitle: PropTypes.bool,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        label: PropTypes.string,
+        className: PropTypes.string,
     };
 
     static defaultProps = {
@@ -43,13 +47,16 @@ export default class Radio extends Component {
     render(): JSX.Element {
         const swatchStyle = {
             backgroundColor: this.props.color,
-            boxShadow: this.props.selected ? `0 0 6px ${this.props.color}` : null,
+            boxShadow: this.props.selected ? `0 0 6px 2px ${this.props.color}` : null,
         };
+
+        const classNames = `swatch ${this.props.className}`;
         return (
             <span
-                className="swatch"
+                className={classNames}
                 onClick={this.onClickValue}
                 title={this.props.setTitle ? (this.value as string) : null}
+                tabIndex={0}
             >
                 <div style={swatchStyle} className="inner">
                     {this.props.children}
