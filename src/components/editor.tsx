@@ -10,30 +10,40 @@ import MaterialRadioGroup from './material_radio_group';
 import PageRadioGroup from './page_radio_group';
 import Texture from '../models/materials/texture';
 
-import blush from '../images/textures/blush_default.png';
-import eyes from '../images/textures/eyes_default.png';
-import eyebrows from '../images/textures/eyebrows_default.png';
-import eyeWhites from '../images/textures/eye_whites.png';
-import glasses from '../images/textures/glasses_default.png';
-import hair from '../images/textures/hair_default.png';
-import jacket from '../images/textures/jacket_default.png';
-import shirt from '../images/textures/shirt_default.png';
-import skin from '../images/textures/skin_default.png';
+import blush from '../includes/textures/blush_default.png';
+import eyes from '../includes/textures/eyes_default.png';
+import eyebrows from '../includes/textures/eyebrows_default.png';
+import eyeWhites from '../includes/textures/eye_whites.png';
+import glasses from '../includes/textures/glasses_default.png';
+import hair from '../includes/textures/hair_default.png';
+import jacket from '../includes/textures/jacket_default.png';
+import shirt from '../includes/textures/shirt_default.png';
+import skin from '../includes/textures/skin_default.png';
 
-import duck from '../images/textures/duck.png';
+import duck from '../includes/textures/duck.png';
 
-import bodyPage from '../images/icons/icons_body.png';
-import headPage from '../images/icons/icons_head.png';
-import shirtPage from '../images/icons//icons_shirt.png';
-//import bodyPage from "../images/icons/icons_body.png";
+import bodyPage from '../includes/icons/icons_body.png';
+import glassesPage from '../includes/icons/glasses.png';
+import headPage from '../includes/icons/icons_head.png';
+import shirtPage from '../includes/icons/icons_shirt.png';
+//import bodyPage from "../includes/icons/icons_body.png";
 
-import curvy from '../images/icons/icons_curvy.png';
-import straight from '../images/icons/icons_straight.png';
-import blair from '../images/icons/icons_hair_blair.png';
-import long from '../images/icons/icons_hair_long.png';
-import messy from '../images/icons/icons_hair_messy.png';
+import curvy from '../includes/icons/icons_curvy.png';
+import straight from '../includes/icons/icons_straight.png';
+import soft from '../includes/icons/soft.png';
+import blair from '../includes/icons/icons_hair_blair.png';
+import compressed from '../includes/icons/hair_compressed.png';
+import long from '../includes/icons/icons_hair_long.png';
+import messy from '../includes/icons/icons_hair_messy.png';
+import puffs from '../includes/icons/hair_puffs.png';
+import swoop from '../includes/icons/hair_swoop.png';
+
+import cat from '../includes/icons/glasses_cat.png';
+import round from '../includes/icons/glasses_round.png';
+import square from '../includes/icons/glasses_square.png';
 
 interface EditorProps {
+    basePart: AvatarPart;
     bodyPart: AvatarPart;
     glassesPart: AvatarPart;
     hairPart: AvatarPart;
@@ -58,6 +68,7 @@ export default class Editor extends Component {
     props: EditorProps;
 
     static propTypes = {
+        basePart: PropTypes.instanceOf(AvatarPart),
         bodyPart: PropTypes.instanceOf(AvatarPart),
         glassesPart: PropTypes.instanceOf(AvatarPart),
         hairPart: PropTypes.instanceOf(AvatarPart),
@@ -86,12 +97,15 @@ export default class Editor extends Component {
         this.shirtMaterial = new BaseMaterial(shirt);
         this.skinMaterial = new BaseMaterial(skin);
 
-        this.props.bodyPart.assignNewMaterials([
+        this.props.basePart.assignNewMaterials([
             this.skinMaterial,
             this.eyeWhitesMaterial,
             this.eyesMaterial,
             this.eyebrowsMaterial,
             this.blushMaterial,
+        ]);
+
+        this.props.bodyPart.assignNewMaterials([
             this.shirtMaterial,
             this.frontLogoMaterial,
             this.jacketMaterial,
@@ -112,7 +126,7 @@ export default class Editor extends Component {
         return (
             <div>
                 <PageRadioGroup
-                    iconPaths={[bodyPage, headPage, shirtPage, shirtPage]}
+                    iconPaths={[bodyPage, headPage, shirtPage, glassesPage]}
                     pageNames={['Body', 'Hair and Eyes', 'Top', 'Glasses']}
                     onClickCallback={this.changePage}
                 />
@@ -120,7 +134,7 @@ export default class Editor extends Component {
                     Body Shape
                     <AvatarPartRadioGroup
                         avatarPart={this.props.bodyPart}
-                        iconPaths={[curvy, straight, straight]}
+                        iconPaths={[curvy, soft, straight]}
                         labels={['curvy', 'soft', 'straight']}
                     />
                     Skin Color
@@ -138,8 +152,8 @@ export default class Editor extends Component {
                     Hair Style
                     <AvatarPartRadioGroup
                         avatarPart={this.props.hairPart}
-                        iconPaths={[blair, long, messy, messy, messy, messy]}
-                        labels={['blair', 'long', 'messy', 'messy', 'messy', 'messy']}
+                        iconPaths={[blair, long, messy, compressed, puffs, swoop]}
+                        labels={['blair', 'long', 'messy', 'compressed', 'puffs', 'swoop']}
                     />
                     Hair Color
                     <ColorRadioGroup
@@ -156,12 +170,12 @@ export default class Editor extends Component {
                     Shirt Color
                     <ColorRadioGroup
                         materials={[this.shirtMaterial]}
-                        colors={['#f2f2f2', '#cedded', '#92a1b1', '#3479b7', '#7d0c1e', '#262525']}
+                        colors={['#D72638', '#3F88C5', '#F49D37', '#140F2D', '#FBFBF2']}
                     />
                     Jacket
                     <ColorRadioGroup
                         materials={[this.jacketMaterial]}
-                        colors={['#f2f2f2', '#cedded', '#92a1b1', '#3479b7', '#7d0c1e', '#262525']}
+                        colors={['#AD1F2D', '#2A618D', '#D5770B', '#33236C', '#F1F1D0']}
                     />
                     Front Logo
                     <MaterialRadioGroup
@@ -182,7 +196,7 @@ export default class Editor extends Component {
                     Glasses
                     <AvatarPartRadioGroup
                         avatarPart={this.props.glassesPart}
-                        iconPaths={[blair, long, messy]}
+                        iconPaths={[cat, round, square]}
                         labels={['Cat Eye', 'Circle', 'Square']}
                     />
                     Color

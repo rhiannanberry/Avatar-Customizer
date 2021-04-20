@@ -10,7 +10,7 @@ export default class Texture {
     private width: number;
     private height: number;
 
-    constructor(path: string, x: number, y = 476, width = 220, height = 270) {
+    constructor(path: string, x: number, y = 476, width = 220, height = 260) {
         this.texturePromise = load(path);
         this.x = x;
         this.y = y;
@@ -34,8 +34,12 @@ export default class Texture {
                 const desiredAspect = this.width / this.height;
                 const fitToX = desiredAspect < currentAspect;
 
-                w = fitToX ? this.width : (this.width / img.width) * img.height;
-                h = fitToX ? (this.width / img.width) * img.height : this.height;
+                const scale = fitToX ? 
+                                (img.width > this.width ? this.width / img.width : img.width / this.width) :
+                                (img.height > this.height ? this.height / img.height : img.height / this.height);
+
+                w = img.width * scale;
+                h = img.height * scale;
             }
             const canvas = document.createElement('canvas');
             canvas.width = 1024;

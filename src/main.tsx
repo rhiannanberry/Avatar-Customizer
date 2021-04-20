@@ -11,9 +11,9 @@ import AvatarPart from './models/avatar_part';
 import Editor from './components/editor';
 import ExportButton from './components/export_buttons';
 
-import bodyModel from '../includes/models/merged/model_body.glb';
-import hairModel from '../includes/models/merged/model_hair_2.glb';
-import glassesModel from '../includes/models/merged/glasses.glb';
+import bodyModel from './includes/models/body.glb';
+import hairModel from './includes/models/hair.glb';
+import glassesModel from './includes/models/glasses.glb';
 
 import './stylesheets/main.scss';
 import './stylesheets/buttons.scss';
@@ -26,15 +26,17 @@ interface SceneObjects {
     clock?: THREE.Clock;
 }
 
-//@ts-ignore
-let mixer = null;
+interface DynamicSceneObjects {
+    group: THREE.Group;
+    mixer: THREE.AnimationMixer;
+}
 
 function initializeScene(): SceneObjects {
     // setup scene
 
     const size = {
-        width: 500,
-        height: 400,
+        width: 400,
+        height: 500,
     };
 
     const scene = new THREE.Scene();
@@ -47,7 +49,7 @@ function initializeScene(): SceneObjects {
     controls.enablePan = false;
 
     // add renderer to dom
-    document.getElementById('container').prepend(renderer.domElement);
+    document.getElementById('left').prepend(renderer.domElement);
 
     // add lighting and position camera
     // TODO: make scene bg configurable. at least light/dark toggle
@@ -68,7 +70,7 @@ function initializeScene(): SceneObjects {
     };
 }
 
-async function importModels(): Promise<THREE.Group> {
+async function importModels(): Promise<DynamicSceneObjects> {
     const bodyGLTF = await loadGLTF(bodyModel);
     const hairGLTF = await loadGLTF(hairModel);
     const glassesGLTF = await loadGLTF(glassesModel);
@@ -76,63 +78,64 @@ async function importModels(): Promise<THREE.Group> {
     // process for export
     const scene = bodyGLTF.scene;
     const avatarRoot = scene.children[0];
-    console.log(bodyGLTF)
-
     
     const skeleton = (avatarRoot.children[1] as THREE.SkinnedMesh).skeleton;
-    const bodySkinnedMeshes = avatarRoot.children.slice(1) as THREE.SkinnedMesh[];
+    const headHandsMesh = [avatarRoot.children[1] as THREE.SkinnedMesh];
+    const bodySkinnedMeshes = avatarRoot.children.slice(2) as THREE.SkinnedMesh[];
     const hairSkinnedMeshes = hairGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
     const glassesSkinnedMeshes = glassesGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
-    console.log(avatarRoot.children)
+
     // remove children from avatarRoot
     avatarRoot.children.splice(1, avatarRoot.children.length - 1);
     
     const avatarBase = new AvatarBase(bodyGLTF, skeleton);
+    const headHandsPart = new AvatarPart(true, true, headHandsMesh);
     const bodyPart = new AvatarPart(true, true, bodySkinnedMeshes);
     const hairPart = new AvatarPart(false, true, hairSkinnedMeshes);
     const glassesPart = new AvatarPart(false, true, glassesSkinnedMeshes);
     
+    avatarBase.addAvatarPart(headHandsPart);
     avatarBase.addAvatarPart(hairPart);
     avatarBase.addAvatarPart(bodyPart);
     avatarBase.addAvatarPart(glassesPart);
     
-    //bodyPart.assignSkeleton(skeleton)
     hairPart.assignSkeleton(skeleton)
     glassesPart.assignSkeleton(skeleton)
 
-    console.log(scene);
-
-    mixer = new THREE.AnimationMixer(scene);
-    mixer.clipAction(bodyGLTF.animations[4]).play();
+    const mixer = new THREE.AnimationMixer(scene);
+    mixer.clipAction(bodyGLTF.animations[4]).play(); // idle animation
     
     // ... just gonna put the react entry point here.... nbd >_>
     ReactDOM.render(
         <>
-            <Editor bodyPart={bodyPart} glassesPart={glassesPart} hairPart={hairPart}></Editor>
             <ExportButton avatarBase={avatarBase} />
             <ExportButton avatarBase={avatarBase} texture />
+        </>,
+        document.getElementById('buttons'),
+    )
+    ReactDOM.render(
+        <>
+            <Editor basePart={headHandsPart} bodyPart={bodyPart} glassesPart={glassesPart} hairPart={hairPart}></Editor>
         </>,
         document.getElementById('options'),
     );
 
-    return scene;
+    return {group: scene, mixer: mixer};
 }
 
-function render(s: SceneObjects): void {
+function render(s: SceneObjects, mixer: THREE.AnimationMixer): void {
     const delta = s.clock.getDelta();
-    //@ts-ignore
     mixer.update(delta);
     s.renderer.render(s.scene, s.camera);
 }
 
 function initialize(): void {
-    importModels().then(group => {
-        const sceneObjects = initializeScene();
-        sceneObjects.scene.add(group);
-        console.log(group)
+    const sceneObjects = initializeScene();
+    importModels().then(dso => {
+        sceneObjects.scene.add(dso.group);
 
         setInterval(() => {
-            render(sceneObjects);
+            render(sceneObjects, dso.mixer);
         }, 100);
     });
 }

@@ -57,6 +57,7 @@ class MyColorPicker extends Component {
             position: 'relative',
             display: 'block',
             height: '60px',
+            maxWidth: '318px',
         } as React.CSSProperties;
 
         const saturationStyle = {

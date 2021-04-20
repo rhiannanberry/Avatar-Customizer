@@ -48,7 +48,7 @@ module.exports = {
           loader: "file-loader",
           options: {
             // move required assets to output dir and add a hash for cache busting
-            name: "images/[name].[ext]",
+            name: "includes/[name].[ext]",
             // Make asset paths relative to /src
           }
         }

@@ -7,18 +7,26 @@ body {
 
 #container {
     margin-top: 30px;
-    height: 400px;
     max-width: 900px;
     display: flex;
     flex-direction: row;
-    align-content: center;
-    align-items: center;
-    justify-content: space-between;
     width: 100%;
 
+    #left {
+        display: flex;
+        flex-direction: column;
+
+        #buttons {
+            display: grid;
+            grid-column-gap: 6px;
+            grid-template-columns: auto auto;
+            padding: 4px 0;
+        }
+    }
+
     canvas {
-        width: 500px;
-        height: 400px;
+        width: 400px;
+        height: 500px;
     }
 
     @media only screen and (max-width: 900px) {
@@ -52,7 +60,9 @@ td {
     flex-direction: column;
     vertical-align: top;
     height: 100%;
-    width: 360px;
+    width: 100%;
+    padding: 0 20px;
+    min-width: 320px;
 
     .texture-layer  {
         height: 32px;

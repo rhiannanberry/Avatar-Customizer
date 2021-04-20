@@ -47,10 +47,10 @@ export default class Radio extends Component {
     render(): JSX.Element {
         const swatchStyle = {
             backgroundColor: this.props.color,
-            boxShadow: this.props.selected ? `0 0 6px 2px ${this.props.color}` : null,
+            color: this.props.color
         };
 
-        const classNames = `swatch ${this.props.className}`;
+        const classNames = `swatch ${this.props.className} ${this.props.selected? 'selected':''}`;
         return (
             <span
                 className={classNames}

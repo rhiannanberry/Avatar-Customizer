@@ -1,4 +1,5 @@
-$swatch-size : 30px;
+$swatch-size : 40px;
+$part-swatch-size: 60px;
 $page-swatch-size: 40px;
 $texture-swatch-size: 40px;
 $swatch-corner-radius : 4px;
@@ -11,7 +12,9 @@ $swatch-background: #e0e0e0;
     & > * {
         margin-bottom: 6px;
     }
-    margin-bottom: 4px;
+    margin-top: 3px;
+    margin-bottom: 6px;
+    max-width: 350px;
 }
 
 .swatch {
@@ -21,10 +24,21 @@ $swatch-background: #e0e0e0;
     border-radius: $swatch-corner-radius;
     margin-right: 6px;
     cursor: pointer;
+    &.selected {
+        .inner {
 
-    &:focus {
-        box-shadow: 0 0 1px 2px #ffaabb;
+            box-shadow: 0 0 3px 2px;
+        }
     }
+
+    &.part {
+        width: $part-swatch-size;
+        height: $part-swatch-size;
+    }
+
+    /*&:focus {
+        box-shadow: 0 4px 0 0 #ffaabb, 0 -4px 0 0 #ffaabb;
+    }*/
 
     /*
     &.page, &.part, &.texture {
@@ -50,7 +64,7 @@ $swatch-background: #e0e0e0;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                border-radius: 4px;
+                //border-radius: 4px;
                 position: absolute;
                 padding: 4px;
                 margin-top: 96px;
@@ -89,6 +103,7 @@ $swatch-background: #e0e0e0;
             height: 80%;
             object-fit: contain;
             -o-object-fit: contain;
+            color: black;
         }
 
     }

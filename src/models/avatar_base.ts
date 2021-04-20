@@ -30,19 +30,6 @@ export default class AvatarBase {
             },
         }
 
-        /*if (this.avatarRoot.userData.gltfExtensions) {
-            delete this.avatarRoot.userData.gltfExtensions.MOZ_hubs_components['scale-audio-feedback'];
-        }*/
-
-        /*this.avatarRoot.userData.gltfExtensions = {
-            MOZ_hubs_components: {
-                'loop-animation': {
-                    clip: 'idle',
-                    paused: false,
-                },
-            },
-        };*/
-
         this.avatarRoot.traverse(node => {
             if (node.name == 'Neck') {
                 node.userData = {

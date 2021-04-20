@@ -56,8 +56,6 @@ export default class ExportButton extends Component {
 
                             const right = anim.tracks[0];
                             const left = anim.tracks[3];
-                            console.log(right);
-                            console.log(left);
 
                             right.values.forEach((v, i) => {
                                 left.values[i] = i%3 == 0 ? -v : v;
@@ -67,7 +65,6 @@ export default class ExportButton extends Component {
                             anim.optimize();
                         }
                     })
-                    console.log(val.animations)
                 },
                 { animations: val.animations, binary: true, includeCustomExtensions: true },
             );
