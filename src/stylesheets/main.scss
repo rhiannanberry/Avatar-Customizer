@@ -2,12 +2,24 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     display: flex;
-    justify-content: center;
+    margin: 0px;
+    flex-direction: column;
+    align-items: center;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
 }
 
 #container {
     margin-top: 30px;
-    max-width: 900px;
+    margin-bottom: 30px;
+    min-height: calc(100vh - 90px);
+    max-width: 860px;
+    justify-content: space-between;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -15,32 +27,92 @@ body {
     #left {
         display: flex;
         flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+
+        canvas {
+            width: 400px;
+            height: 500px;
+        }
 
         #buttons {
+            margin-top: 8px;
             display: grid;
             grid-column-gap: 6px;
             grid-template-columns: auto auto;
-            padding: 4px 0;
         }
     }
 
-    canvas {
-        width: 400px;
-        height: 500px;
+    #options {
+        display: inline-flex;
+        flex-direction: column;
+        vertical-align: top;
+        height: 100%;
+        width: 442px;
+        min-width: 320px;
+
+        color: #753e5c;
+
+        .page {
+            padding: 20px;
+            background-color: lavenderblush;
+            border: solid 1px pink;
+            border-radius: 0 6px 6px 0;
+            margin-top: -1px;
+
+            display: none;
+            &.selected {
+                display: block;
+            }
+        }
+    
+        .texture-layer  {
+            height: 32px;
+            margin: 10px;
+            
+            .layer-button-group {
+                margin: 0px 5px;
+                .layer-button {
+                    display:block;
+                    color: #8d8d8d;
+    
+                    :hover {
+                        color:#010101;
+                        -webkit-transition-duration: 0.2s; /* Safari */
+                        transition-duration: 0.2s;
+                        -moz-transition-duration: 0.2s;
+                    }
+    
+                    >svg {
+                        display: block;
+                    }
+    
+                }
+            }
+            
+            .color-picker {
+                height:100%;
+                width:32px;
+                padding: 0px;
+                //border: 0px;
+                margin: 0px 10px;
+            }
+    
+            .dropdown {
+                height:100%;
+                width: 100px;
+            }
+        }
     }
+
 
     @media only screen and (max-width: 900px) {
         flex-direction: column;
-        canvas {
-            margin-bottom: 20px;
-        }
-    }
-    
-    @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
-        
-        flex-direction: column;
-        canvas {
-            margin-bottom: 20px;
+        align-items: center;
+        #options {
+            width: 100%;
+            max-width: 400px;
+            padding: 0;
         }
     }
 }
@@ -52,53 +124,5 @@ td {
 
     & > div {
         display:contents;
-    }
-}
-
-#options {
-    display: inline-flex;
-    flex-direction: column;
-    vertical-align: top;
-    height: 100%;
-    width: 100%;
-    padding: 0 20px;
-    min-width: 320px;
-
-    .texture-layer  {
-        height: 32px;
-        margin: 10px;
-        
-        .layer-button-group {
-            margin: 0px 5px;
-            .layer-button {
-                display:block;
-                color: #8d8d8d;
-
-                :hover {
-                    color:#010101;
-                    -webkit-transition-duration: 0.2s; /* Safari */
-                    transition-duration: 0.2s;
-                    -moz-transition-duration: 0.2s;
-                }
-
-                >svg {
-                    display: block;
-                }
-
-            }
-        }
-        
-        .color-picker {
-            height:100%;
-            width:32px;
-            padding: 0px;
-            //border: 0px;
-            margin: 0px 10px;
-        }
-
-        .dropdown {
-            height:100%;
-            width: 100px;
-        }
     }
 }

@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, createRef, RefObject } from 'react';
 import * as PropTypes from 'prop-types';
 import tinycolor from 'tinycolor2';
 import { ColorResult } from 'react-color';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
-import { faPalette } from '@fortawesome/free-solid-svg-icons/faPalette';
-
 import { Material } from '../models/materials/material';
 
 import Radio from './radio';
 import MyColorPicker from './color';
+import { faTint } from '@fortawesome/free-solid-svg-icons';
 
 interface ColorRadioGroupProps {
+    title: string;
     materials: Material[];
     colors: string[];
 }
@@ -22,8 +21,11 @@ export default class ColorRadioGroup extends Component {
     disabled: boolean;
     selectedColor: string;
     customColor: string;
+    colorRefs: RefObject<Radio>[] = [];
+    idPrefix: string;
 
     static propTypes = {
+        title: PropTypes.string,
         materials: PropTypes.arrayOf(PropTypes.instanceOf(Material)),
         colors: PropTypes.arrayOf(PropTypes.string),
     };
@@ -32,11 +34,19 @@ export default class ColorRadioGroup extends Component {
         super(props);
 
         this.customColor = tinycolor.random().toHexString();
+        this.idPrefix = this.props.title.replace(/\s/g, "-").toLowerCase();
+
+        const refCount = this.props.colors.length + 1 + (!this.props.materials[0].isRequired ? 1 : 0);
+
+        for (let i = 0; i< refCount; i++) {
+            this.colorRefs.push(createRef<Radio>());
+        }
 
         this.disableMaterial = this.disableMaterial.bind(this);
         this.setColor = this.setColor.bind(this);
         this.setCustomColor = this.setCustomColor.bind(this);
         this.setToCustomColor = this.setToCustomColor.bind(this);
+        this.moveFocus = this.moveFocus.bind(this);
     }
 
     componentDidMount(): void {
@@ -44,6 +54,12 @@ export default class ColorRadioGroup extends Component {
         const count = this.props.colors.length;
         const index = Math.floor(Math.random() * Math.floor(count));
         this.setColor(this.props.colors[index]);
+    }
+
+    moveFocus(index: number, direction: number): void {
+        const length = this.colorRefs.length;
+        const ind = (index + direction + length) % length;
+        this.colorRefs[ind].current.focus();
     }
 
     setColor(color: string): void {
@@ -79,8 +95,12 @@ export default class ColorRadioGroup extends Component {
         let isSelected = this.disabled;
 
         const disableButton = isRequired ? null : (
-            <Radio onClickCallback={this.disableMaterial} selected={this.disabled}>
-                <FontAwesomeIcon className="icon" icon={faBan} />
+            <Radio onClickCallback={this.disableMaterial} 
+                selected={this.disabled}
+                ref={this.colorRefs[0]}
+                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                label='Disable'
+                faIcon={faBan}>
             </Radio>
         );
 
@@ -91,27 +111,43 @@ export default class ColorRadioGroup extends Component {
         const colors = this.props.colors.map((color, i) => (
             <Radio
                 key={i}
+                ref={this.colorRefs[i+(isRequired?0:1)]}
                 color={color}
                 onClickCallback={this.setColor}
                 selected={!this.disabled && this.selectedColor == color}
+                onMoveFocus={(dir: number) => this.moveFocus(i+(isRequired?0:1), dir)}
+                label={color}
                 setTitle
             />
         ));
 
         //TODO: make setting title on custom color work
         const customColorButton = (
-            <Radio onClickCallback={this.setToCustomColor} selected={!isSelected} color={this.customColor} setTitle>
-                <FontAwesomeIcon className="icon" icon={faPalette} />
+            <Radio 
+                    ref={this.colorRefs[this.colorRefs.length-1]}
+                    onClickCallback={this.setToCustomColor} 
+                    selected={!isSelected} 
+                    color={this.customColor} 
+                    className='custom-color'
+                    onMoveFocus={(dir: number) => this.moveFocus(this.colorRefs.length-1, dir)}
+                    label='Custom Color'
+                    faIcon={faTint}
+                    setTitle>
             </Radio>
         );
 
         return (
-            <div className="swatchContainer">
-                {disableButton}
-                {colors}
-                {customColorButton}
-                <MyColorPicker color={this.customColor} onChange={this.setCustomColor} />
-            </div>
+            <>
+                <h3 id={`${this.idPrefix}-label`}>{this.props.title}</h3>
+                <div className="swatchContainer color-container ">
+                    <div id={this.idPrefix} className="color-group" role="radiogroup" aria-labelledby={`${this.idPrefix}-label`}>
+                        {disableButton}
+                        {colors}
+                        {customColorButton}
+                    </div>
+                    <MyColorPicker color={this.customColor} onChange={this.setCustomColor} />
+                </div>
+            </>
         );
     }
 }

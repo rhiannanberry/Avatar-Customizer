@@ -59,7 +59,7 @@ export default class Editor extends Component {
     jacketMaterial: Material;
     shirtMaterial: Material;
     skinMaterial: Material;
-    selectedPage: string;
+    selectedPage: number;
     logoPaths: string[];
     backLogoTextures: Texture[];
     frontLogoTextures: Texture[];
@@ -113,69 +113,74 @@ export default class Editor extends Component {
         ]);
         this.props.hairPart.assignNewMaterials([this.hairMaterial]);
         this.props.glassesPart.assignNewMaterials([this.glassesMaterial]);
-        this.selectedPage = 'Body';
+        this.selectedPage = 0;
         this.changePage = this.changePage.bind(this);
     }
 
-    changePage(selectedPage: string): void {
+    changePage(selectedPage: number): void {
         this.selectedPage = selectedPage;
         this.forceUpdate();
     }
 
     render(): JSX.Element {
+        const classes = function(index: number, selected: number) {
+            return `page${selected === index ? ' selected': ''}`;
+        }
+        const label = ['body', 'hair-eyes', 'top', 'glasses'];
         return (
             <div>
                 <PageRadioGroup
                     iconPaths={[bodyPage, headPage, shirtPage, glassesPage]}
+                    pageLabels={label}
                     pageNames={['Body', 'Hair and Eyes', 'Top', 'Glasses']}
                     onClickCallback={this.changePage}
                 />
-                <div style={{ display: this.selectedPage == 'Body' ? 'block' : 'none' }}>
-                    Body Shape
+                <div id={`${label[0]}-page`} aria-labelledby={label[0]} role='tabpanel' className={classes(0, this.selectedPage)}>
                     <AvatarPartRadioGroup
+                        title='Body Shape'
                         avatarPart={this.props.bodyPart}
                         iconPaths={[curvy, soft, straight]}
                         labels={['curvy', 'soft', 'straight']}
                     />
-                    Skin Color
                     <ColorRadioGroup
+                        title='Skin Color'
                         materials={[this.skinMaterial]}
                         colors={['#503335', '#592f2a', '#a1665e', '#c58c85', '#d1a3a4', '#ecbcb4', '#FFE2DC']}
                     />
-                    Blush Color
                     <ColorRadioGroup
+                        title='Blush Color'
                         materials={[this.blushMaterial]}
-                        colors={['#551F25', '#82333C', '#983E38', '#DC6961', '#e3b9a1']}
+                        colors={['#300d1a', '#551F25', '#82333C', '#983E38', '#DC6961', '#e3b9a1']}
                     />
                 </div>
-                <div style={{ display: this.selectedPage == 'Hair and Eyes' ? 'block' : 'none' }}>
-                    Hair Style
+                <div id={`${label[1]}-page`} aria-labelledby={label[1]} role='tabpanel' className={classes(1, this.selectedPage)}>
                     <AvatarPartRadioGroup
+                        title='Hair Style'
                         avatarPart={this.props.hairPart}
                         iconPaths={[blair, long, messy, compressed, puffs, swoop]}
                         labels={['blair', 'long', 'messy', 'compressed', 'puffs', 'swoop']}
                     />
-                    Hair Color
                     <ColorRadioGroup
+                        title='Hair Color'
                         materials={[this.hairMaterial, this.eyebrowsMaterial]}
                         colors={['#2F2321', '#5C4033', '#C04532', '#B9775A', '#E6C690', '#FCE3B8', '#E6E6E6']}
                     />
-                    Eye Color
                     <ColorRadioGroup
+                        title='Eye Color'
                         materials={[this.eyesMaterial]}
-                        colors={['#552919', '#915139', '#917839', '#718233', '#338251', '#335A82']}
+                        colors={['#552919', '#915139', '#917839', '#718233', '#338251', '#335A82', '#9bcfd3']}
                     />
                 </div>
-                <div style={{ display: this.selectedPage == 'Top' ? 'block' : 'none' }}>
-                    Shirt Color
+                <div id={`${label[2]}-page`} aria-labelledby={label[2]} role='tabpanel' className={classes(2, this.selectedPage)}>
                     <ColorRadioGroup
+                        title='Shirt Color'
                         materials={[this.shirtMaterial]}
-                        colors={['#D72638', '#3F88C5', '#F49D37', '#140F2D', '#FBFBF2']}
+                        colors={['#D72638', '#3F88C5', '#F49D37', '#140F2D', '#FBFBF2', '#dec35e', '#75885d']}
                     />
-                    Jacket
                     <ColorRadioGroup
+                        title='Jacket'
                         materials={[this.jacketMaterial]}
-                        colors={['#AD1F2D', '#2A618D', '#D5770B', '#33236C', '#F1F1D0']}
+                        colors={['#AD1F2D', '#2A618D', '#D5770B', '#33236C', '#da5984', '#acb19e']}
                     />
                     Front Logo
                     <MaterialRadioGroup
@@ -192,17 +197,17 @@ export default class Editor extends Component {
                         xPosition={662}
                     />
                 </div>
-                <div style={{ display: this.selectedPage == 'Glasses' ? 'block' : 'none' }}>
-                    Glasses
+                <div id={`${label[3]}-page`} aria-labelledby={label[3]} role='tabpanel' className={classes(3, this.selectedPage)}>
                     <AvatarPartRadioGroup
+                        title='Glasses'
                         avatarPart={this.props.glassesPart}
                         iconPaths={[cat, round, square]}
                         labels={['Cat Eye', 'Circle', 'Square']}
                     />
-                    Color
                     <ColorRadioGroup
+                        title='Color'
                         materials={[this.glassesMaterial]}
-                        colors={['#1a1616', '#a82b27', '#dab560', '#9a9a9a']}
+                        colors={['#1a1616', '#a82b27', '#dab560', '#e1dbc4', '#9a9a9a', '#bfcb5d', '#5d5dcb']}
                     />
                 </div>
             </div>

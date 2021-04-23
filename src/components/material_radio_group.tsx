@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React, { Component, RefObject, createRef } from 'react';
 import * as PropTypes from 'prop-types';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
 import { faUpload } from '@fortawesome/free-solid-svg-icons/faUpload';
 
@@ -22,6 +21,7 @@ export default class MaterialRadioGroup extends Component {
     customSelected: boolean;
     selected: number; //just gonna go with key here
     file: React.RefObject<HTMLInputElement>;
+    radioRefs: RefObject<Radio>[] = [];
 
     static propTypes = {
         material: PropTypes.instanceOf(Material),
@@ -44,6 +44,12 @@ export default class MaterialRadioGroup extends Component {
         this.toggleSelected = this.toggleSelected.bind(this);
         this.setCustom = this.setCustom.bind(this);
         this.triggerClick = this.triggerClick.bind(this);
+        this.moveFocus = this.moveFocus.bind(this);
+
+        const refCount = this.props.textures.length + 2;
+        for (let i = 0; i < refCount; i++) {
+            this.radioRefs.push(createRef<Radio>());
+        }
     }
 
     disable(): void {
@@ -52,6 +58,12 @@ export default class MaterialRadioGroup extends Component {
         this.customSelected = false;
         this.props.material.material.visible = false;
         this.forceUpdate();
+    }
+
+    moveFocus(index: number, direction: number): void {
+        const length = this.radioRefs.length;
+        const ind = (index + direction + length) % length;
+        this.radioRefs[ind].current.focus();
     }
 
     async toggleSelected(selected: number): Promise<void> {
@@ -86,29 +98,36 @@ export default class MaterialRadioGroup extends Component {
 
     render(): JSX.Element {
         const disableButton = (
-            <Radio onClickCallback={this.disable} selected={this.disabled} className="texture">
-                <FontAwesomeIcon className="icon" icon={faBan} />
+            <Radio onClickCallback={this.disable} 
+                    ref={this.radioRefs[0]}
+                    onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                    selected={this.disabled} 
+                    className="texture" 
+                    faIcon={faBan}>
             </Radio>
         );
         const textures = this.props.texturePaths.map((path, i) => (
             <Radio
                 key={i}
                 value={i}
+                ref={this.radioRefs[i+1]}
+                onMoveFocus={(dir: number) => this.moveFocus(i+1, dir)}
                 onClickCallback={this.toggleSelected}
                 selected={!this.disabled && !this.customSelected && this.selected == i}
                 className="texture"
+                icon={path}
             >
-                <img className="icon" src={path} />
             </Radio>
         ));
         const customButton = (
             <Radio
+                ref={this.radioRefs[textures.length+1]}
+                onMoveFocus={(dir: number) => this.moveFocus(textures.length+1, dir)}
                 onClickCallback={(): void => this.file.current.click()}
                 selected={this.customSelected}
                 className="texture"
-            >
-                <FontAwesomeIcon className="icon" icon={faUpload} />
-            </Radio>
+                faIcon={faUpload}
+            />
         );
         return (
             <div className="swatchContainer">

@@ -85,7 +85,7 @@ export default class ExportButton extends Component {
         const label = this.props.texture ? 'Export Texture' : 'Export Avatar';
         const func = this.props.texture ? this.exportTexture : this.exportGLB;
         return (
-            <button aria-label={label.toLowerCase()} onClick={func} tabIndex={0}>
+            <button aria-label={label.toLowerCase()} onClick={func} >
                 {label}
             </button>
         );

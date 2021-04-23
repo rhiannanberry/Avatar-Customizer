@@ -46,6 +46,7 @@ function initializeScene(): SceneObjects {
     const controls = new OrbitControls(camera, renderer.domElement);
 
     renderer.setSize(size.width, size.height);
+    renderer.domElement.setAttribute('aria-label', 'preview');
     controls.enablePan = false;
 
     // add renderer to dom
@@ -130,8 +131,8 @@ function render(s: SceneObjects, mixer: THREE.AnimationMixer): void {
 }
 
 function initialize(): void {
-    const sceneObjects = initializeScene();
     importModels().then(dso => {
+        const sceneObjects = initializeScene();
         sceneObjects.scene.add(dso.group);
 
         setInterval(() => {

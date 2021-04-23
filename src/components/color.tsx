@@ -53,10 +53,8 @@ class MyColorPicker extends Component {
 
     render(): JSX.Element {
         const style = {
-            width: '100%',
             position: 'relative',
             display: 'block',
-            height: '60px',
             maxWidth: '318px',
         } as React.CSSProperties;
 
@@ -70,24 +68,36 @@ class MyColorPicker extends Component {
             position: 'relative',
         } as React.CSSProperties;
 
+        const sp = ()=> (
+            <div className='saturation-pointer'></div>
+        )
+
+        const hp = ()=> (
+            <div className='hue-pointer'></div>
+        )
+
         return (
-            <span style={style}>
-                <div style={saturationStyle}>
-                    <Saturation
-                        // @ts-ignore
-                        hsl={this.state.hsl}
-                        hsv={this.state.hsv}
-                        onChange={this.onChange}
-                    />
-                </div>
-                <div style={hueStyle}>
-                    <Hue
-                        // @ts-ignore
-                        hsl={this.state.hsl}
-                        onChange={this.onChange}
-                    />
-                </div>
-            </span>
+            <div className="color-picker-wrapper">
+                <span style={style} className='color-picker'>
+                    <div style={saturationStyle}>
+                        <Saturation
+                            // @ts-ignore
+                            hsl={this.state.hsl}
+                            hsv={this.state.hsv}
+                            pointer={sp}
+                            onChange={this.onChange}
+                        />
+                    </div>
+                    <div style={hueStyle}>
+                        <Hue
+                            // @ts-ignore
+                            hsl={this.state.hsl}
+                            onChange={this.onChange}
+                            pointer={hp}
+                        />
+                    </div>
+                </span>
+            </div>
         );
     }
 }

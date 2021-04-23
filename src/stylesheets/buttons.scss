@@ -1,5 +1,5 @@
 $swatch-size : 40px;
-$part-swatch-size: 60px;
+$part-swatch-size: 75px;
 $page-swatch-size: 40px;
 $texture-swatch-size: 40px;
 $swatch-corner-radius : 4px;
@@ -8,13 +8,93 @@ $swatch-background: #e0e0e0;
 .swatchContainer {
     display: flex;
     flex-wrap: wrap;
-    //justify-content: center;
-    & > * {
-        margin-bottom: 6px;
+    
+    margin-top: 6px;
+    margin-bottom: 20px;
+
+    &.page-container {
+        margin-top: 0px;
+        margin-bottom: 0px;
+
+        button {
+            background-color: transparent;
+            color: #381327;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 6px 10px;
+            border: 0px;
+            margin-right: 10px;
+            &:hover,&:focus {
+                box-shadow: none;
+            }
+            &:focus-visible {
+                outline: dotted red;
+            }
+
+            &[aria-selected='true'] {
+                background-color: lavenderblush;
+                border: pink solid 1px;
+                border-radius: 3px 3px 0 0;
+                border-bottom: none;
+                padding: 6px 9px;
+                //text-decoration: underline 2px;
+            }
+        }
     }
-    margin-top: 3px;
-    margin-bottom: 6px;
-    max-width: 350px;
+
+    span:focus-visible {
+        outline: dotted red;
+    }
+
+    &.part-container {
+        display: grid;
+        grid-gap: 6px;
+        grid-template-columns: repeat(auto-fill, 75px);
+    }
+
+    &.color-container {
+        flex-direction: row;
+        flex-wrap: nowrap;
+
+        .color-group {
+            display: grid;
+            grid-gap: 6px;
+            grid-template-columns: repeat(auto-fill, 40px);
+            flex-basis: 184px;
+        }
+    }
+    .color-picker-wrapper {
+        border-radius: 4px;
+        border: #381327 solid 2px;
+        height: 82px;
+        flex-basis: auto;
+        flex-grow: 1;
+
+        .color-picker {
+            height:100%;
+            width: 100%;
+            .saturation-pointer {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                //border: white solid 3px;
+                box-shadow: white 0 0 0 2px, #381327 0 0 0 4px, inset #381327 0 0 0 1px;
+                transform: translate(-5px, -5px);
+                cursor: pointer;
+            }
+    
+            .hue-pointer {
+                width: 4px;
+                height: 18px;
+                //margin-top: -1px;
+                box-shadow: white 0 0 0 2px, #381327 0 0 0 4px, inset #381327 0 0 0 1px;
+                border-radius: 3px;
+                transform: translateX(-2px);
+                cursor: pointer;
+            }
+    
+        }
+    }
 }
 
 .swatch {
@@ -27,7 +107,7 @@ $swatch-background: #e0e0e0;
     &.selected {
         .inner {
 
-            box-shadow: 0 0 3px 2px;
+            box-shadow:  #ff66ae inset 0 0 0 2px, #502f41 inset  0 0 0 4px;
         }
     }
 
@@ -54,6 +134,12 @@ $swatch-background: #e0e0e0;
         width: 100%;
         height:100%;
         border-radius: $swatch-corner-radius;
+        color: #381327;
+        box-shadow: #502f41 inset 0 0 0 2px;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        pointer-events: none;
 
         &.custom {
             background-color: $swatch-background !important;
@@ -103,7 +189,11 @@ $swatch-background: #e0e0e0;
             height: 80%;
             object-fit: contain;
             -o-object-fit: contain;
-            color: black;
+            //color: #381327;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            pointer-events: none;
         }
 
     }
