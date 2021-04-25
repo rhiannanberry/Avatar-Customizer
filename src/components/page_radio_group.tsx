@@ -1,8 +1,5 @@
 import React, { Component, createRef, KeyboardEvent, RefObject } from 'react';
 import * as PropTypes from 'prop-types';
-
-import Radio from './radio';
-
 interface PageRadioGroupProps {
     pageLabels: string[];
     pageNames: string[];
@@ -24,7 +21,7 @@ export default class PageRadioGroup extends Component {
     constructor(props: PageRadioGroupProps) {
         super(props);
 
-        this.props.pageNames.forEach((v, i) => {
+        this.props.pageNames.forEach(() => {
             this.tabRefs.push(createRef<HTMLButtonElement>());
         });
 
@@ -34,7 +31,6 @@ export default class PageRadioGroup extends Component {
     }
 
     togglePage(i: number): void {
-        const pageName = this.props.pageNames[i];
         this.selectedPage = i;
         this.props.onClickCallback(i);
         this.forceUpdate();
@@ -71,8 +67,8 @@ export default class PageRadioGroup extends Component {
                 role="tab"
                 aria-selected={this.selectedPage == i}
                 tabIndex={this.selectedPage === i ? 1 : -1}
-                onClick={() => this.togglePage(i)}
-                onKeyDown={e => this.keyDown(i, e)}
+                onClick={(): void => this.togglePage(i)}
+                onKeyDown={(e): void => this.keyDown(i, e)}
             >
                 {name}
             </button>

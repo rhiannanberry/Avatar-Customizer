@@ -99,7 +99,7 @@ export default class ColorRadioGroup extends Component {
                 onClickCallback={this.disableMaterial}
                 selected={this.disabled}
                 ref={this.colorRefs[0]}
-                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(0, dir)}
                 label="Disable"
                 faIcon={faBan}
             ></Radio>
@@ -116,12 +116,11 @@ export default class ColorRadioGroup extends Component {
                 color={color}
                 onClickCallback={this.setColor}
                 selected={!this.disabled && this.selectedColor == color}
-                onMoveFocus={(dir: number) => this.moveFocus(i + (isRequired ? 0 : 1), dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(i + (isRequired ? 0 : 1), dir)}
                 label={color}
             />
         ));
 
-        //TODO: make setting title on custom color work
         const customColorButton = (
             <Radio
                 ref={this.colorRefs[this.colorRefs.length - 1]}
@@ -129,7 +128,7 @@ export default class ColorRadioGroup extends Component {
                 selected={!isSelected}
                 color={this.customColor}
                 className="custom-color"
-                onMoveFocus={(dir: number) => this.moveFocus(this.colorRefs.length - 1, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(this.colorRefs.length - 1, dir)}
                 label="Custom Color"
                 faIcon={faTint}
             ></Radio>

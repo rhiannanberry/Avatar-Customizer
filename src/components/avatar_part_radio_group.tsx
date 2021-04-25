@@ -80,7 +80,7 @@ export default class AvatarPartRadioGroup extends Component {
             <Radio
                 onClickCallback={this.disablePart}
                 ref={this.partsRefs[0]}
-                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(0, dir)}
                 selected={this.props.avatarPart.disabled}
                 className="part"
                 label="Disable"
@@ -93,7 +93,7 @@ export default class AvatarPartRadioGroup extends Component {
             <Radio
                 key={i}
                 ref={this.partsRefs[d + i]}
-                onMoveFocus={(dir: number) => this.moveFocus(d + i, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(d + i, dir)}
                 className="part"
                 onClickCallback={this.togglePart}
                 value={i}

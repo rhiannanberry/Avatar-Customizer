@@ -68,9 +68,9 @@ class MyColorPicker extends Component {
             position: 'relative',
         } as React.CSSProperties;
 
-        const sp = () => <div className="saturation-pointer"></div>;
+        const sp = (): JSX.Element => <div className="saturation-pointer"></div>;
 
-        const hp = () => <div className="hue-pointer"></div>;
+        const hp = (): JSX.Element => <div className="hue-pointer"></div>;
 
         return (
             <div className="color-picker-wrapper">

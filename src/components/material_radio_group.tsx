@@ -105,7 +105,7 @@ export default class MaterialRadioGroup extends Component {
             <Radio
                 onClickCallback={this.disable}
                 ref={this.radioRefs[0]}
-                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(0, dir)}
                 selected={this.disabled}
                 className="texture"
                 faIcon={faBan}
@@ -116,7 +116,7 @@ export default class MaterialRadioGroup extends Component {
                 key={i}
                 value={i}
                 ref={this.radioRefs[i + 1]}
-                onMoveFocus={(dir: number) => this.moveFocus(i + 1, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(i + 1, dir)}
                 onClickCallback={this.toggleSelected}
                 selected={!this.disabled && !this.customSelected && this.selected == i}
                 className="texture"
@@ -126,7 +126,7 @@ export default class MaterialRadioGroup extends Component {
         const customButton = (
             <Radio
                 ref={this.radioRefs[textures.length + 1]}
-                onMoveFocus={(dir: number) => this.moveFocus(textures.length + 1, dir)}
+                onMoveFocus={(dir: number): void => this.moveFocus(textures.length + 1, dir)}
                 onClickCallback={(): void => this.file.current.click()}
                 selected={this.customSelected}
                 className="texture"

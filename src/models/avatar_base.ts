@@ -88,7 +88,6 @@ export default class AvatarBase {
     }
 
     postExportRestore(): void {
-        const sc = this.fullScene.scene;
         this.avatarRoot.remove(...this.avatarRoot.children);
         this.avatarRootChildren.forEach(child => {
             this.avatarRoot.add(child);

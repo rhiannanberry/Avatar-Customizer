@@ -76,7 +76,6 @@ function initializeScene(): SceneObjects {
 }
 
 async function importModels(): Promise<DynamicSceneObjects> {
-    console.log(bodyModel)
     const bodyGLTF = await loadGLTF(bodyModel);
     const hairGLTF = await loadGLTF(hairModel);
     const glassesGLTF = await loadGLTF(glassesModel);
@@ -85,14 +84,15 @@ async function importModels(): Promise<DynamicSceneObjects> {
     const scene = bodyGLTF.scene;
     const avatarRoot = scene.children[0];
 
-    const hipsIndex = avatarRoot.children.findIndex((e) => e.type === 'Bone');
-    const baseIndex = avatarRoot.children.findIndex((e) => e.name === 'base')
-    const bodyMeshIndexes = avatarRoot.children.filter((e) => e.name !== 'base' && e.type !== 'Bone');
+    const hipsIndex = avatarRoot.children.findIndex(e => e.type === 'Bone');
+    const baseIndex = avatarRoot.children.findIndex(e => e.name === 'base');
 
     const skeleton = (avatarRoot.children[baseIndex] as THREE.SkinnedMesh).skeleton;
     const headHandsMesh = [avatarRoot.children[baseIndex] as THREE.SkinnedMesh];
-    const bodySkinnedMeshes = avatarRoot.children.filter((e) => e.name !== 'base' && e.type !== 'Bone') as THREE.SkinnedMesh[];
-    const hairSkinnedMeshes = hairGLTF.scene.children[0].children.filter((e) => e.type !== 'Bone') as THREE.SkinnedMesh[];
+    const bodySkinnedMeshes = avatarRoot.children.filter(
+        e => e.name !== 'base' && e.type !== 'Bone',
+    ) as THREE.SkinnedMesh[];
+    const hairSkinnedMeshes = hairGLTF.scene.children[0].children.filter(e => e.type !== 'Bone') as THREE.SkinnedMesh[];
     const glassesSkinnedMeshes = glassesGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
 
     // remove children from avatarRoot

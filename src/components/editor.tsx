@@ -123,7 +123,7 @@ export default class Editor extends Component {
     }
 
     render(): JSX.Element {
-        const classes = function(index: number, selected: number) {
+        const classes = function(index: number, selected: number): string {
             return `page${selected === index ? ' selected' : ''}`;
         };
         const label = ['body', 'hair-eyes', 'top', 'glasses'];

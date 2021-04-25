@@ -71,7 +71,7 @@ export default class Radio extends Component {
         }
     }
 
-    focus() {
+    focus(): void {
         this.radioRef.current.focus();
         this.forceUpdate();
     }
@@ -100,7 +100,7 @@ export default class Radio extends Component {
                 <div style={swatchStyle} className="inner" tabIndex={-1}>
                     {this.props.children}
 
-                    {(() => {
+                    {((): JSX.Element => {
                         if (this.props.icon) {
                             return <img className="icon" src={this.props.icon} tabIndex={-1} />;
                         } else if (this.props.faIcon) {
