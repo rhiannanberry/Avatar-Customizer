@@ -21,26 +21,22 @@ import shirt from '../includes/textures/shirt_default.png';
 import skin from '../includes/textures/skin_default.png';
 
 import duck from '../includes/textures/duck.png';
+import eyelligator_white from '../includes/textures/eyelligator_white.png';
+import eyelligator_black from '../includes/textures/eyelligator_black.png';
 
-import bodyPage from '../includes/icons/icons_body.png';
-import glassesPage from '../includes/icons/glasses.png';
-import headPage from '../includes/icons/icons_head.png';
-import shirtPage from '../includes/icons/icons_shirt.png';
-//import bodyPage from "../includes/icons/icons_body.png";
+import curvy from '../includes/icons/body_curvy.svg';
+import straight from '../includes/icons/body_straight.svg';
+import soft from '../includes/icons/body_soft.svg';
+import blair from '../includes/icons/hair_blair.svg';
+import compressed from '../includes/icons/hair_compressed.svg';
+import long from '../includes/icons/hair_long.svg';
+import short from '../includes/icons/hair_short.svg';
+import puffs from '../includes/icons/hair_poofs.svg';
+import swoop from '../includes/icons/hair_swoop.svg';
 
-import curvy from '../includes/icons/icons_curvy.png';
-import straight from '../includes/icons/icons_straight.png';
-import soft from '../includes/icons/soft.png';
-import blair from '../includes/icons/icons_hair_blair.png';
-import compressed from '../includes/icons/hair_compressed.png';
-import long from '../includes/icons/icons_hair_long.png';
-import messy from '../includes/icons/icons_hair_messy.png';
-import puffs from '../includes/icons/hair_puffs.png';
-import swoop from '../includes/icons/hair_swoop.png';
-
-import cat from '../includes/icons/glasses_cat.png';
-import round from '../includes/icons/glasses_round.png';
-import square from '../includes/icons/glasses_square.png';
+import cat from '../includes/icons/glasses_cat.svg';
+import round from '../includes/icons/glasses_circle.svg';
+import square from '../includes/icons/glasses_square.svg';
 
 interface EditorProps {
     basePart: AvatarPart;
@@ -77,7 +73,7 @@ export default class Editor extends Component {
     constructor(props: EditorProps) {
         super(props);
 
-        this.logoPaths = [duck];
+        this.logoPaths = [duck, eyelligator_white, eyelligator_black];
         this.backLogoTextures = this.logoPaths.map(path => {
             return new Texture(path, 662);
         });
@@ -130,7 +126,6 @@ export default class Editor extends Component {
         return (
             <div>
                 <PageRadioGroup
-                    iconPaths={[bodyPage, headPage, shirtPage, glassesPage]}
                     pageLabels={label}
                     pageNames={['Body', 'Hair and Eyes', 'Top', 'Glasses']}
                     onClickCallback={this.changePage}
@@ -167,7 +162,7 @@ export default class Editor extends Component {
                     <AvatarPartRadioGroup
                         title="Hair Style"
                         avatarPart={this.props.hairPart}
-                        iconPaths={[blair, long, messy, compressed, puffs, swoop]}
+                        iconPaths={[blair, long, short, compressed, puffs, swoop]}
                         labels={['blair', 'long', 'short', 'compressed', 'puffs', 'swoop']}
                     />
                     <ColorRadioGroup

@@ -68,7 +68,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html",
-      inject: "head"
+      inject: "head",
+      favicon: "./src/includes/icons/fav_icon.svg"
     }),
     new webpack.NamedModulesPlugin(),
     //new webpack.HotModuleReplacementPlugin(),

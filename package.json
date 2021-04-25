@@ -57,7 +57,8 @@
     "three-gltf2-loader": "^1.2.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.9",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "webpack-manifest-plugin": "^3.1.1"
   },
   "scripts": {
     "prettier": "prettier --write src/**/*.js",

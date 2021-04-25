@@ -12,7 +12,6 @@ export default class PageRadioGroup extends Component {
     tabRefs: RefObject<HTMLButtonElement>[] = [];
 
     static propTypes = {
-        iconPaths: PropTypes.arrayOf(PropTypes.string),
         pageLabels: PropTypes.arrayOf(PropTypes.string),
         pageNames: PropTypes.arrayOf(PropTypes.string),
         onClickCallback: PropTypes.func,

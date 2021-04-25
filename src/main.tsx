@@ -34,8 +34,8 @@ function initializeScene(): SceneObjects {
     // setup scene
 
     const size = {
-        width: 400,
-        height: 500,
+        width: 350,
+        height: 450,
     };
 
     const scene = new THREE.Scene();
@@ -61,7 +61,7 @@ function initializeScene(): SceneObjects {
     scene.add(new THREE.AmbientLight(0xffffff));
     scene.background = new THREE.Color(0xe6e6e6);
 
-    camera.position.set(0.2, 0.7, 0.75);
+    camera.position.set(0.2, 0.7, 0.65);
     camera.matrixAutoUpdate = true;
 
     controls.target.set(0, 0.5, 0);
