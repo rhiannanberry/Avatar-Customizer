@@ -42,15 +42,14 @@ export default class ExportButton extends Component {
                     el.download = 'custom_avatar.glb';
                     el.click();
                     el.remove();
-                    val.animations.forEach((anim) => {
-                        if (anim.name == "idle_eyes") {
-                            
-                            const t:THREE.KeyframeTrack[] = [];
-                            anim.tracks.forEach((track) => {
+                    val.animations.forEach(anim => {
+                        if (anim.name == 'idle_eyes') {
+                            const t: THREE.KeyframeTrack[] = [];
+                            anim.tracks.forEach(track => {
                                 if (track.name.includes('Eye')) {
                                     t.push(track);
                                 }
-                            })
+                            });
                             anim.tracks = t;
                             anim.optimize();
 
@@ -58,13 +57,12 @@ export default class ExportButton extends Component {
                             const left = anim.tracks[3];
 
                             right.values.forEach((v, i) => {
-                                left.values[i] = i%3 == 0 ? -v : v;
-                            })
-
+                                left.values[i] = i % 3 == 0 ? -v : v;
+                            });
                         } else {
                             anim.optimize();
                         }
-                    })
+                    });
                 },
                 { animations: val.animations, binary: true, includeCustomExtensions: true },
             );
@@ -82,10 +80,10 @@ export default class ExportButton extends Component {
     }
 
     render(): JSX.Element {
-        const label = this.props.texture ? 'Export Texture' : 'Export Avatar';
+        const label = this.props.texture ? 'Export Texture' : 'Export Avatar ❤️';
         const func = this.props.texture ? this.exportTexture : this.exportGLB;
         return (
-            <button aria-label={label.toLowerCase()} onClick={func} >
+            <button aria-label={label.toLowerCase()} onClick={func}>
                 {label}
             </button>
         );

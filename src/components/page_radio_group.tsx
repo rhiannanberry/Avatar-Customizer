@@ -25,7 +25,7 @@ export default class PageRadioGroup extends Component {
         super(props);
 
         this.props.pageNames.forEach((v, i) => {
-            this.tabRefs.push(createRef<HTMLButtonElement>())
+            this.tabRefs.push(createRef<HTMLButtonElement>());
         });
 
         this.selectedPage = 0;
@@ -68,15 +68,20 @@ export default class PageRadioGroup extends Component {
                 key={i}
                 aria-controls={`${this.props.pageLabels[i]}-page`}
                 ref={this.tabRefs[i]}
-                role='tab'
+                role="tab"
                 aria-selected={this.selectedPage == i}
-                tabIndex={this.selectedPage === i ? 1:-1}
-                onClick={()=>this.togglePage(i)}
-                onKeyDown={(e) => this.keyDown(i, e)}>
+                tabIndex={this.selectedPage === i ? 1 : -1}
+                onClick={() => this.togglePage(i)}
+                onKeyDown={e => this.keyDown(i, e)}
+            >
                 {name}
             </button>
         ));
 
-        return <div className="swatchContainer page-container" role='tablist'>{pages}</div>;
+        return (
+            <div className="swatch-container page-container" role="tablist">
+                {pages}
+            </div>
+        );
     }
 }

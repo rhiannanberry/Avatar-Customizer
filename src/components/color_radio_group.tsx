@@ -34,11 +34,11 @@ export default class ColorRadioGroup extends Component {
         super(props);
 
         this.customColor = tinycolor.random().toHexString();
-        this.idPrefix = this.props.title.replace(/\s/g, "-").toLowerCase();
+        this.idPrefix = this.props.title.replace(/\s/g, '-').toLowerCase();
 
         const refCount = this.props.colors.length + 1 + (!this.props.materials[0].isRequired ? 1 : 0);
 
-        for (let i = 0; i< refCount; i++) {
+        for (let i = 0; i < refCount; i++) {
             this.colorRefs.push(createRef<Radio>());
         }
 
@@ -95,13 +95,14 @@ export default class ColorRadioGroup extends Component {
         let isSelected = this.disabled;
 
         const disableButton = isRequired ? null : (
-            <Radio onClickCallback={this.disableMaterial} 
+            <Radio
+                onClickCallback={this.disableMaterial}
                 selected={this.disabled}
                 ref={this.colorRefs[0]}
                 onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
-                label='Disable'
-                faIcon={faBan}>
-            </Radio>
+                label="Disable"
+                faIcon={faBan}
+            ></Radio>
         );
 
         this.props.colors.forEach(color => {
@@ -111,36 +112,39 @@ export default class ColorRadioGroup extends Component {
         const colors = this.props.colors.map((color, i) => (
             <Radio
                 key={i}
-                ref={this.colorRefs[i+(isRequired?0:1)]}
+                ref={this.colorRefs[i + (isRequired ? 0 : 1)]}
                 color={color}
                 onClickCallback={this.setColor}
                 selected={!this.disabled && this.selectedColor == color}
-                onMoveFocus={(dir: number) => this.moveFocus(i+(isRequired?0:1), dir)}
+                onMoveFocus={(dir: number) => this.moveFocus(i + (isRequired ? 0 : 1), dir)}
                 label={color}
-                setTitle
             />
         ));
 
         //TODO: make setting title on custom color work
         const customColorButton = (
-            <Radio 
-                    ref={this.colorRefs[this.colorRefs.length-1]}
-                    onClickCallback={this.setToCustomColor} 
-                    selected={!isSelected} 
-                    color={this.customColor} 
-                    className='custom-color'
-                    onMoveFocus={(dir: number) => this.moveFocus(this.colorRefs.length-1, dir)}
-                    label='Custom Color'
-                    faIcon={faTint}
-                    setTitle>
-            </Radio>
+            <Radio
+                ref={this.colorRefs[this.colorRefs.length - 1]}
+                onClickCallback={this.setToCustomColor}
+                selected={!isSelected}
+                color={this.customColor}
+                className="custom-color"
+                onMoveFocus={(dir: number) => this.moveFocus(this.colorRefs.length - 1, dir)}
+                label="Custom Color"
+                faIcon={faTint}
+            ></Radio>
         );
 
         return (
             <>
                 <h3 id={`${this.idPrefix}-label`}>{this.props.title}</h3>
-                <div className="swatchContainer color-container ">
-                    <div id={this.idPrefix} className="color-group" role="radiogroup" aria-labelledby={`${this.idPrefix}-label`}>
+                <div className="swatch-container color-container ">
+                    <div
+                        id={this.idPrefix}
+                        className="color-group"
+                        role="radiogroup"
+                        aria-labelledby={`${this.idPrefix}-label`}
+                    >
                         {disableButton}
                         {colors}
                         {customColorButton}

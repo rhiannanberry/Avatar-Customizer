@@ -6,7 +6,7 @@ export class Material {
 
     constructor(textureURL: string = null, isRequired = false) {
         this.isRequired = isRequired;
-        this.material = new THREE.MeshStandardMaterial({skinning:true});
+        this.material = new THREE.MeshStandardMaterial({ skinning: true });
         this.material.transparent = true;
 
         if (textureURL) {

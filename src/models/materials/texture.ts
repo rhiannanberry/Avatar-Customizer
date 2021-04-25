@@ -34,9 +34,13 @@ export default class Texture {
                 const desiredAspect = this.width / this.height;
                 const fitToX = desiredAspect < currentAspect;
 
-                const scale = fitToX ? 
-                                (img.width > this.width ? this.width / img.width : img.width / this.width) :
-                                (img.height > this.height ? this.height / img.height : img.height / this.height);
+                const scale = fitToX
+                    ? img.width > this.width
+                        ? this.width / img.width
+                        : img.width / this.width
+                    : img.height > this.height
+                    ? this.height / img.height
+                    : img.height / this.height;
 
                 w = img.width * scale;
                 h = img.height * scale;

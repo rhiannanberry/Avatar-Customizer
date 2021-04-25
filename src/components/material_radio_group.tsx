@@ -13,6 +13,7 @@ interface MaterialRadioGroupProps {
     textures: Texture[];
     texturePaths: string[];
     xPosition: number;
+    title: string;
 }
 
 export default class MaterialRadioGroup extends Component {
@@ -22,8 +23,10 @@ export default class MaterialRadioGroup extends Component {
     selected: number; //just gonna go with key here
     file: React.RefObject<HTMLInputElement>;
     radioRefs: RefObject<Radio>[] = [];
+    idPrefix: string;
 
     static propTypes = {
+        title: PropTypes.string,
         material: PropTypes.instanceOf(Material),
         textures: PropTypes.arrayOf(PropTypes.instanceOf(Texture)),
         texturePaths: PropTypes.arrayOf(PropTypes.string),
@@ -34,6 +37,7 @@ export default class MaterialRadioGroup extends Component {
         super(props);
 
         this.file = React.createRef<HTMLInputElement>();
+        this.idPrefix = this.props.title.replace(/\s/g, '-').toLowerCase();
 
         this.selected = -1;
         this.disabled = true;
@@ -98,31 +102,31 @@ export default class MaterialRadioGroup extends Component {
 
     render(): JSX.Element {
         const disableButton = (
-            <Radio onClickCallback={this.disable} 
-                    ref={this.radioRefs[0]}
-                    onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
-                    selected={this.disabled} 
-                    className="texture" 
-                    faIcon={faBan}>
-            </Radio>
+            <Radio
+                onClickCallback={this.disable}
+                ref={this.radioRefs[0]}
+                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                selected={this.disabled}
+                className="texture"
+                faIcon={faBan}
+            ></Radio>
         );
         const textures = this.props.texturePaths.map((path, i) => (
             <Radio
                 key={i}
                 value={i}
-                ref={this.radioRefs[i+1]}
-                onMoveFocus={(dir: number) => this.moveFocus(i+1, dir)}
+                ref={this.radioRefs[i + 1]}
+                onMoveFocus={(dir: number) => this.moveFocus(i + 1, dir)}
                 onClickCallback={this.toggleSelected}
                 selected={!this.disabled && !this.customSelected && this.selected == i}
                 className="texture"
                 icon={path}
-            >
-            </Radio>
+            ></Radio>
         ));
         const customButton = (
             <Radio
-                ref={this.radioRefs[textures.length+1]}
-                onMoveFocus={(dir: number) => this.moveFocus(textures.length+1, dir)}
+                ref={this.radioRefs[textures.length + 1]}
+                onMoveFocus={(dir: number) => this.moveFocus(textures.length + 1, dir)}
                 onClickCallback={(): void => this.file.current.click()}
                 selected={this.customSelected}
                 className="texture"
@@ -130,12 +134,15 @@ export default class MaterialRadioGroup extends Component {
             />
         );
         return (
-            <div className="swatchContainer">
-                {disableButton}
-                {textures}
-                {customButton}
-                <input hidden ref={this.file} type="file" accept="image/png" onChange={this.setCustom} />
-            </div>
+            <>
+                <h3 id={`${this.idPrefix}-label`}>{this.props.title}</h3>
+                <div className="swatch-container" role="radiogroup" aria-labelledby={`${this.idPrefix}-label`}>
+                    {disableButton}
+                    {textures}
+                    {customButton}
+                    <input hidden ref={this.file} type="file" accept="image/png" onChange={this.setCustom} />
+                </div>
+            </>
         );
     }
 }

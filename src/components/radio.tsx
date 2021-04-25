@@ -8,7 +8,6 @@ interface RadioProps {
     color: string;
     onClickCallback: Function;
     selected: boolean;
-    setTitle: boolean;
     className?: string;
     icon?: string;
     faIcon?: IconDefinition;
@@ -29,7 +28,6 @@ export default class Radio extends Component {
         icon: PropTypes.string,
         onClickCallback: PropTypes.func,
         selected: PropTypes.bool,
-        setTitle: PropTypes.bool,
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         label: PropTypes.string,
         className: PropTypes.string,
@@ -39,7 +37,6 @@ export default class Radio extends Component {
     static defaultProps = {
         color: '#ece5eb',
         selected: false,
-        setTitle: false,
     };
 
     constructor(props: RadioProps) {
@@ -56,8 +53,8 @@ export default class Radio extends Component {
         //only send back up if SUCCESSFUL for texture upload attempts
     }
 
-    keyDown(e: KeyboardEvent<HTMLSpanElement>): void{
-        switch(e.key) {
+    keyDown(e: KeyboardEvent<HTMLSpanElement>): void {
+        switch (e.key) {
             case 'Enter':
             case ' ':
                 e.preventDefault();
@@ -65,11 +62,11 @@ export default class Radio extends Component {
                 return;
             case 'ArrowLeft':
                 e.preventDefault();
-                this.props.onMoveFocus? this.props.onMoveFocus(-1, this) : null;
+                this.props.onMoveFocus ? this.props.onMoveFocus(-1, this) : null;
                 return;
             case 'ArrowRight':
                 e.preventDefault();
-                this.props.onMoveFocus? this.props.onMoveFocus(1, this) : null;
+                this.props.onMoveFocus ? this.props.onMoveFocus(1, this) : null;
                 return;
         }
     }
@@ -81,12 +78,13 @@ export default class Radio extends Component {
 
     render(): JSX.Element {
         const isCustomColor = this.props.className === 'custom-color';
-        let swatchStyle = {
+        const swatchStyle = {
             backgroundColor: this.props.faIcon ? '#ece5eb' : this.props.color,
-            color: isCustomColor ? this.props.color : '#381327'
+            color: isCustomColor ? this.props.color : '#381327',
         };
-
-        const classNames = `swatch ${this.props.className} ${this.props.selected? 'selected':''}`;
+        const classNames = `swatch ${this.props.className ? this.props.className : ''} ${
+            this.props.selected ? 'selected' : ''
+        }`;
 
         return (
             <span
@@ -96,21 +94,19 @@ export default class Radio extends Component {
                 className={classNames}
                 onClick={this.onClickValue}
                 onKeyDown={this.keyDown}
-                title={this.props.setTitle ? (this.value as string) : null}
-                aria-label={this.props.label ? (this.props.label) : null}
+                aria-label={this.props.label ? this.props.label : null}
                 tabIndex={this.props.selected ? 1 : -1}
             >
                 <div style={swatchStyle} className="inner" tabIndex={-1}>
                     {this.props.children}
-                    
-                    {  (() => {
-                            if (this.props.icon) {
-                                return (<img className='icon' src={this.props.icon} tabIndex={-1}/>)
-                            } else if (this.props.faIcon) {
-                                return (<FontAwesomeIcon className='icon' icon={this.props.faIcon} />)
-                            }
-                        })()
-                    }
+
+                    {(() => {
+                        if (this.props.icon) {
+                            return <img className="icon" src={this.props.icon} tabIndex={-1} />;
+                        } else if (this.props.faIcon) {
+                            return <FontAwesomeIcon className="icon" icon={this.props.faIcon} />;
+                        }
+                    })()}
                 </div>
             </span>
         );

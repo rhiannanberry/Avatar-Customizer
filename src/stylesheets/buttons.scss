@@ -5,7 +5,7 @@ $texture-swatch-size: 40px;
 $swatch-corner-radius : 4px;
 $swatch-background: #e0e0e0;
 
-.swatchContainer {
+.swatch-container {
     display: flex;
     flex-wrap: wrap;
     
@@ -18,7 +18,7 @@ $swatch-background: #e0e0e0;
 
         button {
             background-color: transparent;
-            color: #381327;
+            color: #582d45;
             cursor: pointer;
             font-size: 20px;
             padding: 6px 10px;
@@ -28,7 +28,7 @@ $swatch-background: #e0e0e0;
                 box-shadow: none;
             }
             &:focus-visible {
-                outline: dotted red;
+                outline: dotted #dd2e44;
             }
 
             &[aria-selected='true'] {
@@ -43,7 +43,7 @@ $swatch-background: #e0e0e0;
     }
 
     span:focus-visible {
-        outline: dotted red;
+        outline: dotted #dd2e44;
     }
 
     &.part-container {
@@ -116,16 +116,6 @@ $swatch-background: #e0e0e0;
         height: $part-swatch-size;
     }
 
-    /*&:focus {
-        box-shadow: 0 4px 0 0 #ffaabb, 0 -4px 0 0 #ffaabb;
-    }*/
-
-    /*
-    &.page, &.part, &.texture {
-        width: $page-swatch-size;
-        height: $page-swatch-size;
-    }*/
-
     .inner {
         display: flex;
         justify-content: center;
@@ -140,49 +130,6 @@ $swatch-background: #e0e0e0;
         -webkit-user-select: none;
         user-select: none;
         pointer-events: none;
-
-        &.custom {
-            background-color: $swatch-background !important;
-
-            .customContainer {
-                height: 50px;
-                width: 200px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                //border-radius: 4px;
-                position: absolute;
-                padding: 4px;
-                margin-top: 96px;
-                margin-left: 176px;
-
-                background-color: #e8e8e8;
-
-                &.closed {
-                    display: none
-                }
-
-                .hue {
-                    height: 10px;
-                    width: 100%;
-                    margin-bottom: 6px;
-                    position: relative;
-                }
-
-                .saturation {
-                    flex-grow: 1;
-                    position: relative;
-                    width: 100%;
-                }
-
-                .icon {
-                    width: 80%;
-                    height: 80%;
-                    object-fit: contain;
-                    -o-object-fit: contain;
-                }
-            }
-        }
 
         .icon {
             width: 80%;
@@ -199,8 +146,17 @@ $swatch-background: #e0e0e0;
     }
 }
 
-button{
-    &:focus, &:hover {
-        box-shadow: 0 0 2px 2px #ffaabb;
+#buttons {
+    button {
+        font-size: 16px;
+        background-color: #ffaabb;
+        border: none;
+        border-radius: 4px;
+        padding: 6px 10px;
+        cursor: pointer;
+
+        &:active {
+            box-shadow: inset 0 0 0 2px #dd2e44;
+        }
     }
 }

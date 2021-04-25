@@ -28,7 +28,7 @@ export default class AvatarBase {
                     },
                 },
             },
-        }
+        };
 
         this.avatarRoot.traverse(node => {
             if (node.name == 'Neck') {

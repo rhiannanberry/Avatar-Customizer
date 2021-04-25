@@ -31,7 +31,7 @@ export default class AvatarPartRadioGroup extends Component {
     constructor(props: AvatarPartRadioGroupProps) {
         super(props);
 
-        this.idPrefix = this.props.title.replace(/\s/g, "-").toLowerCase();
+        this.idPrefix = this.props.title.replace(/\s/g, '-').toLowerCase();
 
         this.isRequired = this.props.avatarPart.isRequired;
 
@@ -70,19 +70,21 @@ export default class AvatarPartRadioGroup extends Component {
     }
 
     togglePart(partIndex: number): void {
-        this.props.avatarPart.toggleMesh(partIndex);
+        this.props.avatarPart.toggleMesh(this.props.labels[partIndex]);
         this.forceUpdate();
     }
 
     render(): JSX.Element {
         const d = this.isRequired ? 0 : 1;
         const disableButton = this.isRequired ? null : (
-            <Radio onClickCallback={this.disablePart} 
-                    ref={this.partsRefs[0]}
-                    onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
-                    selected={this.props.avatarPart.disabled} 
-                    className="part" 
-                    label='Disable'>
+            <Radio
+                onClickCallback={this.disablePart}
+                ref={this.partsRefs[0]}
+                onMoveFocus={(dir: number) => this.moveFocus(0, dir)}
+                selected={this.props.avatarPart.disabled}
+                className="part"
+                label="Disable"
+            >
                 <FontAwesomeIcon className="icon" icon={faBan} />
             </Radio>
         );
@@ -90,22 +92,26 @@ export default class AvatarPartRadioGroup extends Component {
         const parts = this.props.iconPaths.map((path, i) => (
             <Radio
                 key={i}
-                ref={this.partsRefs[d+i]}
-                onMoveFocus={(dir: number) => this.moveFocus(d+i, dir)}
+                ref={this.partsRefs[d + i]}
+                onMoveFocus={(dir: number) => this.moveFocus(d + i, dir)}
                 className="part"
                 onClickCallback={this.togglePart}
                 value={i}
                 label={this.props.labels[i]}
                 selected={!this.props.avatarPart.disabled && this.props.avatarPart.isSelected(i)}
                 icon={path}
-            >
-            </Radio>
+            ></Radio>
         ));
 
         return (
             <>
                 <h3 id={`${this.idPrefix}-label`}>{this.props.title}</h3>
-                <div id={this.idPrefix} className="swatchContainer part-container" role='radiogroup' aria-labelledby={`${this.idPrefix}-label`}>
+                <div
+                    id={this.idPrefix}
+                    className="swatch-container part-container"
+                    role="radiogroup"
+                    aria-labelledby={`${this.idPrefix}-label`}
+                >
                     {disableButton}
                     {parts}
                 </div>

@@ -1,6 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+* {
+
+    //font-weight: bold;
+    
+    button, .footer {
+
+        color: #753e5c;
+    }
+
+    a {
+        color: #dd2e44;
+        text-decoration: none;
+    }
+}
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Balsamiq Sans', cursive;
     font-weight: bold;
+    button {
+        font-family: 'Fredoka One', cursive;
+        font-weight: normal;
+
+    }
     display: flex;
     margin: 0px;
     flex-direction: column;
@@ -13,11 +34,24 @@ body {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none;
 }
-
+.footer {
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: 'Balsamiq Sans', cursive;
+    font-weight: bold;
+    text-align: center;
+    p {
+        width: 100%;
+        margin: 0;
+    }
+}
 #container {
     margin-top: 30px;
     margin-bottom: 30px;
-    min-height: calc(100vh - 90px);
+    min-height: calc(100vh - 120px);
     max-width: 860px;
     justify-content: space-between;
     display: flex;
@@ -30,9 +64,27 @@ body {
         align-items: center;
         margin-bottom: 20px;
 
+        #site-marker {
+            font-family: 'Fredoka One', cursive;
+            font-weight: normal;
+            position: relative;
+            top: 5px;
+            left: 5px;
+            width: 100%;
+            height: 0;
+            color: #753e5caa;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            pointer-events: none;
+            font-size: 20px;
+        }
+
         canvas {
             width: 400px;
             height: 500px;
+            border-radius: 4px;
+            box-shadow: pink 0 0 0 1px;
         }
 
         #buttons {
@@ -53,6 +105,10 @@ body {
 
         color: #753e5c;
 
+        h3 {
+            margin: 0;
+        }
+
         .page {
             padding: 20px;
             background-color: lavenderblush;
@@ -65,48 +121,11 @@ body {
                 display: block;
             }
         }
-    
-        .texture-layer  {
-            height: 32px;
-            margin: 10px;
-            
-            .layer-button-group {
-                margin: 0px 5px;
-                .layer-button {
-                    display:block;
-                    color: #8d8d8d;
-    
-                    :hover {
-                        color:#010101;
-                        -webkit-transition-duration: 0.2s; /* Safari */
-                        transition-duration: 0.2s;
-                        -moz-transition-duration: 0.2s;
-                    }
-    
-                    >svg {
-                        display: block;
-                    }
-    
-                }
-            }
-            
-            .color-picker {
-                height:100%;
-                width:32px;
-                padding: 0px;
-                //border: 0px;
-                margin: 0px 10px;
-            }
-    
-            .dropdown {
-                height:100%;
-                width: 100px;
-            }
-        }
     }
+}
 
-
-    @media only screen and (max-width: 900px) {
+@media only screen and (max-width: 900px) {
+    #container {
         flex-direction: column;
         align-items: center;
         #options {
@@ -114,6 +133,30 @@ body {
             max-width: 400px;
             padding: 0;
         }
+    }
+
+    .footer {
+        font-size: 16px;
+        width: auto;
+        padding: 0 10px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #container {
+        #left {
+            max-width: 375px;
+            canvas {
+                max-width: 375px;
+                max-height: 469px;
+            }
+        }
+        #options {
+            max-width: 375px;
+        }
+    }
+    .footer {
+        font-weight: normal;
     }
 }
 

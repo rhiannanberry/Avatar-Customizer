@@ -17,7 +17,6 @@ import glassesModel from './includes/models/glasses.glb';
 
 import './stylesheets/main.scss';
 import './stylesheets/buttons.scss';
-import './stylesheets/editor.scss';
 
 interface SceneObjects {
     camera: THREE.Camera;
@@ -41,7 +40,7 @@ function initializeScene(): SceneObjects {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({antialias: true});
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     const clock = new THREE.Clock();
     const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -52,12 +51,17 @@ function initializeScene(): SceneObjects {
     // add renderer to dom
     document.getElementById('left').prepend(renderer.domElement);
 
+    const marker = document.createElement('div');
+    marker.setAttribute('id', 'site-marker');
+    marker.innerHTML = 'qt-mkr';
+    document.getElementById('left').prepend(marker);
+
     // add lighting and position camera
     // TODO: make scene bg configurable. at least light/dark toggle
     scene.add(new THREE.AmbientLight(0xffffff));
     scene.background = new THREE.Color(0xe6e6e6);
 
-    camera.position.set(.2, 0.7, 0.75);
+    camera.position.set(0.2, 0.7, 0.75);
     camera.matrixAutoUpdate = true;
 
     controls.target.set(0, 0.5, 0);
@@ -79,33 +83,37 @@ async function importModels(): Promise<DynamicSceneObjects> {
     // process for export
     const scene = bodyGLTF.scene;
     const avatarRoot = scene.children[0];
-    
-    const skeleton = (avatarRoot.children[1] as THREE.SkinnedMesh).skeleton;
-    const headHandsMesh = [avatarRoot.children[1] as THREE.SkinnedMesh];
-    const bodySkinnedMeshes = avatarRoot.children.slice(2) as THREE.SkinnedMesh[];
-    const hairSkinnedMeshes = hairGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
+
+    const hipsIndex = avatarRoot.children.findIndex((e) => e.type === 'Bone');
+    const baseIndex = avatarRoot.children.findIndex((e) => e.name === 'base')
+    const bodyMeshIndexes = avatarRoot.children.filter((e) => e.name !== 'base' && e.type !== 'Bone');
+
+    const skeleton = (avatarRoot.children[baseIndex] as THREE.SkinnedMesh).skeleton;
+    const headHandsMesh = [avatarRoot.children[baseIndex] as THREE.SkinnedMesh];
+    const bodySkinnedMeshes = avatarRoot.children.filter((e) => e.name !== 'base' && e.type !== 'Bone') as THREE.SkinnedMesh[];
+    const hairSkinnedMeshes = hairGLTF.scene.children[0].children.filter((e) => e.type !== 'Bone') as THREE.SkinnedMesh[];
     const glassesSkinnedMeshes = glassesGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
 
     // remove children from avatarRoot
-    avatarRoot.children.splice(1, avatarRoot.children.length - 1);
-    
+    avatarRoot.children = [avatarRoot.children[hipsIndex]];
+
     const avatarBase = new AvatarBase(bodyGLTF, skeleton);
     const headHandsPart = new AvatarPart(true, true, headHandsMesh);
     const bodyPart = new AvatarPart(true, true, bodySkinnedMeshes);
     const hairPart = new AvatarPart(false, true, hairSkinnedMeshes);
     const glassesPart = new AvatarPart(false, true, glassesSkinnedMeshes);
-    
+
     avatarBase.addAvatarPart(headHandsPart);
     avatarBase.addAvatarPart(hairPart);
     avatarBase.addAvatarPart(bodyPart);
     avatarBase.addAvatarPart(glassesPart);
-    
-    hairPart.assignSkeleton(skeleton)
-    glassesPart.assignSkeleton(skeleton)
+
+    hairPart.assignSkeleton(skeleton);
+    glassesPart.assignSkeleton(skeleton);
 
     const mixer = new THREE.AnimationMixer(scene);
     mixer.clipAction(bodyGLTF.animations[4]).play(); // idle animation
-    
+
     // ... just gonna put the react entry point here.... nbd >_>
     ReactDOM.render(
         <>
@@ -113,7 +121,7 @@ async function importModels(): Promise<DynamicSceneObjects> {
             <ExportButton avatarBase={avatarBase} texture />
         </>,
         document.getElementById('buttons'),
-    )
+    );
     ReactDOM.render(
         <>
             <Editor basePart={headHandsPart} bodyPart={bodyPart} glassesPart={glassesPart} hairPart={hairPart}></Editor>
@@ -121,7 +129,7 @@ async function importModels(): Promise<DynamicSceneObjects> {
         document.getElementById('options'),
     );
 
-    return {group: scene, mixer: mixer};
+    return { group: scene, mixer: mixer };
 }
 
 function render(s: SceneObjects, mixer: THREE.AnimationMixer): void {

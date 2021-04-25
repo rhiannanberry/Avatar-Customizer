@@ -68,17 +68,13 @@ class MyColorPicker extends Component {
             position: 'relative',
         } as React.CSSProperties;
 
-        const sp = ()=> (
-            <div className='saturation-pointer'></div>
-        )
+        const sp = () => <div className="saturation-pointer"></div>;
 
-        const hp = ()=> (
-            <div className='hue-pointer'></div>
-        )
+        const hp = () => <div className="hue-pointer"></div>;
 
         return (
             <div className="color-picker-wrapper">
-                <span style={style} className='color-picker'>
+                <span style={style} className="color-picker">
                     <div style={saturationStyle}>
                         <Saturation
                             // @ts-ignore
