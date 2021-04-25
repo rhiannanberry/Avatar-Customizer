@@ -47,9 +47,8 @@ module.exports = {
         use: {
           loader: "file-loader",
           options: {
-            // move required assets to output dir and add a hash for cache busting
-            name: "includes/[name].[ext]",
-            // Make asset paths relative to /src
+            name: '[name].[ext]',
+            outputPath: 'assets/'
           }
         }
       },
@@ -57,6 +56,9 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js', '.jsx' , '.scss'],
+    alias: {
+      assets: path.resolve('./src/includes')
+    }
   },
   
   devServer: {

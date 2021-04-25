@@ -76,6 +76,7 @@ function initializeScene(): SceneObjects {
 }
 
 async function importModels(): Promise<DynamicSceneObjects> {
+    console.log(bodyModel)
     const bodyGLTF = await loadGLTF(bodyModel);
     const hairGLTF = await loadGLTF(hairModel);
     const glassesGLTF = await loadGLTF(glassesModel);
