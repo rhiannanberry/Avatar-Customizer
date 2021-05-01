@@ -19,6 +19,7 @@ interface ColorRadioGroupProps {
 export default class ColorRadioGroup extends Component {
     props: ColorRadioGroupProps;
     disabled: boolean;
+    textureLed: boolean;
     selectedColor: string;
     customColor: string;
     colorRefs: RefObject<Radio>[] = [];
@@ -36,7 +37,10 @@ export default class ColorRadioGroup extends Component {
         this.customColor = tinycolor.random().toHexString();
         this.idPrefix = this.props.title.replace(/\s/g, '-').toLowerCase();
 
-        const refCount = this.props.colors.length + 1 + (!this.props.materials[0].isRequired ? 1 : 0);
+        this.textureLed = this.props.materials.some(m => m.textureLed);
+
+        const refCount =
+            this.props.colors.length + 1 + (!this.props.materials[0].isRequired && !this.textureLed ? 1 : 0);
 
         for (let i = 0; i < refCount; i++) {
             this.colorRefs.push(createRef<Radio>());
@@ -66,7 +70,9 @@ export default class ColorRadioGroup extends Component {
         this.disabled = false;
         this.selectedColor = color;
         this.props.materials.forEach(material => {
-            material.material.visible = true;
+            if (!this.textureLed) {
+                material.material.visible = true;
+            }
             material.material.color.setStyle(color);
         });
         this.forceUpdate();
@@ -90,7 +96,7 @@ export default class ColorRadioGroup extends Component {
     }
 
     render(): JSX.Element {
-        const isRequired = this.props.materials[0].isRequired;
+        const isRequired = this.props.materials[0].isRequired || this.textureLed;
 
         let isSelected = this.disabled;
 

@@ -21,8 +21,14 @@ import shirt from '../includes/textures/shirt_default.png';
 import skin from '../includes/textures/skin_default.png';
 
 import duck from '../includes/textures/duck.png';
-import eyelligator_white from '../includes/textures/eyelligator_white.png';
-import eyelligator_black from '../includes/textures/eyelligator_black.png';
+import eyelligatorWhite from '../includes/textures/eyelligator_white.png';
+import eyelligatorBlack from '../includes/textures/eyelligator_black.png';
+
+import fh1 from '../includes/textures/facialhair_1.png';
+import fh2 from '../includes/textures/facialhair_2.png';
+import fh3 from '../includes/textures/facialhair_3.png';
+import fh4 from '../includes/textures/facialhair_4.png';
+import fh5 from '../includes/textures/facialhair_5.png';
 
 import curvy from '../includes/icons/body_curvy.svg';
 import straight from '../includes/icons/body_straight.svg';
@@ -57,11 +63,20 @@ export default class Editor extends Component {
     skinMaterial: Material;
     selectedPage: number;
     logoPaths: string[];
+
     backLogoTextures: Texture[];
     frontLogoTextures: Texture[];
+
     backLogoMaterial: Material;
     frontLogoMaterial: Material;
     props: EditorProps;
+
+    beardPaths: string[];
+    moustachePaths: string[];
+    beardTextures: Texture[];
+    moustacheTextures: Texture[];
+    beardMaterial: Material;
+    moustacheMaterial: Material;
 
     static propTypes = {
         basePart: PropTypes.instanceOf(AvatarPart),
@@ -73,12 +88,22 @@ export default class Editor extends Component {
     constructor(props: EditorProps) {
         super(props);
 
-        this.logoPaths = [duck, eyelligator_white, eyelligator_black];
+        this.logoPaths = [duck, eyelligatorWhite, eyelligatorBlack];
         this.backLogoTextures = this.logoPaths.map(path => {
             return new Texture(path, 662);
         });
         this.frontLogoTextures = this.logoPaths.map(path => {
             return new Texture(path, 148);
+        });
+
+        this.beardPaths = [fh5];
+        this.beardTextures = this.beardPaths.map(path => {
+            return new Texture(path, 338, 214, 346, 119);
+        });
+
+        this.moustachePaths = [fh1, fh2, fh3, fh4];
+        this.moustacheTextures = this.moustachePaths.map(path => {
+            return new Texture(path, 338, 214, 346, 119);
         });
 
         this.blushMaterial = new Material(blush);
@@ -88,6 +113,8 @@ export default class Editor extends Component {
         this.glassesMaterial = new BaseMaterial(glasses);
         this.backLogoMaterial = new Material();
         this.frontLogoMaterial = new Material();
+        this.beardMaterial = new Material(null, false, true);
+        this.moustacheMaterial = new Material(null, false, true);
         this.hairMaterial = new BaseMaterial(hair);
         this.jacketMaterial = new Material(jacket);
         this.shirtMaterial = new BaseMaterial(shirt);
@@ -99,6 +126,8 @@ export default class Editor extends Component {
             this.eyesMaterial,
             this.eyebrowsMaterial,
             this.blushMaterial,
+            this.beardMaterial,
+            this.moustacheMaterial,
         ]);
 
         this.props.bodyPart.assignNewMaterials([
@@ -174,6 +203,29 @@ export default class Editor extends Component {
                         title="Eye Color"
                         materials={[this.eyesMaterial]}
                         colors={['#552919', '#915139', '#917839', '#718233', '#338251', '#335A82', '#9bcfd3']}
+                    />
+                    <MaterialRadioGroup
+                        title="Moustache"
+                        material={this.moustacheMaterial}
+                        textures={this.moustacheTextures}
+                        texturePaths={this.moustachePaths}
+                        xPosition={0}
+                        noCustom
+                        generatePreviews
+                    />
+                    <MaterialRadioGroup
+                        title="Beard"
+                        material={this.beardMaterial}
+                        textures={this.beardTextures}
+                        texturePaths={this.beardPaths}
+                        xPosition={0}
+                        noCustom
+                        generatePreviews
+                    />
+                    <ColorRadioGroup
+                        title="Facial Hair Color"
+                        materials={[this.moustacheMaterial, this.beardMaterial]}
+                        colors={['#2F2321', '#5C4033', '#C04532', '#B9775A', '#E6C690', '#FCE3B8', '#E6E6E6']}
                     />
                 </div>
                 <div

@@ -14,6 +14,8 @@ interface MaterialRadioGroupProps {
     texturePaths: string[];
     xPosition: number;
     title: string;
+    noCustom?: boolean;
+    generatePreviews?: boolean;
 }
 
 export default class MaterialRadioGroup extends Component {
@@ -31,6 +33,8 @@ export default class MaterialRadioGroup extends Component {
         textures: PropTypes.arrayOf(PropTypes.instanceOf(Texture)),
         texturePaths: PropTypes.arrayOf(PropTypes.string),
         xPosition: PropTypes.number,
+        noCustom: PropTypes.bool,
+        generatePreviews: PropTypes.bool,
     };
 
     constructor(props: MaterialRadioGroupProps) {
@@ -50,7 +54,7 @@ export default class MaterialRadioGroup extends Component {
         this.triggerClick = this.triggerClick.bind(this);
         this.moveFocus = this.moveFocus.bind(this);
 
-        const refCount = this.props.textures.length + 2;
+        const refCount = this.props.textures.length + 1 + (this.props.noCustom ? 0 : 1);
         for (let i = 0; i < refCount; i++) {
             this.radioRefs.push(createRef<Radio>());
         }
@@ -121,9 +125,10 @@ export default class MaterialRadioGroup extends Component {
                 selected={!this.disabled && !this.customSelected && this.selected == i}
                 className="texture"
                 icon={path}
+                generatePreview={this.props.generatePreviews}
             ></Radio>
         ));
-        const customButton = (
+        const customButton = this.props.noCustom ? null : (
             <Radio
                 ref={this.radioRefs[textures.length + 1]}
                 onMoveFocus={(dir: number): void => this.moveFocus(textures.length + 1, dir)}

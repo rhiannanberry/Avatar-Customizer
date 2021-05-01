@@ -141,6 +141,10 @@ $swatch-background: #e0e0e0;
             -webkit-user-select: none;
             user-select: none;
             pointer-events: none;
+
+            &.invert {
+                filter: invert(90%);
+            }
         }
 
     }

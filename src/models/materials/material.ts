@@ -3,9 +3,12 @@ import load from '../../util';
 export class Material {
     material: THREE.MeshStandardMaterial;
     isRequired: boolean;
+    textureLed: boolean;
 
-    constructor(textureURL: string = null, isRequired = false) {
+    // TODO: convert everything past textureURL to options obj
+    constructor(textureURL: string = null, isRequired = false, textureLed = false) {
         this.isRequired = isRequired;
+        this.textureLed = textureLed;
         this.material = new THREE.MeshStandardMaterial({ skinning: true });
         this.material.transparent = true;
 
