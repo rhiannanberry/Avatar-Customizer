@@ -62,7 +62,6 @@ export default class AvatarBase {
                 geometries = geometries.concat(part.getSelectedMeshes().map(mesh => mesh.geometry));
             }
         });
-
         const skinnedMesh = new THREE.SkinnedMesh(BufferGeometryUtils.mergeBufferGeometries(geometries), material);
         skinnedMesh.skeleton = this.skeleton;
         skinnedMesh.name = 'Avatar';

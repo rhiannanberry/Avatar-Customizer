@@ -98,7 +98,7 @@ export default class AvatarPartRadioGroup extends Component {
                 onClickCallback={this.togglePart}
                 value={i}
                 label={this.props.labels[i]}
-                selected={!this.props.avatarPart.disabled && this.props.avatarPart.isSelected(i)}
+                selected={!this.props.avatarPart.disabled && this.props.avatarPart.isSelected(this.props.labels[i])}
                 icon={path}
             ></Radio>
         ));

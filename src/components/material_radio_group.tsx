@@ -17,7 +17,8 @@ interface MaterialRadioGroupProps {
     noCustom?: boolean;
     generatePreviews?: boolean;
 }
-
+// y=64, h=273
+// x=323 w=376
 export default class MaterialRadioGroup extends Component {
     props: MaterialRadioGroupProps;
     disabled: boolean;

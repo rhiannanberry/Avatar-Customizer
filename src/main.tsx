@@ -11,8 +11,12 @@ import AvatarPart from './models/avatar_part';
 import Editor from './components/editor';
 import ExportButton from './components/export_buttons';
 
-import bodyModel from './includes/models/body.glb';
+import bodyModel from './includes/models/body2.glb';
 import hairModel from './includes/models/hair.glb';
+import hair2Model from './includes/models/hair_2.glb';
+import headwearModel from './includes/models/headwear.glb';
+import moustachesModel from './includes/models/moustaches.glb';
+import beardsModel from './includes/models/beards.glb';
 import glassesModel from './includes/models/glasses.glb';
 
 import './stylesheets/main.scss';
@@ -58,7 +62,13 @@ function initializeScene(): SceneObjects {
 
     // add lighting and position camera
     // TODO: make scene bg configurable. at least light/dark toggle
-    scene.add(new THREE.AmbientLight(0xffffff));
+    const light = new THREE.PointLight(0xffffff, 0.5, 100);
+    light.position.set(6, 6, 10);
+    scene.add(light);
+    const light2 = new THREE.PointLight(0xffffff, 0.5, 100);
+    light2.position.set(-6, 6, -6);
+    scene.add(light2);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
     scene.background = new THREE.Color(0xe6e6e6);
 
     camera.position.set(0.2, 0.7, 0.65);
@@ -78,6 +88,10 @@ function initializeScene(): SceneObjects {
 async function importModels(): Promise<DynamicSceneObjects> {
     const bodyGLTF = await loadGLTF(bodyModel);
     const hairGLTF = await loadGLTF(hairModel);
+    const hair2GLTF = await loadGLTF(hair2Model);
+    const headwearGLTF = await loadGLTF(headwearModel);
+    const moustachesGLTF = await loadGLTF(moustachesModel);
+    const beardsGLTF = await loadGLTF(beardsModel);
     const glassesGLTF = await loadGLTF(glassesModel);
 
     // process for export
@@ -93,6 +107,18 @@ async function importModels(): Promise<DynamicSceneObjects> {
         e => e.name !== 'base' && e.type !== 'Bone',
     ) as THREE.SkinnedMesh[];
     const hairSkinnedMeshes = hairGLTF.scene.children[0].children.filter(e => e.type !== 'Bone') as THREE.SkinnedMesh[];
+    const hair2SkinnedMeshes = hair2GLTF.scene.children[0].children.filter(
+        e => e.type !== 'Bone',
+    ) as THREE.SkinnedMesh[];
+    const headwearSkinnedMeshes = headwearGLTF.scene.children[0].children.filter(
+        e => e.type !== 'Bone',
+    ) as THREE.SkinnedMesh[];
+    const moustachesSkinnedMeshes = moustachesGLTF.scene.children[0].children.filter(
+        e => e.type !== 'Bone',
+    ) as THREE.SkinnedMesh[];
+    const beardsSkinnedMeshes = beardsGLTF.scene.children[0].children.filter(
+        e => e.type !== 'Bone',
+    ) as THREE.SkinnedMesh[];
     const glassesSkinnedMeshes = glassesGLTF.scene.children[0].children.slice(1) as THREE.SkinnedMesh[];
 
     // remove children from avatarRoot
@@ -102,18 +128,30 @@ async function importModels(): Promise<DynamicSceneObjects> {
     const headHandsPart = new AvatarPart(true, true, headHandsMesh);
     const bodyPart = new AvatarPart(true, true, bodySkinnedMeshes);
     const hairPart = new AvatarPart(false, true, hairSkinnedMeshes);
+    const hair2Part = new AvatarPart(false, true, hair2SkinnedMeshes);
+    const headwearPart = new AvatarPart(false, true, headwearSkinnedMeshes);
+    const moustachesPart = new AvatarPart(false, true, moustachesSkinnedMeshes);
+    const beardsPart = new AvatarPart(false, true, beardsSkinnedMeshes);
     const glassesPart = new AvatarPart(false, true, glassesSkinnedMeshes);
 
     avatarBase.addAvatarPart(headHandsPart);
     avatarBase.addAvatarPart(hairPart);
+    avatarBase.addAvatarPart(hair2Part);
     avatarBase.addAvatarPart(bodyPart);
     avatarBase.addAvatarPart(glassesPart);
+    avatarBase.addAvatarPart(headwearPart);
+    avatarBase.addAvatarPart(moustachesPart);
+    avatarBase.addAvatarPart(beardsPart);
 
     hairPart.assignSkeleton(skeleton);
+    hair2Part.assignSkeleton(skeleton);
     glassesPart.assignSkeleton(skeleton);
+    headwearPart.assignSkeleton(skeleton);
+    moustachesPart.assignSkeleton(skeleton);
+    beardsPart.assignSkeleton(skeleton);
 
     const mixer = new THREE.AnimationMixer(scene);
-    mixer.clipAction(bodyGLTF.animations[4]).play(); // idle animation
+    mixer.clipAction(bodyGLTF.animations.find(anim => anim.name == 'idle_eyes')).play(); // idle animation
 
     // ... just gonna put the react entry point here.... nbd >_>
     ReactDOM.render(
@@ -125,7 +163,16 @@ async function importModels(): Promise<DynamicSceneObjects> {
     );
     ReactDOM.render(
         <>
-            <Editor basePart={headHandsPart} bodyPart={bodyPart} glassesPart={glassesPart} hairPart={hairPart}></Editor>
+            <Editor
+                basePart={headHandsPart}
+                bodyPart={bodyPart}
+                glassesPart={glassesPart}
+                hairPart={hairPart}
+                hair2Part={hair2Part}
+                headwearPart={headwearPart}
+                moustachesPart={moustachesPart}
+                beardsPart={beardsPart}
+            ></Editor>
         </>,
         document.getElementById('options'),
     );

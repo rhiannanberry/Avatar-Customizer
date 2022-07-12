@@ -5,7 +5,7 @@ export default class AvatarPart {
     isRequired: boolean;
     isSingular: boolean;
     //private sharesMaterials: Boolean = true;
-    private selectedSkinnedMeshes: number[] = [];
+    private selectedSkinnedMeshes: string[] = [];
     skinnedMeshes: THREE.SkinnedMesh[];
     materials: Material[];
 
@@ -14,16 +14,16 @@ export default class AvatarPart {
         this.isSingular = isSingular;
         this.skinnedMeshes = skinnedMeshes;
         if (this.isRequired) {
-            this.selectedSkinnedMeshes.push(0); //TODO: Maybe set this to random among sm
+            this.selectedSkinnedMeshes.push(this.skinnedMeshes[0].name); //TODO: Maybe set this to random among sm
         }
-        this.skinnedMeshes.forEach((mesh, i) => {
-            mesh.visible = this.isSelected(i);
+        this.skinnedMeshes.forEach(mesh => {
+            mesh.visible = this.isSelected(mesh.name);
         });
     }
 
     assignSkeleton(skeleton: THREE.Skeleton): void {
         this.skinnedMeshes.forEach(mesh => {
-            mesh.skeleton.dispose();
+            mesh.skeleton?.dispose();
             mesh.skeleton = skeleton;
         });
     }
@@ -49,43 +49,31 @@ export default class AvatarPart {
         }
     }
 
-    isSelected(index: number): boolean {
-        return this.selectedSkinnedMeshes.includes(index);
+    isSelected(name: string): boolean {
+        return this.selectedSkinnedMeshes.includes(name);
     }
 
-    toggleMesh(toToggle: number | string): void {
-        let value: null | number;
-        if (typeof toToggle === 'string') {
-            this.skinnedMeshes.forEach((mesh, i) => {
-                if (mesh.name == toToggle) {
-                    value = i;
-                }
-            });
-        } else {
-            value = toToggle as number;
-        }
-
+    toggleMesh(toToggle: string): void {
         const selectedCount = this.selectedSkinnedMeshes.length;
-        const meshCount = this.skinnedMeshes.length;
-
-        if (value !== null && value < meshCount) {
-            const alreadySelected = this.selectedSkinnedMeshes.includes(value);
+        const mesh = this.mesh(toToggle);
+        const alreadySelected = this.selectedSkinnedMeshes.includes(toToggle);
+        if (mesh) {
             if (alreadySelected) {
                 if (this.isRequired && (this.isSingular || selectedCount == 1)) {
                     return; //dont do anything
                 }
-                this.deselectMesh(value);
+                this.deselectMesh(toToggle);
             } else {
                 if (this.isSingular && selectedCount > 0) {
                     this.deselectMesh(this.selectedSkinnedMeshes.pop());
                 }
-                this.selectMesh(value);
+                this.selectMesh(toToggle);
             }
         }
     }
 
     getSelectedMeshes(): THREE.SkinnedMesh[] {
-        return this.selectedSkinnedMeshes.map(i => this.skinnedMeshes[i]);
+        return this.selectedSkinnedMeshes.map(name => this.mesh(name));
     }
 
     get disabled(): boolean {
@@ -96,13 +84,17 @@ export default class AvatarPart {
         return this.skinnedMeshes;
     }
 
-    private selectMesh(toSelect: number): void {
-        this.skinnedMeshes[toSelect].visible = true;
+    private mesh(name: string): THREE.SkinnedMesh {
+        return this.skinnedMeshes.find(mesh => mesh.name === name);
+    }
+
+    private selectMesh(toSelect: string): void {
+        this.mesh(toSelect).visible = true;
         this.selectedSkinnedMeshes.push(toSelect);
     }
 
-    private deselectMesh(toDeselect: number): void {
-        this.skinnedMeshes[toDeselect].visible = false;
+    private deselectMesh(toDeselect: string): void {
+        this.mesh(toDeselect).visible = false;
         this.selectedSkinnedMeshes = this.selectedSkinnedMeshes.filter(item => item !== toDeselect);
     }
 }
