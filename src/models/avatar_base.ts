@@ -63,6 +63,7 @@ export default class AvatarBase {
             }
         });
         geometries.forEach(geo => (geo.attributes.color ? delete geo.attributes.color : null));
+        console.log(geometries)
         const skinnedMesh = new THREE.SkinnedMesh(BufferGeometryUtils.mergeBufferGeometries(geometries), material);
         skinnedMesh.skeleton = this.skeleton;
         skinnedMesh.name = 'Avatar';
